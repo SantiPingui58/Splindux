@@ -28,7 +28,7 @@ public class Spleef2vs2Menu extends MenuBuilder {
 	@Override
 	public void onClick(Player p, ItemStack stack, int slot) {
 		if (slot == 11) {
-			GameManager.getManager().addUnrankedQueue(p, null);
+			GameManager.getManager().addSpleef2v2Queue(p, null);
 		} else if (slot == 15) {
 			new MapSelector2vs2Menu(p).o(p);
 		} else if (slot == 26) {

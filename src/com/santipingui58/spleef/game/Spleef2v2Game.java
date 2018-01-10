@@ -100,8 +100,8 @@ public class Spleef2v2Game implements Listener  {
 	  	
 		  Game g = GameManager.getManager().getArena(id);
 		  
-		  String team1 = g.getPlayer1().get(0).getName() + g.getPlayer1().get(1).getName();
-		  String team2 = g.getPlayer2().get(0).getName() + g.getPlayer2().get(1).getName();
+		  String team1 = g.getPlayer1().get(0).getName() + "-"+  g.getPlayer1().get(1).getName();
+		  String team2 = g.getPlayer2().get(0).getName() + "-" + g.getPlayer2().get(1).getName();
 
 		  
 		  

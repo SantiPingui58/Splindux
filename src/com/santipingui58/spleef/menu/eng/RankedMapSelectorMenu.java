@@ -16,7 +16,7 @@ import com.santipingui58.spleef.utils.ItemBuilder;
 public class RankedMapSelectorMenu extends MenuBuilder {
 
 	public RankedMapSelectorMenu(Player p) {
-		super("§aSelect a map", 1);
+		super("§aSelect a map", 2);
 		
 		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lSCT").
 				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListRanked("SCT")).
@@ -32,6 +32,11 @@ public class RankedMapSelectorMenu extends MenuBuilder {
 		
 		s(3, new ItemBuilder(Material.MAP).setTitle("§a§lKraken").
 				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListRanked("kraken")).
+				build());
+		s(3, new ItemBuilder(Material.MAP).setTitle("§a§lIgnition").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListRanked("kraken")).
+				build());
+		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cBack").
 				build());
 	
 	}
@@ -75,5 +80,23 @@ public class RankedMapSelectorMenu extends MenuBuilder {
 		} 
 		}
 	} 
+		
+		if(slot == 4) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "ignition")) {
+					GameManager.getManager().addRankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}
+		
+		
+		if (slot == 17) {
+			new SpleefMenu(p).o(p);
+		}
+		
+		
+		
 }
 }

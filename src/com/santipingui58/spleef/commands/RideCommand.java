@@ -24,12 +24,13 @@ public class RideCommand implements CommandExecutor {
 		} else {
 		if(cmd.getName().equalsIgnoreCase("ride")){
 			final Player p = (Player) sender;
+			
+			if (p.hasPermission("splindux.ride")) {
 			if (!GameManager.getManager().isInGame(p) || !GameManager.getManager().isSpectating(p)) {
 			if (args.length == 1) {
 				final Player pa = Bukkit.getServer().getPlayer(args[0]);
 				if (Bukkit.getOnlinePlayers().contains(pa)) {
-					pa.setPassenger(p);
-					
+					pa.setPassenger(p);		
 				} else {
 					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 						p.sendMessage("§cEl jugador §b" + args[1] + "§c");
@@ -44,6 +45,7 @@ public class RideCommand implements CommandExecutor {
 				}
 			}
 		}}
+		}
 	
 	return false;
 }

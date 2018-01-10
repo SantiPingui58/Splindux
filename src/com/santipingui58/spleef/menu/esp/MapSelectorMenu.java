@@ -9,6 +9,7 @@ import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.menu.MenuBuilder;
+import com.santipingui58.spleef.menu.eng.SpleefMenu;
 import com.santipingui58.spleef.utils.ItemBuilder;
 
 
@@ -16,7 +17,7 @@ import com.santipingui58.spleef.utils.ItemBuilder;
 public class MapSelectorMenu extends MenuBuilder {
 
 	public MapSelectorMenu(Player p) {
-		super("§aSelecciona un mapa", 1);
+		super("§aSelecciona un mapa", 2);
 		
 		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lSCT").
 				addLore("§aEn cola: §b" + GameManager.getManager().getQueueMapListUnranked("SCT")).
@@ -30,6 +31,12 @@ public class MapSelectorMenu extends MenuBuilder {
 				build());
 		s(3, new ItemBuilder(Material.MAP).setTitle("§a§lKraken").
 				addLore("§aEn cola: §b" + GameManager.getManager().getQueueMapListUnranked("kraken")).
+				build());
+		s(4, new ItemBuilder(Material.MAP).setTitle("§a§lIgnition").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("ignition")).
+				build());
+		
+		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cVolver").
 				build());
 		
 	}
@@ -73,6 +80,20 @@ public class MapSelectorMenu extends MenuBuilder {
 		} 
 		}
 	} 
+		
+		if(slot == 4) {
+		for (Game s :  GameManager.getManager().getArenasList()) {
+			if (Main.containsIgnoreCase(s.getId(), "ignition")) {
+				GameManager.getManager().addUnrankedQueue(p, s.getId());
+				break;
+		
+	} 
+	}
+}   
+		
+		if (slot == 17) {
+	new SpleefMenu(p).o(p);
+}
 
 }
 }

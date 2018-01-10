@@ -13,7 +13,7 @@ import com.santipingui58.spleef.utils.ItemBuilder;
 public class UnrankedMenu extends MenuBuilder {
 
 	public UnrankedMenu(Player p) {
-		super("§b§lUnraked games", 3);
+		super("§b§lUnraked games 1vs1", 3);
 		
 		s(0, new ItemBuilder(Material.DIAMOND_SPADE).setTitle("§aSpleef 1vs1").
 				build());

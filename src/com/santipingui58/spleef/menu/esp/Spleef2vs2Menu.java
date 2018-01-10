@@ -6,15 +6,14 @@ import org.bukkit.inventory.ItemStack;
 
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.menu.MenuBuilder;
-import com.santipingui58.spleef.menu.eng.UnrankedMenu;
 import com.santipingui58.spleef.utils.ItemBuilder;
 
 
 
-public class SpleefMenu extends MenuBuilder {
+public class Spleef2vs2Menu extends MenuBuilder {
 
-	public SpleefMenu(Player p) {
-		super("§b§lSpleef 1vs1", 3);
+	public Spleef2vs2Menu(Player p) {
+		super("§b§lSpleef 2vs2", 3);
 		
 		s(11, new ItemBuilder(Material.NETHER_STAR).setTitle("§aMapa al azar").
 				build());
@@ -29,15 +28,12 @@ public class SpleefMenu extends MenuBuilder {
 	@Override
 	public void onClick(Player p, ItemStack stack, int slot) {
 		if (slot == 11) {
-			GameManager.getManager().addUnrankedQueue(p, null);
+			GameManager.getManager().addSpleef2v2Queue(p, null);
 		} else if (slot == 15) {
-			new MapSelectorMenu(p).o(p);
+			new MapSelector2vs2Menu(p).o(p);
+		} else if (slot == 26) {
+			new Unranked2vs2Menu(p).o(p);
 		}
-		
-		else if (slot == 26) {
-			new UnrankedMenu(p).o(p);
-		}
-		
 	}
 
 }

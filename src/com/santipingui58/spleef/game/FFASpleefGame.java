@@ -39,7 +39,6 @@ public static void startCountdown(String id) {
       paladia.setItemMeta(meta);
       palahie.setItemMeta(meta1);
       final Game g = GameManager.getManager().getArena(id);
-      g.resetArenaStarting();
       GameManager.getManager().reinicio(g);
      for (final Player p : g.getQueue()) {
     	 g.getPlayers().add(p);
@@ -93,7 +92,7 @@ public static void gameOver(Player ganador, String id) {
 		SpleefRankManager.levelUp(winner);
 		SpleefRankManager.levelUp(winner);
 		g.getQueue().add(winner);
-		
+		g.resetArenaStarting();
 		if (g.getQueue().size() >= 3) {
 		for (Player pl : g.getPlayers()) {
 			if (!(pl.equals(winner))) {
