@@ -18,14 +18,14 @@ public class Game {
 	public static ItemStack opcionesesp = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOpciones").build();
 	public static ItemStack torneosesp = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lEventos").build();
 	public static ItemStack leavequeueesp = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aSalir de la cola").build();
-	
+	public static ItemStack partiesesp = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3Menu de Party").build();
 	
 	public static ItemStack rankeditemeng = new ItemBuilder (Material.DIAMOND_SPADE).setTitle("§b§lRanked Queue").build();
 	public static ItemStack unrankeditemeng = new ItemBuilder (Material.IRON_SPADE).setTitle("§b§lUnranked Queue").build();
 	public static ItemStack opcioneseng = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOptions").build();
 	public static ItemStack torneoseng = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lTournaments").build();
 	public static ItemStack leavequeueeng = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aLeave the queue").build();
-	
+	public static ItemStack partieseng = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3Party's Menu").build();
 	
 	 private final String id;
 	 private final String tipo;
@@ -211,12 +211,40 @@ public class Game {
 	    
 	    
 	    
-	    public Location getSpawn1() {
-	    	return this.spawn1;
+	    public Location getSpawn1A() { 	
+	    	int x1 =  this.spawn1.getBlockX() + 2;
+	    	int y1 = this.spawn1.getBlockY();
+	    	int z1 = this.spawn1.getBlockZ();	
+	    	return new Location (this.spawn1.getWorld(), x1,y1,z1);
+	    }
+    
+	    public Location getSpawn1B() {
+	    	int x1 =  this.spawn1.getBlockX() - 2;
+	    	int y1 = this.spawn1.getBlockY();
+	    	int z1 = this.spawn1.getBlockZ();	
+	    	return new Location (this.spawn1.getWorld(), x1,y1,z1);
+	    }
+	    
+	    public Location getSpawn2A() { 	
+	    	int x1 =  this.spawn2.getBlockX() + 2;
+	    	int y1 = this.spawn2.getBlockY();
+	    	int z1 = this.spawn2.getBlockZ();	
+	    	return new Location (this.spawn2.getWorld(), x1,y1,z1);
+	    }
+    
+	    public Location getSpawn2B() {
+	    	int x1 =  this.spawn2.getBlockX() - 2;
+	    	int y1 = this.spawn2.getBlockY();
+	    	int z1 = this.spawn2.getBlockZ();	
+	    	return new Location (this.spawn2.getWorld(), x1,y1,z1);
 	    }
 	    
 	    public Location getSpawn2() {
 	    	return this.spawn2;
+	    }
+	    
+	    public Location getSpawn1() {
+	    	return this.spawn1;
 	    }
 	    
 	    public Location getArena1() {

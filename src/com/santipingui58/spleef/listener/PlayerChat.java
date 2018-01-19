@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.commands.AfkCommand;
 import com.santipingui58.spleef.managers.DataManager;
+import com.santipingui58.spleef.managers.PartyManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -30,7 +31,9 @@ public class PlayerChat implements Listener {
 		if (AfkCommand.isAfk(p)) {
 			AfkCommand.removeAfk(p);
 		}
-		
+		if (PartyManager.getManager().isInPartyMode(p)) {
+			
+		}
 		
 		if (!p.hasPermission("splindux.chatcooldown")) {
 			if (cooldown.contains(p)) {

@@ -42,7 +42,7 @@ public class Spleef2v2Game implements Listener  {
 	     final Player  p1B = g.getPlayer1().get(1);
 	     
 	     final Player  p2A = g.getPlayer2().get(0);
-	     final Player  p2B = g.getPlayer2().get(0);
+	     final Player  p2B = g.getPlayer2().get(1);
 	     
 	     p1A.setFlying(false);
 	     p2A.setFlying(false);
@@ -50,7 +50,7 @@ public class Spleef2v2Game implements Listener  {
 	     p2B.setFlying(false);
 	     
 	     teamTeleport(p1A, p1B, g.getSpawn1());
-	     teamTeleport(p2A,p2B, g.getSpawn2());
+	     teamTeleport(p2A, p2B, g.getSpawn2());
 	     
 	     
 	     
@@ -75,12 +75,12 @@ public class Spleef2v2Game implements Listener  {
 				@Override
 				public void run() {
 					 p1A.getInventory().clear();
-				     p2A.getInventory().clear();
 				     p1B.getInventory().clear();
+				     p2A.getInventory().clear();
 				     p2B.getInventory().clear();
 					p1A.getInventory().addItem(pala);
-			   		p2A.getInventory().addItem(pala);
 			   		p1B.getInventory().addItem(pala);
+			   		p2A.getInventory().addItem(pala);
 			   		p2B.getInventory().addItem(pala);
 			      
 				}

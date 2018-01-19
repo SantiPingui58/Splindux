@@ -29,6 +29,7 @@ public class Party {
 	  public List<Player> getPlayers() {
 		  return this.players;
 	  }
+	  
 	  public void addPlayer(Player p) {
 		  this.players.add(p);
 	  }

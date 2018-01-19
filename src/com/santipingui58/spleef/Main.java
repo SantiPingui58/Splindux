@@ -42,6 +42,7 @@ import com.santipingui58.spleef.commands.StatsCommand;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
+import com.santipingui58.spleef.game.Spleef2v2Game;
 import com.santipingui58.spleef.game.SpleefGame;
 import com.santipingui58.spleef.listener.PlayerChat;
 import com.santipingui58.spleef.listener.PlayerJoin;
@@ -212,17 +213,17 @@ public class Main extends JavaPlugin {
 		        		
 		        		if (GameManager.getManager().isStarted(g)) {
 		        		        if (g.getCanPlay() == false) {
-		        		        	if (g.getType().equalsIgnoreCase("spleef")) {
+		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")) {
 		        		        	if (g.getArenaStarting() > 1) {
 		        		        	g.ArenaStarting();
-		        		        	Player p1 = g.getPlayer1().get(0);
-		        		        	Player p2 = g.getPlayer2().get(0);
-		        		        	
+		        		        
+		        		        	for (Player p1 : g.getPlayer1()) {
 		        		        	if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
 		        		        		  p1.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7La ronda comienza en &6" + g.getArenaStarting() + "&7!")); 
 		        		        	  } else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
 		        		        		  p1.sendMessage("§7The round starts in §6" + g.getArenaStarting() + "§7!");
 		        		        	  }
+		        		        	}
 		        		        	  
 		        		        	  for (Player sp : g.getSpectators()) {
 		        		        		  if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
@@ -231,17 +232,24 @@ public class Main extends JavaPlugin {
 		        			        		  sp.sendMessage("§7The round starts in §6" + g.getArenaStarting() + "§7!");
 		        			        	  }
 		        		        	  }
-		        		        	  
+		        		        	  for (Player p2 : g.getPlayer2()) {
 		        		        	  if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
 		        		        		  p2.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7La ronda comienza en &6" + g.getArenaStarting() + "&7!")); 
 		        		        	  } else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
 		        		        		  p2.sendMessage("§7The round starts in §6" + g.getArenaStarting() + "§7!");
 		        		        	  }
 		        		        	  
+		        		        	  }
 		        		        	} else {
 		        		        		g.resetArenaStarting();
+		        		        		if (g.getType().equalsIgnoreCase("spleef")) {
 		        		        		GameManager.getManager().cristalquitar(g.getSpawn1(), g.getSpawn2());
+		        		        		} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+		        		        			GameManager.getManager().cristalquitar(g.getSpawn1A(), g.getSpawn1B());
+		        		        			GameManager.getManager().cristalquitar(g.getSpawn2A(), g.getSpawn2B());
+		        		        		}
 		        		        		g.trueCanPlay();
+		        		        		
 		        		        	}
 		        		        } else if (g.getType().equalsIgnoreCase("ffaspleef")) {		        		       
 		        		        			 if (g.getArenaStarting() > 1) {
@@ -308,12 +316,17 @@ public class Main extends JavaPlugin {
 			  
 		 for (Game g : GameManager.getManager().getArenasList()) {
 			 g.getQueue().clear();
-			
+	
 			 if (g.getType().equalsIgnoreCase("spleef")) {
 			 if (GameManager.getManager().isRanked(g)) {
 				 RankedSpleefGame.gameOver(null, null, g.getId()); 
 			 } else {
 			 SpleefGame.gameOver(null, null, g.getId()); 
+			 }
+		 } else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+			 if (GameManager.getManager().isRanked(g)) {
+			 } else {
+			 Spleef2v2Game.gameOver(null, null, g.getId()); 
 			 }
 		 } else if (g.getType().equalsIgnoreCase("ffaspleef")){
 			 FFASpleefGame.gameOver(null, g.getId());
@@ -416,6 +429,7 @@ public class Main extends JavaPlugin {
 			p.getInventory().setItem(1, Game.unrankeditemesp);
 			p.getInventory().setItem(7, Game.torneosesp);
 			p.getInventory().setItem(8, Game.opcionesesp);
+			
 		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
 			p.getInventory().setItem(0, Game.rankeditemeng);
 			p.getInventory().setItem(1, Game.unrankeditemeng);

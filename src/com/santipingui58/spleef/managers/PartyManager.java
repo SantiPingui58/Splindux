@@ -15,6 +15,7 @@ public class PartyManager {
 
 	 private final List<Party> parties = new ArrayList<Party>();
 	 private static HashMap<Player,List<Player>> partyrequest = new HashMap<Player, List<Player>>();
+	 private List<Player> pcmode = new ArrayList<Player>();
 	 
 	private static PartyManager pm;
 	
@@ -44,6 +45,12 @@ public class PartyManager {
 			  }
 		  }
 		  
+		  return false;
+	  }
+	  
+	  
+	  public boolean isInPartyMode(Player p) {
+		  if (this.pcmode.contains(p)) return true;
 		  return false;
 	  }
 	  

@@ -28,6 +28,7 @@ import com.santipingui58.spleef.commands.AfkCommand;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
+import com.santipingui58.spleef.managers.PartyManager;
 import com.santipingui58.spleef.menu.esp.OptionsMenu;
 import com.santipingui58.spleef.menu.esp.RankedMenu;
 import com.santipingui58.spleef.menu.esp.TournamentsMenu;
@@ -98,6 +99,26 @@ public class PlayerListener implements Listener {
 				new com.santipingui58.spleef.menu.eng.OptionsMenu(e.getPlayer()).o(e.getPlayer());
 			} 
 			
+			if(e.getPlayer().getItemInHand().equals(Game.partieseng)) {
+				if (PartyManager.getManager().isInParty(e.getPlayer())) {
+				//	new OptionsMenu(e.getPlayer()).o(e.getPlayer());
+				} else {
+						e.getPlayer().sendMessage("§cNecesitas estar en una Party para usar este Item. Crea una invitando jugadores con "
+								+ "§3/party invite <Jugador>");
+				}
+			} 
+			
+			if(e.getPlayer().getItemInHand().equals(Game.partieseng)) {
+				if (PartyManager.getManager().isInParty(e.getPlayer())) {
+				//	new OptionsMenu(e.getPlayer()).o(e.getPlayer());
+				} else {
+						e.getPlayer().sendMessage("§cYou need to be in a Party to use this Item. Create one inviting players with "
+								+ "§3/party invite <Player>");
+					
+				}
+			} 
+			
+			
 			if(e.getPlayer().getItemInHand().equals(Game.leavequeueeng)) {
 				GameManager.getManager().leaveQueue(e.getPlayer());
 			} 
@@ -137,7 +158,6 @@ public class PlayerListener implements Listener {
 	public static void onBreak (BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		if (GameManager.getManager().isInGame(p)) {
-			
 			if (GameManager.getManager().getArenabyPlayer(p).getCanPlay() == false ) {
 				e.setCancelled(true);
 		}

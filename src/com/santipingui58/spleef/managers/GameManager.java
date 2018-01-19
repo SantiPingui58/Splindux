@@ -67,7 +67,11 @@ public class GameManager {
     		if (a.getPlayer1().contains(p) || a.getPlayer2().contains(p) || a.getSpectators().contains(p)) {
     			return a;
     		}
-    		} else if (a.getType().equalsIgnoreCase("ffaspleef")) {
+    		} else if (a.getType().equalsIgnoreCase("spleef2v2")) {
+        		if (a.getPlayer1().contains(p) || a.getPlayer2().contains(p) || a.getSpectators().contains(p) || a.getInGameSpect().contains(p)) {
+        			return a;
+        		}
+        		} else if (a.getType().equalsIgnoreCase("ffaspleef")) {
     			if (a.getPlayers().contains(p) || a.getSpectators().contains(p)) {
     				return a;
     			}
@@ -108,13 +112,13 @@ public class GameManager {
     		g.falseCanPlay();
     		reinicio(g);
     		if (g.getType().equalsIgnoreCase("spleef")) {
-    			if (GameManager.getManager().is2vs2Spleef(g)) {
-    				
-    			} else {
-    		cristalcolocar(g.getSpawn1(), g.getSpawn2());
+    			cristalcolocar(g.getSpawn1(), g.getSpawn2());
+    		} else if (g.getType().equalsIgnoreCase("spleef2v2")){
+    			cristalcolocar(g.getSpawn1A(), g.getSpawn1B());
+    			cristalcolocar(g.getSpawn2A(), g.getSpawn2B());
     			}
     		}
-    		      }
+    		      
 
     	
     
@@ -597,7 +601,7 @@ public class GameManager {
     
     public boolean isInGame(Player p) {
         for (Game a : this.arenas) {
-        	if (a.getType().equalsIgnoreCase("spleef")) {
+        	if (a.getType().equalsIgnoreCase("spleef") || a.getType().equalsIgnoreCase("spleef2v2")) {
         		 if (a.getPlayer1().contains(p) || a.getPlayer2().contains(p))
                      return true;
         	} else if (a.getType().equalsIgnoreCase("ffaspleef")) {
@@ -774,7 +778,7 @@ public class GameManager {
     		if (g.getType().equalsIgnoreCase("spleef2v2")) {
     			
     			if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
-    				if (g.getQueue().size() >= 3) {
+    				if (g.getQueue().size() >= 1) {
     					
     					if (!GameManager.getManager().rankedgames.contains(g)) {
     		    			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
@@ -832,7 +836,7 @@ public class GameManager {
 			if (g.getType().equalsIgnoreCase("spleef2v2")) {
 			if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
 			if (Main.containsIgnoreCase(g.getId(), id)) {
-    		if (g.getQueue().size() >= 3) {
+    		if (g.getQueue().size() >= 1) {
     			if (!GameManager.getManager().rankedgames.contains(g)) {
     				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
     	    			p.sendMessage("§3[Spleef] §6Añadido a la cola §bUnranked §6para §aSnow Spleef 2vs2§6, en el mapa §b" + g.getId());
@@ -852,7 +856,7 @@ public class GameManager {
 		
 			ArrayList<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
-    				if (g.getType().equalsIgnoreCase("spleef")) {
+    				if (g.getType().equalsIgnoreCase("spleef2v2")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
     				if (Main.containsIgnoreCase(g.getId(), id)) {
     					if (g.getQueue().isEmpty()) {
@@ -1238,9 +1242,9 @@ public void checkQueue(Game g, boolean isranked) {
 				g.getQueue().remove(p2_B);
 				
 				g.getPlayer1().add(p1_A);
-				g.getPlayer1().add(p2_B);
-				g.getPlayer1().add(p2_A);
-				g.getPlayer1().add(p2_B);
+				g.getPlayer1().add(p1_B);
+				g.getPlayer2().add(p2_A);
+				g.getPlayer2().add(p2_B);
 				
 				if (isranked == true) { 
 					if (DataManager.getLang(p1_A).equalsIgnoreCase("ESP")) {
@@ -1253,7 +1257,7 @@ public void checkQueue(Game g, boolean isranked) {
 					
 					if (DataManager.getLang(p1_B).equalsIgnoreCase("ESP")) {
 						p1_B.sendMessage("§3[Spleef] §6Rivales encontrados: §a" + p2_A.getName()  + "-" + p2_B.getName() + "§7(§e" + DataManager.getElo(p2_A) + "§7)");
-						p1_B.sendMessage("§aTu team es: §b" + p1_B.getName());
+						p1_B.sendMessage("§aTu team es: §b" + p1_A.getName());
 						} else if (DataManager.getLang(p1_A).equalsIgnoreCase("ENG")) {
 							p1_B.sendMessage("§3[Spleef] §6Found opponents: §a" + p2_A.getName()  + "-" + p2_B.getName()+ "§7(§e" + DataManager.getElo(p2_A) + "§7)");
 							p1_B.sendMessage("§aYour teammate: §b" + p1_A.getName());
@@ -1306,7 +1310,7 @@ public void checkQueue(Game g, boolean isranked) {
 						
 						if (DataManager.getLang(p1_B).equalsIgnoreCase("ESP")) {
 							p1_B.sendMessage("§3[Spleef] §6Rivales encontrados: §a" + p2_A.getName()  + "-" + p2_B.getName());
-							p1_B.sendMessage("§aTu team es: §b" + p1_B.getName());
+							p1_B.sendMessage("§aTu team es: §b" + p1_A.getName());
 							} else if (DataManager.getLang(p1_A).equalsIgnoreCase("ENG")) {
 								p1_B.sendMessage("§3[Spleef] §6Found opponents: §a" + p2_A.getName()  + "-" + p2_B.getName());
 								p1_B.sendMessage("§aYour teammate: §b" + p1_A.getName());
@@ -1324,7 +1328,7 @@ public void checkQueue(Game g, boolean isranked) {
 						if (DataManager.getLang(p2_B).equalsIgnoreCase("ESP")) {
 							p2_B.sendMessage("§3[Spleef] §6Rivales encontrados: §a" + p1_A.getName()  + "-" + p1_B.getName());
 							p2_B.sendMessage("§aTu team es: §b" + p2_A.getName());
-							} else if (DataManager.getLang(p1_A).equalsIgnoreCase("ENG")) {
+							} else if (DataManager.getLang(p2_B).equalsIgnoreCase("ENG")) {
 								p2_B.sendMessage("§3[Spleef] §6Found opponents: §a" + p1_A.getName()  + "-" + p1_B.getName());
 								p2_B.sendMessage("§aYour teammate: §b" + p2_A.getName());
 								}

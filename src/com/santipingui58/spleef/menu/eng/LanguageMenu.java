@@ -18,15 +18,17 @@ public class LanguageMenu  {
         		event.getPlayer().sendMessage("§aLanguage updated! Please re-join the Server and join again to see the changes.");
         		Main.data.getConfig().set("data." + event.getPlayer().getUniqueId() + ".lang", "ENG");
         		Main.data.save();
+        		event.setWillClose(true);
         	} else if (event.getName().equalsIgnoreCase("§aEspañol")) {
         		event.getPlayer().sendMessage("§aIdioma actualizado! Por favor vuelvea entrar al server para cargar los cambios.");
         		Main.data.getConfig().set("data." + event.getPlayer().getUniqueId() + ".lang", "ESP");	
         		Main.data.save();
+        		event.setWillClose(true);
         	}  else if (event.getName().equalsIgnoreCase("§cBack")) {
         		new OptionsMenu(event.getPlayer()).o(event.getPlayer());
         	}
             
-            event.setWillClose(true);
+            
         }
     }, Main.get())
     .setOption(1, Main.getSkull("http://textures.minecraft.net/texture/a9f5799dfb7de65350337e735651d4c831f1c2a827d584b02d8e875ff8eaa2"),

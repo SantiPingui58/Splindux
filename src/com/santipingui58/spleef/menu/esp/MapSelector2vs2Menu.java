@@ -18,8 +18,8 @@ public class MapSelector2vs2Menu extends MenuBuilder {
 	public MapSelector2vs2Menu(Player p) {
 		super("§aSelecciona un mapa", 2);
 		
-		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lSCT").
-				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("SCT")).
+		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lIce Palace").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("icepalace")).
 				build());
 		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cVolver").
 				build());
@@ -32,8 +32,8 @@ public class MapSelector2vs2Menu extends MenuBuilder {
 	public void onClick(Player p, ItemStack stack, int slot) {
 		if(slot == 0) {
 			for (Game s :  GameManager.getManager().getArenasList()) {
-				if (Main.containsIgnoreCase(s.getId(), "SCT")) {
-					GameManager.getManager().addUnrankedQueue(p, s.getId());
+				if (Main.containsIgnoreCase(s.getId(), "icepalace")) {
+					GameManager.getManager().addSpleef2v2Queue(p, "icepalace");
 					break;
 			
 		} 
