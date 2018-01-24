@@ -55,6 +55,13 @@ public class PartyManager {
 	  }
 	  
 	  
+	  public void addPartyMode(Player p) {
+		  this.pcmode.add(p);
+	  }
+	  
+	  public void removePartyMode (Player p) {
+		  this.pcmode.remove(p);
+	  }
 	  
 	  
 	  public Party getPartyByAnyPlayer (Player pl) {
@@ -80,7 +87,7 @@ public class PartyManager {
 			Party party = new Party(sender, null);
 			this.parties.add(party);
 		}
-		  
+		  if (sender.equals(getPartyByAnyPlayer(sender).getLeader())) {
 		  if (this.isInParty(p)) {
 			  if (pa.getPlayers().contains(p)) {
 				
@@ -140,6 +147,17 @@ public class PartyManager {
 			    }
 			    , 1200L);
 		  }
+	  } else {
+		  if (DataManager.getLang(sender).equalsIgnoreCase("ESP")) {
+			  
+		  }
+	  }
+	  }
+	  
+	  
+	  public void removePlayer (Player sender, Party pa, Player p) {
+		  
+		  
 	  }
 	  
 	  

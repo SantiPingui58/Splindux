@@ -29,6 +29,7 @@ import com.santipingui58.spleef.commands.FriendsCommand;
 import com.santipingui58.spleef.commands.HGCommand;
 import com.santipingui58.spleef.commands.HeadCommand;
 import com.santipingui58.spleef.commands.LeaveCommand;
+import com.santipingui58.spleef.commands.MsgCommand;
 import com.santipingui58.spleef.commands.NickCommand;
 import com.santipingui58.spleef.commands.PartyCommand;
 import com.santipingui58.spleef.commands.PingCommand;
@@ -130,6 +131,8 @@ public class Main extends JavaPlugin {
 		    getCommand("fly").setExecutor(new FlyCommand());
 		    getCommand("ride").setExecutor(new RideCommand());
 		    getCommand("head").setExecutor(new HeadCommand());
+		    getCommand("msg").setExecutor(new MsgCommand());
+		    
 		    getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		    getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
 		    getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
@@ -152,6 +155,7 @@ public class Main extends JavaPlugin {
 		        		if (!g.getInGameSpect().contains(p)) {
 		        		DeathManager.onWalk(p);
 		        	}
+		        		
 		        		} else {
 		        			PlayerListener.onMove(p);
 		        		}
@@ -189,29 +193,17 @@ public class Main extends JavaPlugin {
 	                	}
 	                }
 		        	
-		        	
-		        	
-		        	for (Game g : GameManager.getManager().getArenasList()) {
-		        		try {
-
-		        		for (Player p : Bukkit.getOnlinePlayers()) {
-		        			if (GameManager.getManager().isInGame(p)) {
-		        				p.setFlying(false);
-		        			}
+	                 
+	                 for (Player p : Bukkit.getOnlinePlayers()) {
 		    				if (GameManager.getManager().isInGame(p) || GameManager.getManager().isSpectating(p)) {
 		        			 new Scoreboard().createScoreboardGame(p);
 		        		} else {
 		        			new Scoreboard().createScoreboard(p);
 		        			} 
 		        		}
-		        		}
-		        		  catch (Exception e) {
-		        		}
-		        		
-
-		        		
-		        		
-		        		if (GameManager.getManager().isStarted(g)) {
+	                          
+		        	
+		        	for (Game g : GameManager.getManager().getInGameArenas()) {		        			
 		        		        if (g.getCanPlay() == false) {
 		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")) {
 		        		        	if (g.getArenaStarting() > 1) {
@@ -254,8 +246,6 @@ public class Main extends JavaPlugin {
 		        		        } else if (g.getType().equalsIgnoreCase("ffaspleef")) {		        		       
 		        		        			 if (g.getArenaStarting() > 1) {
 		     		        		        	g.ArenaStarting();
-		     		        		        	
-		     		        		        	
 		     		        		        	for (Player p : g.getPlayers()) {
 		     		        		        		if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 		     			        		        		  p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7La ronda comienza en &6" + g.getArenaStarting() + "&7!")); 
@@ -273,7 +263,7 @@ public class Main extends JavaPlugin {
 		        		        	 } else {
 			        		        	 g.addTime();
 				        		        }
-		        		        } 
+		        		        
 		        		        }      
 		        		
 		        //	}		   	

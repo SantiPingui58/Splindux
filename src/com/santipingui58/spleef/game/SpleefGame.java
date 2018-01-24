@@ -40,9 +40,12 @@ public class SpleefGame implements Listener  {
 	     
 	     p1.setFlying(false);
 	     p2.setFlying(false);
+	     p1.setAllowFlight(false);
+	     p2.setAllowFlight(false);
 	     p1.teleport(g.getSpawn1());
 	     p2.teleport(g.getSpawn2());
-	     
+	     p1.setGameMode(GameMode.SURVIVAL);
+	     p2.setGameMode(GameMode.SURVIVAL);
 	     
 	     if (DataManager.getNightVision(p1)) {
 	    	 p1.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
@@ -85,6 +88,7 @@ public class SpleefGame implements Listener  {
 	  		  
 	  		  g.resetRounds();
 	  		  GameManager.getManager().reinicio(g);
+	  		  GameManager.getManager().removeInGameArena(g);
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  

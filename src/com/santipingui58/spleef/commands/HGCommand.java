@@ -21,6 +21,8 @@ public class HGCommand implements CommandExecutor {
 	
 		if(cmd.getName().equalsIgnoreCase("hg")){
 			Player p = (Player) sender;
+			
+			
 			if (p.hasPermission("splindux.admin")) {
 				if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("ffaspleef")) {

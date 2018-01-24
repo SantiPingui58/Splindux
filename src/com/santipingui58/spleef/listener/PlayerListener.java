@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.commands.AfkCommand;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
@@ -208,7 +209,10 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onTeleport (PlayerTeleportEvent e) {
+		e.getTo().getChunk().load();
 		Player p = e.getPlayer();
+		
+		
 		for (Game g : GameManager.getManager().getArenasList())
 		if (g.getSpectators().contains(p)) {
 			if (e.getCause().equals(TeleportCause.SPECTATE)) {
@@ -261,6 +265,21 @@ public class PlayerListener implements Listener {
 		
 		}
 		
+		
+		if (p.getWorld().getName().equalsIgnoreCase("splindux")) {
+			if (p.getLocation().getBlockY() <= 0) {
+				 p.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+			}
+			
+		
+			
+			if (Main.getLoc(Main.arena.get("lobby"), true).distance(p.getLocation()) >= 100) {
+				 p.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+			}
+			
+			
+			
+		}
 		
 		
 		

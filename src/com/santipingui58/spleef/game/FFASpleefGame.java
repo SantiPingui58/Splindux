@@ -40,9 +40,11 @@ public static void startCountdown(String id) {
       palahie.setItemMeta(meta1);
       final Game g = GameManager.getManager().getArena(id);
       GameManager.getManager().reinicio(g);
+      
      for (final Player p : g.getQueue()) {
     	 g.getPlayers().add(p);
      p.setFlying(false);
+     p.setAllowFlight(false);
      p.setGameMode(GameMode.SURVIVAL);
      p.teleport(g.getSpawn1());
      
@@ -71,7 +73,7 @@ public static void startCountdown(String id) {
      
      g.getQueue().clear();
      
-     
+    GameManager.getManager().addInGameArena(g);
     GameManager.getManager().Countdown(g);
   
   }
@@ -80,6 +82,7 @@ public static void startCountdown(String id) {
 public static void gameOver(Player ganador, String id) {
 	  
 	  final Game g = GameManager.getManager().getArena(id);
+	  GameManager.getManager().removeInGameArena(g);
 		try {
 		Player winner = g.getPlayers().get(0);
 		g.getPlayers().remove(winner);
@@ -93,6 +96,10 @@ public static void gameOver(Player ganador, String id) {
 		SpleefRankManager.levelUp(winner);
 		g.getQueue().add(winner);
 		g.resetArenaStarting();
+		g.resetTime();
+		GameManager.getManager().removeInGameArena(g);
+		GameManager.getManager().reinicio(g);
+		 
 		if (g.getQueue().size() >= 3) {
 		for (Player pl : g.getPlayers()) {
 			if (!(pl.equals(winner))) {

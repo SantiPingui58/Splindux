@@ -72,6 +72,13 @@ public class PartyCommand implements CommandExecutor{
 						p.sendMessage("§3/party invite <player> §7- §eInvite players to your Party");
 					}
 				}
+			} else if (args[0].equalsIgnoreCase("remove")) {
+				if (args.length == 2) {
+					Player pa = Bukkit.getPlayer(args[1]);
+					if (Bukkit.getOnlinePlayers().contains(pa)) {
+						//PartyManager.getManager().
+					}
+				}
 			}
 		
 		} else if (cmd.getName().equalsIgnoreCase("pchat")) {
@@ -97,7 +104,35 @@ public class PartyCommand implements CommandExecutor{
 				}
 			}
 			
-		} 
+		} else if (cmd.getName().equalsIgnoreCase("pc")) {
+			if (PartyManager.getManager().isInParty(p)) {
+				if (PartyManager.getManager().isInPartyMode(p)) {
+					PartyManager.getManager().removePartyMode(p);
+					
+					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+						p.sendMessage("§3Ahora estás hablando por el chat de la Party");
+					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
+						p.sendMessage("§3Now you are talking in the Party's chat");
+					}
+ 					
+				} else if (PartyManager.getManager().isInPartyMode(p)) {
+					PartyManager.getManager().addPartyMode(p);
+					
+					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+						p.sendMessage("§3Ya no estás hablando por el chat de la Party");
+					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
+						p.sendMessage("§3You are not longer talking in the Party's chat");
+					}
+					
+				}
+			} else {
+				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+					p.sendMessage("§cNecesitas estar en una Party para ejecutar este comando.");
+				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+					p.sendMessage("§cYou need to be in a Party to execute this command.");
+				}
+			}
+		}
 		}
 		return false;
 	}

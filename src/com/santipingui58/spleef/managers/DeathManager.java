@@ -19,6 +19,7 @@ public class DeathManager {
 			Game g = GameManager.getManager().getArenabyPlayer(p);
 			if (g.getType().equalsIgnoreCase("spleef")) {
 					if (getDeath(p.getLocation(),g)) {
+						
 				Player player1 = g.getPlayer1().get(0);
 				Player player2 = g.getPlayer2().get(0);
 				g.addRounds();				
@@ -113,15 +114,15 @@ public class DeathManager {
 					g.getEndGame().clear();
 				}
 			
-		} else if (g.getType().equalsIgnoreCase("spleef2vs2")) {
-			
+		} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
 			
 			if (getDeath(p.getLocation(),g)) {
+				
+				
 				Player player1A = g.getPlayer1().get(0);
 				Player player1B = g.getPlayer1().get(1);
 				Player player2A = g.getPlayer2().get(0);
-				Player player2B = g.getPlayer2().get(1);
-				g.addRounds();				
+				Player player2B = g.getPlayer2().get(1);			
 				if (p == player1A) {
 					
 					if (g.getInGameSpect().contains(player1B)) {
@@ -130,7 +131,13 @@ public class DeathManager {
 							
 						} else {
 							g.addPoints2();
-							g.getSpectators().clear();
+							g.addRounds();	
+							g.getInGameSpect().clear();
+							player1A.setGameMode(GameMode.SURVIVAL);
+						    player2A.setGameMode(GameMode.SURVIVAL);
+						    player1B.setGameMode(GameMode.SURVIVAL);
+						    player2B.setGameMode(GameMode.SURVIVAL);
+							
 							Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
 							Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
 							
@@ -172,6 +179,8 @@ public class DeathManager {
 						}
 					} else {
 						g.getInGameSpect().add(p);
+						p.setGameMode(GameMode.SPECTATOR);
+						p.teleport(player1B);
 						for (Player sp : g.getSpectators()) {
 							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
 								sp.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
@@ -192,13 +201,13 @@ public class DeathManager {
 							}
 						
 						if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-							player2A.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
+							player2A.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído!");
 							} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
 								player2A.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
 							}
 						
 						if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-							player2B.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
+							player2B.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído!");
 							} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
 								player2B.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
 							}
@@ -213,7 +222,12 @@ public class DeathManager {
 					
 				} else {
 					g.addPoints2();
-					g.getSpectators().clear();
+					g.getInGameSpect().clear();
+					g.addRounds();	
+					player1A.setGameMode(GameMode.SURVIVAL);
+				    player2A.setGameMode(GameMode.SURVIVAL);
+				    player1B.setGameMode(GameMode.SURVIVAL);
+				    player2B.setGameMode(GameMode.SURVIVAL);
 					Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
 					Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
 					
@@ -255,6 +269,8 @@ public class DeathManager {
 				}
 			} else {
 				g.getInGameSpect().add(p);
+				p.setGameMode(GameMode.SPECTATOR);
+				p.teleport(player1A);
 				for (Player sp : g.getSpectators()) {
 					if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
 						sp.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
@@ -295,8 +311,13 @@ public class DeathManager {
 						Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
 						
 					} else {
+						g.addRounds();	
 						g.addPoints1();
-						g.getSpectators().clear();
+						g.getInGameSpect().clear();
+						player1A.setGameMode(GameMode.SURVIVAL);
+					    player2A.setGameMode(GameMode.SURVIVAL);
+					    player1B.setGameMode(GameMode.SURVIVAL);
+					    player2B.setGameMode(GameMode.SURVIVAL);
 						Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
 						Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
 						
@@ -338,6 +359,8 @@ public class DeathManager {
 					}
 				} else {
 					g.getInGameSpect().add(p);
+					p.setGameMode(GameMode.SPECTATOR);
+					p.teleport(player2B);
 					for (Player sp : g.getSpectators()) {
 						if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
 							sp.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
@@ -379,7 +402,12 @@ public class DeathManager {
 							
 						} else {
 							g.addPoints1();
+							g.addRounds();	
 							g.getSpectators().clear();
+							player1A.setGameMode(GameMode.SURVIVAL);
+						    player2A.setGameMode(GameMode.SURVIVAL);
+						    player1B.setGameMode(GameMode.SURVIVAL);
+						    player2B.setGameMode(GameMode.SURVIVAL);
 							Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
 							Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
 							
@@ -421,6 +449,8 @@ public class DeathManager {
 						}
 					} else {
 						g.getInGameSpect().add(p);
+						p.setGameMode(GameMode.SPECTATOR);
+						p.teleport(player2A);
 						for (Player sp : g.getSpectators()) {
 							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
 								sp.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
@@ -518,7 +548,7 @@ public class DeathManager {
 	 
 	 
 	 public static boolean getDeath(Location l, Game g) {
-		  	if (l.getY() >= g.getArena1().getBlockY()-2) {
+		  	if (l.getY() >= g.getArena1().getBlockY()-1) {
 		  		return false;
 		  	} 
 		  	return true;

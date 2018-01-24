@@ -32,6 +32,11 @@ public class PlayerChat implements Listener {
 			AfkCommand.removeAfk(p);
 		}
 		if (PartyManager.getManager().isInPartyMode(p)) {
+			event.setCancelled(true);
+			for (Player party :PartyManager.getManager().getPartyByAnyPlayer(p).getPlayers()) {
+				  party.sendMessage("§3[Party]§f " + p.getName() + "§7: §f" + event.getMessage());
+			}
+			return;
 			
 		}
 		

@@ -39,12 +39,15 @@ public class RankedSpleefGame implements Listener  {
 	     
 	     final Player  p1 = g.getPlayer1().get(0);
 	     final Player  p2 = g.getPlayer2().get(0);
-	     
+	     p1.setGameMode(GameMode.SURVIVAL);
+	     p2.setGameMode(GameMode.SURVIVAL);
 	    
 	     
 	     
 	     p1.setFlying(false);
 	     p2.setFlying(false);
+	     p1.setAllowFlight(false);
+	     p2.setAllowFlight(false);
 	     p1.teleport(g.getSpawn1());
 	     p2.teleport(g.getSpawn2());
 	     
@@ -86,6 +89,7 @@ public class RankedSpleefGame implements Listener  {
 	  		 
 	  		  g.resetRounds();
 	  		RankedSpleefGame.reinicio(g);
+	  		GameManager.getManager().removeInGameArena(g);
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  

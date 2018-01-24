@@ -26,6 +26,7 @@ public class GameManager {
 
     
     private final List<Game> arenas = new ArrayList<Game>();
+    private final List<Game> arenasingame = new ArrayList<Game>();
     private final List<Game> rankedgames = new ArrayList<Game>();
     private GameManager() {}
     
@@ -599,6 +600,8 @@ public class GameManager {
     }
     }
     
+    
+    
     public boolean isInGame(Player p) {
         for (Game a : this.arenas) {
         	if (a.getType().equalsIgnoreCase("spleef") || a.getType().equalsIgnoreCase("spleef2v2")) {
@@ -613,6 +616,9 @@ public class GameManager {
         }
         return false;
     }
+    
+    
+    
     
     public boolean isSpectating(Player p) {
         for (Game a : this.arenas) {
@@ -661,6 +667,21 @@ public class GameManager {
 		return this.arenas;
     	
     }
+    
+    
+    public List<Game> getInGameArenas() {
+    	return this.arenasingame;
+    }
+    
+    public void addInGameArena(Game g) {
+    	this.arenasingame.add(g);
+    }
+    
+    public void removeInGameArena(Game g) {
+    	this.arenasingame.remove(g);
+    }
+    
+    
     
     public void leaveQueue(Player p) {
     	for (Game g : getArenasList()) {
@@ -1286,6 +1307,7 @@ public void checkQueue(Game g, boolean isranked) {
 		   	      g.resetPoints();
 		   	      g.resetRounds();
 		   	      g.resetTime();
+		   	      this.arenasingame.add(g);
 		   	      p1_A.getInventory().clear();
 		   	      p2_A.getInventory().clear(); 	  
 		   	      p1_B.getInventory().clear();
@@ -1340,6 +1362,7 @@ public void checkQueue(Game g, boolean isranked) {
 		   	      g.resetPoints();
 		   	      g.resetRounds();
 		   	      g.resetTime();
+		   	   this.arenasingame.add(g);
 		   	      p1_A.getInventory().clear();
 		   	      p2_A.getInventory().clear(); 	  
 		   	      p1_B.getInventory().clear();
@@ -1379,6 +1402,7 @@ public void checkQueue(Game g, boolean isranked) {
 	   	      g.resetPoints();
 	   	      g.resetRounds();
 	   	      g.resetTime();
+	   	   this.arenasingame.add(g);
 	   	      p1.getInventory().clear();
 	   	      p2.getInventory().clear(); 	  
 	   	      DataManager.playedRanked(p1);
@@ -1391,6 +1415,7 @@ public void checkQueue(Game g, boolean isranked) {
 	   	      g.resetPoints();
 	   	      g.resetRounds();
 	   	      g.resetTime();
+	   	   this.arenasingame.add(g);
 	   	   p1.getInventory().clear();
 	   	      p2.getInventory().clear();   	  
 	        	SpleefGame.startCountdown(g.getId());

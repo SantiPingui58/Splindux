@@ -504,5 +504,102 @@ public class SpleefRankManager {
 	  }
 	
 	
+	  
+	  public void levelUpProgress(Player p) {
+		  int current_level = DataManager.getLevel(p);
+		  int next_level;
+		  
+		  if (getSpleefRank(p).equalsIgnoreCase("PrincipianteI")) {
+			  next_level = 5;
+		  } else  if (getSpleefRank(p).equalsIgnoreCase("PrincipianteII")) {
+			  
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteIII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteIV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioI")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioIII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioIV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoI")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoIII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoIV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("EliteI")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteIII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteIV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoI")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoIII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoIV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterI")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterIII")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterIV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterV")) {
+			  
+		  } else if (getSpleefRank(p).equalsIgnoreCase("VeteranI")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranV")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVI")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVIII")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIX")) {
+			  
+		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranX")) {
+			  
+		  }
+		   
+		  
+		  
+		  
+		  
+	  }
+	  
+	  
 	
 }

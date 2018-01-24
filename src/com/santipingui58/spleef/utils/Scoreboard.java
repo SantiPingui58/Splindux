@@ -30,16 +30,6 @@ public class Scoreboard {
 	}
 		public static void setTag(Player p) {
 		String prefix = ChatColor.translateAlternateColorCodes('&', PermissionsEx.getUser(p).getPrefix());
-		if (GameManager.getManager().isInGame(p)) {
-			Game g = GameManager.getManager().getArenabyPlayer(p);
-			if (g.getType().equalsIgnoreCase("spleef2v2")) {
-				if (g.getPlayer1().contains(p)) {				
-					NametagEdit.getApi().setPrefix(p, "§c");
-				} else if (g.getPlayer2().contains(p)) {
-					NametagEdit.getApi().setPrefix(p, "§9");
-				}
-			}
-		}
 		if (AfkCommand.isAfk(p)) {
 			NametagEdit.getApi().setPrefix(p, "§7§oAFK ");
 		} else if (p.hasPermission("splindux.staff") || p.hasPermission("splindux.donator")) {
@@ -172,14 +162,14 @@ public class Scoreboard {
 								}
 								if (g.getPoints1() > g.getPoints2()) {
 									
-								cache.add("§a"+ g.getPlayer1().get(0).getName()+"-" + g.getPlayer1().get(1).getName() + "§7:§b " + g.getPoints1());
-								cache.add("§a"+ g.getPlayer2().get(0).getName() + "-" + g.getPlayer2().get(1).getName() + "§7:§b " + g.getPoints2());
-								} else {
-									
-									cache.add("§a"+ g.getPlayer2().get(0).getName()+ "§7:§b " + g.getPoints2());	
-									cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
-								}
+								cache.add("§cRojo§7:§b " + g.getPoints1());
+								cache.add("§9Azul§7:§b " + g.getPoints2());
+								} else {							
+									cache.add("§9Azul§7:§b " + g.getPoints2());
+								cache.add("§cRojo§7:§b " + g.getPoints1());
 								
+								
+								}
 								for(int i = 0; i < cache.size(); i++){
 									data = cache.toArray(new String[i]);
 								}

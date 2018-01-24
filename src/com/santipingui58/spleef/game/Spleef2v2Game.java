@@ -49,6 +49,16 @@ public class Spleef2v2Game implements Listener  {
 	     p1B.setFlying(false);
 	     p2B.setFlying(false);
 	     
+	     p1A.setAllowFlight(false);
+	     p2A.setAllowFlight(false);
+	     p1B.setAllowFlight(false);
+	     p2B.setAllowFlight(false);
+	   
+	     
+	     
+
+	     
+	     
 	     teamTeleport(p1A, p1B, g.getSpawn1());
 	     teamTeleport(p2A, p2B, g.getSpawn2());
 	     
@@ -82,12 +92,22 @@ public class Spleef2v2Game implements Listener  {
 			   		p1B.getInventory().addItem(pala);
 			   		p2A.getInventory().addItem(pala);
 			   		p2B.getInventory().addItem(pala);
-			      
+			   		
+				     p1A.getInventory().setHelmet(new ItemStack (Material.REDSTONE_BLOCK));   
+				     p1B.getInventory().setHelmet(new ItemStack (Material.REDSTONE_BLOCK));
+				     
+				     p2A.getInventory().setHelmet(new ItemStack (Material.LAPIS_BLOCK));   
+				     p2B.getInventory().setHelmet(new ItemStack (Material.LAPIS_BLOCK));
+				     p1A.setGameMode(GameMode.SURVIVAL);
+				     p2A.setGameMode(GameMode.SURVIVAL);
+				     p1B.setGameMode(GameMode.SURVIVAL);
+				     p2B.setGameMode(GameMode.SURVIVAL);
+				     
 				}
 			}.runTaskLater(Main.get(), 3L);	
 	      
 	      
-	      new Scoreboard().createScoreboardGame(p1A);
+			new Scoreboard().createScoreboardGame(p1A);
         	new Scoreboard().createScoreboardGame(p2A);
         	new Scoreboard().createScoreboardGame(p1B);
         	new Scoreboard().createScoreboardGame(p2B);
@@ -110,6 +130,7 @@ public class Spleef2v2Game implements Listener  {
 	  		  
 	  		  g.resetRounds();
 	  		  GameManager.getManager().reinicio(g);
+	  		GameManager.getManager().removeInGameArena(g);
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  
@@ -312,6 +333,14 @@ public class Spleef2v2Game implements Listener  {
 		  
 		  Location a = new Location(l.getWorld(), spawn1X, spawn1Y, spawn1Z);
 		  Location b = new Location (l.getWorld(), spawn2X, spawn2Y, spawn2Z);
+		  a.setDirection(l.getDirection());
+		  a.setPitch(l.getPitch());
+		  a.setYaw(l.getYaw());
+		  
+		  b.setDirection(l.getDirection());
+		  b.setPitch(l.getPitch());
+		  b.setYaw(l.getYaw());
+		  
 		  p1.teleport(a);
 		  p2.teleport(b);
 		  

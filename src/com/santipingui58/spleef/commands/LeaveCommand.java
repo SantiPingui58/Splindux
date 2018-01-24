@@ -1,5 +1,6 @@
 package com.santipingui58.spleef.commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public class LeaveCommand implements CommandExecutor {
 		} else {
 			Player p = (Player) sender;
 		if(cmd.getName().equalsIgnoreCase("leave")){
+			p.setGameMode(GameMode.SURVIVAL);
 			for (Game g : GameManager.getManager().getArenasList()) {
 				
 				
