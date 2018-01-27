@@ -6,6 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -23,6 +27,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.util.BlockIterator;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.commands.AfkCommand;
@@ -136,6 +141,31 @@ public class PlayerListener implements Listener {
 		Bukkit.getConsoleSender().sendMessage("§f[" + e.getAddress() + "] has pinged." );
 	}
 	
+	  @SuppressWarnings("deprecation")
+	@EventHandler
+	  public void onSnowball(ProjectileHitEvent e)
+	  {
+	    Player p = (Player)e.getEntity().getShooter();
+	    if (GameManager.getManager().isInGame(p)) {
+	    BlockIterator iterator = new BlockIterator(e.getEntity().getWorld(), e.getEntity().getLocation().toVector(), e.getEntity().getVelocity().normalize(), 0.0D, 4);
+	    Block hitblock = null;
+	    while (iterator.hasNext()) {
+	      hitblock = iterator.next();
+
+	      if (hitblock.getTypeId() != 0)
+	      {
+	        break;
+	      }
+	    }
+	    if (hitblock.getType() == Material.SNOW_BLOCK)
+	    {
+	      p.playSound(hitblock.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5F, 2.0F);
+	      hitblock.setType(Material.AIR);
+	    }
+	  } 
+	    }
+	
+	
 	
 	@EventHandler
 	public static void onCommand(PlayerCommandPreprocessEvent e) {
@@ -209,9 +239,15 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onTeleport (PlayerTeleportEvent e) {
-		e.getTo().getChunk().load();
 		Player p = e.getPlayer();
 		
+		for (Entity pa : p.getPassengers()) {
+			p.getPassengers().remove(pa);
+		}
+		
+		if (p.isInsideVehicle()) {
+			p.leaveVehicle();
+		}
 		
 		for (Game g : GameManager.getManager().getArenasList())
 		if (g.getSpectators().contains(p)) {

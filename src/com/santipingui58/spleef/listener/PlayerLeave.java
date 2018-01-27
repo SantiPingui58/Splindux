@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
 import com.santipingui58.spleef.game.SpleefGame;
@@ -26,10 +27,13 @@ public class PlayerLeave implements Listener {
 			}
 				
 				
+				
+				
 				if (GameManager.getManager().isInGame(p)) {
 					Game g = GameManager.getManager().getArenabyPlayer(p);
 					
-					if (GameManager.getManager().isRanked(g)) {
+					if (g.getType().equalsIgnoreCase("spleef")) {
+						if (GameManager.getManager().isRanked(g)) {
 						Player ganador = null;
 						if (g.getPlayer1().contains(p)){
 							ganador = g.getPlayer2().get(0);
@@ -38,7 +42,17 @@ public class PlayerLeave implements Listener {
 						}
 						
 						RankedSpleefGame.gameOver(ganador, p, g.getId());
-						
+						} else {
+							Player ganador = null;
+							if (g.getPlayer1().contains(p)){
+								ganador = g.getPlayer2().get(0);
+							} else {
+								ganador = g.getPlayer1().get(0);
+							}
+							
+							SpleefGame.gameOver(ganador, p, g.getId());
+							
+						}
 					} else if (g.getType().equalsIgnoreCase("ffaspleef")) {
 						try {
 						g.getQueue().remove(p);
@@ -48,17 +62,12 @@ public class PlayerLeave implements Listener {
 							g.getPlayers().remove(p);
 						} catch (Exception ex) {}
 						
+						if (g.getPlayers().size() <= 1) {
+							FFASpleefGame.gameOver(g.getPlayers().get(0), g.getId());
+						} 
 						
+					} else if (g.getType().equalsIgnoreCase("spleef2v2")){
 						
-					} else {
-						Player ganador = null;
-						if (g.getPlayer1().contains(p)){
-							ganador = g.getPlayer2().get(0);
-						} else {
-							ganador = g.getPlayer1().get(0);
-						}
-						
-						SpleefGame.gameOver(ganador, p, g.getId());
 					}
 				} 
 				

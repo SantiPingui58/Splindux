@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
+import com.santipingui58.spleef.game.RankedSpleefGame;
 import com.santipingui58.spleef.game.Spleef2v2Game;
 import com.santipingui58.spleef.game.SpleefGame;
 
@@ -36,7 +37,13 @@ public class DeathManager {
 						 }
 						 if (p.getInventory().contains(SpleefGame.pala)) {
 						 p.getInventory().removeItem(SpleefGame.pala);
+						 if (GameManager.getManager().isRanked(g)) {
+							  Main.get().getLogger().info("ranked terminado");
+							 RankedSpleefGame.gameOver(player2, player1, g.getId());
+						 } else {
+							  Main.get().getLogger().info("Spleef normal terminado");
 							SpleefGame.gameOver(player2, player1, g.getId());
+						 }
 						 }	
 						
 									
@@ -79,9 +86,11 @@ public class DeathManager {
 						 if (p.getInventory().contains(SpleefGame.pala)) {
 						 p.getInventory().removeItem(SpleefGame.pala);
 						 }
-						 
+						 if (GameManager.getManager().isRanked(g)) {
+							 RankedSpleefGame.gameOver(player1, player2,g.getId());
+						 } else {
 						SpleefGame.gameOver(player1, player2,g.getId());
-								
+						 }
 				} else {		
 					p.teleport(g.getSpawn2());
 					player1.teleport(g.getSpawn1());
@@ -126,11 +135,11 @@ public class DeathManager {
 				if (p == player1A) {
 					
 					if (g.getInGameSpect().contains(player1B)) {
+						g.addPoints2();
 						if (g.getPoints2() >= g.getWin()) {	
 							Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());
 							
 						} else {
-							g.addPoints2();
 							g.addRounds();	
 							g.getInGameSpect().clear();
 							player1A.setGameMode(GameMode.SURVIVAL);
@@ -217,11 +226,12 @@ public class DeathManager {
 		} else if (p == player1B) {
 			
 			if (g.getInGameSpect().contains(player1A)) {
+				g.addPoints2();
 				if (g.getPoints2() >= g.getWin()) {	
 					Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());
 					
 				} else {
-					g.addPoints2();
+					
 					g.getInGameSpect().clear();
 					g.addRounds();	
 					player1A.setGameMode(GameMode.SURVIVAL);
@@ -307,12 +317,12 @@ public class DeathManager {
 			}  else if (p == player2A) {
 				
 				if (g.getInGameSpect().contains(player2B)) {
+					g.addPoints1();
 					if (g.getPoints1() >= g.getWin()) {	
 						Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
 						
 					} else {
-						g.addRounds();	
-						g.addPoints1();
+						g.addRounds();				
 						g.getInGameSpect().clear();
 						player1A.setGameMode(GameMode.SURVIVAL);
 					    player2A.setGameMode(GameMode.SURVIVAL);
@@ -397,11 +407,11 @@ public class DeathManager {
 				}  else if (p == player2B) {
 					
 					if (g.getInGameSpect().contains(player2A)) {
+						g.addPoints1();
 						if (g.getPoints1() >= g.getWin()) {	
 							Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
 							
 						} else {
-							g.addPoints1();
 							g.addRounds();	
 							g.getSpectators().clear();
 							player1A.setGameMode(GameMode.SURVIVAL);
@@ -505,7 +515,6 @@ public class DeathManager {
 						
 						
 						FFASpleefGame.gameOver(g.getPlayers().get(0), g.getId());
-						
 				} else {
 					
 				

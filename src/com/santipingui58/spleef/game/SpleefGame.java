@@ -2,6 +2,8 @@ package com.santipingui58.spleef.game;
 
 
 
+import java.util.Iterator;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -37,7 +39,7 @@ public class SpleefGame implements Listener  {
 	      final Game g = GameManager.getManager().getArena(id);
 	     final Player  p1 = g.getPlayer1().get(0);
 	     final Player  p2 = g.getPlayer2().get(0);
-	     
+	     Main.get().getLogger().info("Spleef normal iniciado");
 	     p1.setFlying(false);
 	     p2.setFlying(false);
 	     p1.setAllowFlight(false);
@@ -88,7 +90,14 @@ public class SpleefGame implements Listener  {
 	  		  
 	  		  g.resetRounds();
 	  		  GameManager.getManager().reinicio(g);
-	  		  GameManager.getManager().removeInGameArena(g);
+	  		Iterator<Game> i = GameManager.getManager().getInGameArenas().iterator();
+			while (i.hasNext()) {
+				Game ga = i.next();
+				if (ga.equals(g)) {
+					i.remove();
+				}
+				
+			}
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  

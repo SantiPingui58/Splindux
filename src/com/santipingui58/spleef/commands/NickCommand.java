@@ -27,15 +27,17 @@ public class NickCommand implements CommandExecutor {
 				if (args.length == 0 || args.length >= 3) {
 					if (p.hasPermission("splingdux.admin")) {
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-							p.sendMessage("§aUso del comando: /nick <nick> [jugador]");
+							p.sendMessage("§aUso del comando: /nick [jugador] <nick>");
 							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-								p.sendMessage("§aUse of command: /nick <nick> [player]");
+								p.sendMessage("§aUse of command: /nick [player] <nick>");
 							}
 					} else {
 					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§aUso del comando: /nick <nick>");
+					p.sendMessage("§aUso del comando: /nick off");
 					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 						p.sendMessage("§aUse of command: /nick <nick>");
+						p.sendMessage("§aUse of command: /nick off");
 					}
 					}
 				} else if (args[0].equalsIgnoreCase("off")){
@@ -101,6 +103,18 @@ public class NickCommand implements CommandExecutor {
 										return false;
 									}
 								
+							}
+							
+							for (Player ps : Bukkit.getServer().getOnlinePlayers()) {
+								String s = ps.getName();
+								if (args[0].equalsIgnoreCase(s)) {
+									if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+										p.sendMessage("§cEse nick ya está en uso. Para desactivar tu nick usa §b/nick off");
+										} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+											p.sendMessage("§cThis nick is already in use. To turn off your nick use §b/nick off");
+										}
+									return false;
+								}
 							}
 							Player pa = Bukkit.getServer().getPlayer(args[1]);
 							if (Bukkit.getOnlinePlayers().contains(pa)) {

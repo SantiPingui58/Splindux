@@ -39,7 +39,7 @@ public class PlayerJoin implements Listener {
 		
 		Player p = e.getPlayer();
 		p.setGameMode(GameMode.ADVENTURE);
-		
+		//NPCManager.updateNPCs(p);
 		p.teleport(Main.getLoc(Main.arena.getConfig().getString("lobby")));
 		final String prefix = ChatColor.translateAlternateColorCodes('&', PermissionsEx.getUser(p).getPrefix());
 		e.setJoinMessage(null);
@@ -70,7 +70,6 @@ public class PlayerJoin implements Listener {
 				}
 			} 
 			
-			p.setLevel(DataManager.getLevel(p));
 			p.setHealth(20);
 			p.setFoodLevel(20);
 			Main.giveItems(p);

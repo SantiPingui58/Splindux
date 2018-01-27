@@ -2,7 +2,11 @@ package com.santipingui58.spleef;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,12 +43,14 @@ import com.santipingui58.spleef.commands.ResetCommand;
 import com.santipingui58.spleef.commands.RideCommand;
 import com.santipingui58.spleef.commands.SpectCommand;
 import com.santipingui58.spleef.commands.SpleefCommand;
+import com.santipingui58.spleef.commands.StaffCommand;
 import com.santipingui58.spleef.commands.StatsCommand;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
 import com.santipingui58.spleef.game.Spleef2v2Game;
 import com.santipingui58.spleef.game.SpleefGame;
+import com.santipingui58.spleef.listener.NPCListener;
 import com.santipingui58.spleef.listener.PlayerChat;
 import com.santipingui58.spleef.listener.PlayerJoin;
 import com.santipingui58.spleef.listener.PlayerLeave;
@@ -53,6 +59,7 @@ import com.santipingui58.spleef.managers.BroadcastManager;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.DeathManager;
 import com.santipingui58.spleef.managers.GameManager;
+import com.santipingui58.spleef.managers.SpleefRankManager;
 import com.santipingui58.spleef.utils.Configuration;
 import com.santipingui58.spleef.utils.Cooldown1_9;
 import com.santipingui58.spleef.utils.Damage1_9;
@@ -132,6 +139,7 @@ public class Main extends JavaPlugin {
 		    getCommand("ride").setExecutor(new RideCommand());
 		    getCommand("head").setExecutor(new HeadCommand());
 		    getCommand("msg").setExecutor(new MsgCommand());
+		    getCommand("staff").setExecutor(new StaffCommand());
 		    
 		    getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		    getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
@@ -139,8 +147,10 @@ public class Main extends JavaPlugin {
 		    getServer().getPluginManager().registerEvents(new PlayerChat(), this);
 		    getServer().getPluginManager().registerEvents(new Cooldown1_9(), this);
 		    getServer().getPluginManager().registerEvents(new Damage1_9(), this);
-		    
-		    
+		    getServer().getPluginManager().registerEvents(new NPCListener(), this);
+		    for (Player p : Bukkit.getOnlinePlayers()) {
+		    	p.performCommand("leave");
+		    }
 		    
 		    
 		    
@@ -202,8 +212,23 @@ public class Main extends JavaPlugin {
 		        			} 
 		        		}
 	                          
-		        	
-		        	for (Game g : GameManager.getManager().getInGameArenas()) {		        			
+	             
+		        	for (final Game g : GameManager.getManager().getArenasList()) {
+		        		if (GameManager.getManager().getInGameArenas().contains(g)) {
+		        		try {
+		        		Set<Game> dup = findDuplicates(GameManager.getManager().getInGameArenas());
+		        			if (dup.contains(g)) {
+		        				Iterator<Game> i = GameManager.getManager().getInGameArenas().iterator();
+		        				while (i.hasNext()) {
+		        					Game ga = i.next();
+		        					if (ga.equals(g)) {
+		        						i.remove();
+		        					}
+		        					
+		        				}
+		        			}
+		        		} catch (Exception e) {}
+		        		
 		        		        if (g.getCanPlay() == false) {
 		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")) {
 		        		        	if (g.getArenaStarting() > 1) {
@@ -259,19 +284,44 @@ public class Main extends JavaPlugin {
 				        		        	}
 		        		        			 
 		        		        			 
-		        		        		 }
+		        		        		 }      		        	
 		        		        	 } else {
 			        		        	 g.addTime();
+			        		        	 	if (g.getType().equalsIgnoreCase("ffaspleef")) {
+			        		        	 		if (g.getTime() == 240) {
+			        		        	 			for (Player p : g.getPlayers()) {
+			     		        		        		if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+			     		        		        			  p.sendMessage("§3[SpleefFFA] §aQueda §c1 minuto §a de partida!");
+			     			        		        	  } else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+			     			        		        		  p.sendMessage("§3[SpleefFFA] §c1 minute §a left of the game!");
+			     			        		        	  }
+			     		        		        	}
+			        		        	 			
+			        		        	 			for (Player p : g.getQueue()) {
+			     		        		        		if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+			     		        		        			  p.sendMessage("§3[SpleefFFA] §aQueda §c1 minuto §a de partida!");
+			     			        		        	  } else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+			     			        		        		  p.sendMessage("§3[SpleefFFA] §c1 minute §a left of the game!");
+			     			        		        	  }
+			     		        		        	}
+			        		        	 			
+			        		        	 		} else if (g.getTime() >= 299) {
+
+			        		        	 			FFASpleefGame.gameOver(null, g.getId());
+			        		        	 		}
 				        		        }
 		        		        
-		        		        }      
-		        		
-		        //	}		   	
+		        		              
+		        	}
+		        	}
 	        }
 	      }
+	  }
 	      , 0L, 20L);
 		
-		 
+		    
+		    
+		    
 		    
 		    if (arena.getConfig().contains("arenas")) {
 		    	this.getLogger().info("Buscando arenas...");
@@ -289,6 +339,7 @@ public class Main extends JavaPlugin {
 		        {
 					BroadcastManager.Broadcast(); 
 							HolographicAPI.update();
+							
 		        }
 		      }
 		      , 0L, 300*20L);
@@ -409,7 +460,7 @@ public class Main extends JavaPlugin {
 	  
 	  public static void giveItems(Player p) {
 		  p.getInventory().clear();
-		  
+		  SpleefRankManager.levelUpProgress(p);
 		  for (PotionEffect effect : p.getActivePotionEffects())
 		        p.removePotionEffect(effect.getType());
 		  
@@ -441,6 +492,21 @@ public class Main extends JavaPlugin {
 			p.sendMessage("§cAn error has ocurred while joining the Server. Please leave and join again, if the problem persists, contact a Staff of the Server.");
 		}
 	  }
+	  
+	  
+	  public static <T> Set<T> findDuplicates(Collection<T> list) {
+
+		    Set<T> duplicates = new LinkedHashSet<T>();
+		    Set<T> uniques = new HashSet<T>();
+
+		    for(T t : list) {
+		        if(!uniques.add(t)) {
+		            duplicates.add(t);
+		        }
+		    }
+
+		    return duplicates;
+		}
 	  
 
 	  }

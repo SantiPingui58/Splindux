@@ -48,6 +48,11 @@ public class GameManager {
         return null; // Not found
     }
     
+    
+    public List<Game> getRankedGames() {
+    	return this.rankedgames;
+    }
+    
     public boolean isRanked(Game g) {
     	if (this.rankedgames.contains(g)) {
     		return true;
@@ -676,7 +681,7 @@ public class GameManager {
     public void addInGameArena(Game g) {
     	this.arenasingame.add(g);
     }
-    
+  
     public void removeInGameArena(Game g) {
     	this.arenasingame.remove(g);
     }
@@ -725,8 +730,17 @@ public class GameManager {
     public void addSpleefFFAQueue (Player p) {
     	for (final Game g : this.arenas) {
     			if (g.getType().equalsIgnoreCase("ffaspleef")) {
+    				for (Game ga : this.arenas) {
+    					try {
+    						ga.getQueue().remove(p);
+    						ga.getPlayers().remove(p);
+    						ga.getPlayer1().remove(p);
+    						ga.getPlayer2().remove(p);
+    					} catch (Exception e) {}
+    				}
     				Main.givequeueItems(p);
     				g.getQueue().add(p);
+    				p.getPassengers().clear();
     				p.teleport(g.getSpect());
     				if (GameManager.getManager().isStarted(g)) {
     					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
@@ -794,6 +808,14 @@ public class GameManager {
     
     
     public void addSpleef2v2Queue (Player p, String id) {
+    	for (Game ga : this.arenas) {
+			try {
+				ga.getQueue().remove(p);
+				ga.getPlayers().remove(p);
+				ga.getPlayer1().remove(p);
+				ga.getPlayer2().remove(p);
+			} catch (Exception e) {}
+		}
     	if (id == null) {
     	for (final Game g : this.arenas) {
     		if (g.getType().equalsIgnoreCase("spleef2v2")) {
@@ -1192,7 +1214,9 @@ public void DuelGame (Player p1, Player p2, String id) {
 		 for (Game g : getArenasList()) {
 			 if (g.getType().equalsIgnoreCase("spleef")) {
 			 if (g.getQueue().size() == 0) {
+				 if (!this.rankedgames.contains(g)) {
 				 av.add(g);
+				 }
 			 }
 			 }
 		 }
@@ -1226,10 +1250,12 @@ public void DuelGame (Player p1, Player p2, String id) {
 		if (g.getType().equalsIgnoreCase("spleef")) {
 		if (Main.containsIgnoreCase(g.getId(), id)) {
 			if (g.getQueue().size() == 0) {
+				if (!this.rankedgames.contains(g)) {
 			g.getQueue().add(p1);
 			g.getQueue().add(p2);
 			checkQueue(g,false);
 			return;
+				}
 			}
 		}
 		}
@@ -1313,6 +1339,11 @@ public void checkQueue(Game g, boolean isranked) {
 		   	      p1_B.getInventory().clear();
 		   	      p2_B.getInventory().clear(); 	
 		   	      
+		   	      p1_A.getPassengers().clear();
+		   	      p1_B.getPassengers().clear();
+		   	      p2_A.getPassengers().clear();
+		   	      p2_B.getPassengers().clear();
+		   	
 		   	      DataManager.playedRanked(p1_A);
 		   	      DataManager.playedRanked(p2_A);
 		   	      DataManager.playedRanked(p1_B);
@@ -1357,16 +1388,21 @@ public void checkQueue(Game g, boolean isranked) {
 						
 		        	
 		        	
-		        g.resetWin();
-		       	 g.resetArenaStarting();
+				g.resetWin();
+				g.resetArenaStarting();
 		   	      g.resetPoints();
 		   	      g.resetRounds();
 		   	      g.resetTime();
-		   	   this.arenasingame.add(g);
+		   	      this.arenasingame.add(g);
 		   	      p1_A.getInventory().clear();
 		   	      p2_A.getInventory().clear(); 	  
 		   	      p1_B.getInventory().clear();
-		   	      p2_B.getInventory().clear(); 	 
+		   	      p2_B.getInventory().clear(); 
+		   	      
+		   	      p1_A.getPassengers().clear();
+		   	      p1_B.getPassengers().clear();
+		   	      p2_A.getPassengers().clear();
+		   	      p2_B.getPassengers().clear();
 		        	Spleef2v2Game.startCountdown(g.getId());
 		        }
 				
@@ -1402,22 +1438,27 @@ public void checkQueue(Game g, boolean isranked) {
 	   	      g.resetPoints();
 	   	      g.resetRounds();
 	   	      g.resetTime();
-	   	   this.arenasingame.add(g);
-	   	      p1.getInventory().clear();
-	   	      p2.getInventory().clear(); 	  
+	   	 	 this.arenasingame.add(g);
+	   	 	 this.rankedgames.add(g);
+	   	      p1.getInventory().clear(); 
+	   	      p1.getPassengers().clear();
+	   	      p2.getInventory().clear(); 	
+	   	      p2.getPassengers().clear();
 	   	      DataManager.playedRanked(p1);
-	   	   DataManager.playedRanked(p2);
+	   	      DataManager.playedRanked(p2);
 	   	      
 	        RankedSpleefGame.startCountdown(g.getId());
+	        
 	        } else  { 
 	        	g.resetWin();
 	        	 g.resetArenaStarting();
 	   	      g.resetPoints();
 	   	      g.resetRounds();
 	   	      g.resetTime();
-	   	   this.arenasingame.add(g);
-	   	   p1.getInventory().clear();
-	   	      p2.getInventory().clear();   	  
+	   	      this.arenasingame.add(g);
+	   	      p1.getInventory().clear();
+	   	      p1.getPassengers().clear();
+	   	      p2.getPassengers().clear();
 	        	SpleefGame.startCountdown(g.getId());
 	        }
 			
@@ -1427,7 +1468,12 @@ public void checkQueue(Game g, boolean isranked) {
  
 public void resetRequest(Player p) {
 	Game g = GameManager.getManager().getArenabyPlayer(p);
-	if (!g.getReset().isEmpty() && !g.getReset().contains(p)) {
+	
+	if (!g.getReset().contains(p)) {
+	g.getReset().add(p);
+	}
+	
+	if ((g.getPlayer1().size() + g.getPlayer2().size()) <= g.getReset().size()) {
 		reinicio(g);
 		for (Player p1 : g.getPlayer1()) {
 			if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
@@ -1454,29 +1500,171 @@ public void resetRequest(Player p) {
 				p.sendMessage("§3[Spleef]§6 You have requested to reset the arena");
 			}
 			if (g.getPlayer1().contains(p)) {
-				Player p2 = GameManager.getManager().getArenabyPlayer(p).getPlayer2().get(0);
+				for (Player p2 :GameManager.getManager().getArenabyPlayer(p).getPlayer2()) {
 				if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
 				p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado reiniciar la arena, coloca §b/reset §apara reiniciarla.");
 				} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
 					p2.sendMessage("§3[Spleef]§a Your oponent has requested to reset the arena, type §b/reset §a to reset it.");
 				}
+				}
 			} else if (g.getPlayer2().contains(p)) {
-				Player p1 = GameManager.getManager().getArenabyPlayer(p).getPlayer1().get(0);
+				for (Player p1 :GameManager.getManager().getArenabyPlayer(p).getPlayer1()) {
 				if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
 				p1.sendMessage("§3[Spleef]§aTu oponente ha solicitado reiniciar la arena, coloca §b/reset §apara reiniciarla.");
 				} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
 					p1.sendMessage("§3[Spleef]§a Your oponent has requested to reset the arena, type §b/reset §a to reset it.");
 				}
+				}
 			}
 				
-		g.getReset().add(p);
+		
+	}
+	
+}
+
+public void playToRequest(Player p, Integer por) {
+	Game g = GameManager.getManager().getArenabyPlayer(p);
+	if (!g.getPlayTo().containsKey(p)) {
+	g.getPlayTo().put(p, por);
+	}
+	
+	if ((g.getPlayer1().size() + g.getPlayer2().size()) <= g.getPlayTo().size()) {
+		
+		for (Integer i : g.getPlayTo().values()) {
+			if (!(por == i)) {
+				break;
+			}
+			
+			g.setWin(por);
+			g.getPlayTo().clear();
+			
+			for (Player p1 : g.getPlayer1()) {
+				if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
+				p1.sendMessage("§3[Spleef]§6 Ultimo punto seteado a: §a" + por);
+				} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
+					p1.sendMessage("§3[Spleef]§6 Last point set to : §a" + por);
+				}
+			}
+			for (Player p2 : g.getPlayer2()) {
+				if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
+				p2.sendMessage("§3[Spleef]§6 Ultimo punto seteado a: §a" + por);
+				} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
+					p2.sendMessage("§3[Spleef]§6 Last point set to : §a" + por);
+				}
+			}
+			
+			return;
+			
+		}
+		
+			if (g.getPlayer1().contains(p)) {
+				
+				for (Player p2 : g.getPlayer2()) {
+				if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
+				p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado jugar hasta §b" + por + "§a, coloca /playto " + por 
+						+ " para aceptarlo."); 
+				} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
+					p2.sendMessage("§3[Spleef]§a Your oponent has requested to play to §b" +  por + "§a, type /playto " + por 
+						+ " to accept it."); 
+				}
+				}
+				
+				for (Player p1 : g.getPlayer1()) {
+					
+					if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
+						p1.sendMessage("§3[Spleef]§6 Has solicitado jugar hasta §e" + por);
+						} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
+							p1.sendMessage("§3[Spleef]§6 You have requested to play to §e" + por);
+						}
+				}
+				
+				
+				
+			} else if (g.getPlayer2().contains(p)) {
+				
+				for (Player p1 : g.getPlayer1()) {
+					if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
+					p1.sendMessage("§3[Spleef]§aTu oponente ha solicitado jugar hasta §b" + por + "§a, coloca /playto " + por 
+							+ "para aceptarlo."); 
+					} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
+						p1.sendMessage("§3[Spleef]§a Your oponent has requested to play to §b" +  por + "§a, type /playto " + por 
+							+ "to accept it."); 
+					}
+					}
+					
+					for (Player p2 : g.getPlayer2()) {
+						
+						if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
+							p2.sendMessage("§3[Spleef]§6 Has solicitado jugar hasta §e" + por);
+							} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
+								p2.sendMessage("§3[Spleef]§6 You have requested to play to §e" + por);
+							}
+					}
+			}
+		
+			g.getPlayTo().put(p, por);
+		
+			
+		
+		
+	} else {
+		if (g.getPlayer1().contains(p)) {
+			
+			for (Player p2 : g.getPlayer2()) {
+			if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
+			p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado jugar hasta §b" + por + "§a, coloca /playto " + por 
+					+ "para aceptarlo."); 
+			} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
+				p2.sendMessage("§3[Spleef]§a Your oponent has requested to play to §b" +  por + "§a, type /playto " + por 
+					+ "to accept it."); 
+			}
+			}
+			
+			for (Player p1 : g.getPlayer1()) {
+				
+				if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
+					p1.sendMessage("§3[Spleef]§6 Has solicitado jugar hasta §e" + por);
+					} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
+						p1.sendMessage("§3[Spleef]§6 You have requested to play to §e" + por);
+					}
+			}
+			
+			
+			
+		} else if (g.getPlayer2().contains(p)) {
+			
+			for (Player p1 : g.getPlayer1()) {
+				if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
+				p1.sendMessage("§3[Spleef]§aTu oponente ha solicitado jugar hasta §b" + por + "§a, coloca /playto " + por 
+						+ "para aceptarlo."); 
+				} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
+					p1.sendMessage("§3[Spleef]§a Your oponent has requested to play to §b" +  por + "§a, type /playto " + por 
+						+ "to accept it."); 
+				}
+				}
+				
+				for (Player p2 : g.getPlayer2()) {
+					
+					if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
+						p2.sendMessage("§3[Spleef]§6 Has solicitado jugar hasta §e" + por);
+						} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
+							p2.sendMessage("§3[Spleef]§6 You have requested to play to §e" + por);
+						}
+				}
+		}
+		
+		
+			
 	}
 	
 }
 
 public void endgameRequest(Player p) {
 	Game g = GameManager.getManager().getArenabyPlayer(p);
-	if (!g.getEndGame().isEmpty() && !g.getEndGame().contains(p)) {
+	if (!g.getEndGame().contains(p)) {
+	g.getEndGame().add(p);
+	}
+	if (g.getPlayer1().size() + g.getPlayer2().size() <= g.getEndGame().size()) {
 		SpleefGame.gameOver(null, null, g.getId());
 		for (Player p1 : g.getPlayer1()) {
 			if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
@@ -1516,7 +1704,7 @@ public void endgameRequest(Player p) {
 				}
 			}
 				
-		g.getEndGame().add(p);
+		
 	}
 	
 }

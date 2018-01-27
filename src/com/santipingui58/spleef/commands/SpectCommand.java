@@ -90,7 +90,7 @@ public class SpectCommand implements CommandExecutor {
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 						p.sendMessage("§cEl jugador §b" + args[0] + "§c no existe o no se encuentra conectado.");
 					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-						p.sendMessage("§cThe player §b" + args[0] + "§cdoesn't exists or is not online.");
+						p.sendMessage("§cThe player §b" + args[0] + "§c doesn't exists or is not online.");
 					}
 						}
 				}

@@ -33,20 +33,25 @@ public class SpleefCommand implements CommandExecutor{
 			} else if(p.hasPermission("spleefcore.admin")) {
 					if(args[0].equalsIgnoreCase("setup")) {
 						if(args.length == 1) {
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef create <ID>"));
+							
 							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setspawn1 <ID>"));
 							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setspawn2 <ID>"));
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setdeath1 <ID>"));
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setdeath2 <ID>"));
 							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setarena1 <ID> "));
 							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup setarena2 <ID>"));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef setup settype <ID> <tipo>"));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&b/spleef create <ID>"));
 							
 					}  else if (args[1].equalsIgnoreCase("setlobby")) {
 						Main.arena.getConfig().set("lobby", Main.setLoc(p.getLocation(), true));
 						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del lobby."));
 						Main.arena.save();
 						return true;
-					}
+					} else if (args[1].equalsIgnoreCase("setarenas")) {
+						Main.arena.getConfig().set("arena", Main.setLoc(p.getLocation(), true));
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del lobby del mundo arenas."));
+						Main.arena.save();
+						return true;
+					} 
 					else if (args[1].equalsIgnoreCase("setspawn1")) {
 						if (args.length == 3) {
 						Main.arena.getConfig().set("arenas."+ args[2]+ ".spawn1", Main.setLoc(p.getLocation(), true));
@@ -62,23 +67,6 @@ public class SpleefCommand implements CommandExecutor{
 						return true; 
 						}
 					}
-					 else if (args[1].equalsIgnoreCase("setdeath1")) {
-							if (args.length == 3) {
-							Main.arena.getConfig().set("arenas."+ args[2]+ ".death1", Main.setLoc(p.getLocation(), true));
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del punto de muerte #1 de la arena: &b" + args[2]));
-							Main.arena.save();
-							return true; 
-							}
-						}
-					 else if (args[1].equalsIgnoreCase("setdeath2")) {
-							if (args.length == 3) {
-							Main.arena.getConfig().set("arenas."+ args[2]+ ".death2", Main.setLoc(p.getLocation(), true));
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del punto de muerte #2 de la arena: &b" + args[2]));
-							Main.arena.save();
-							return true; 
-							}
-						}
-						
 					 else if (args[1].equalsIgnoreCase("setarena1")) {
 							if (args.length == 3) {
 							Main.arena.getConfig().set("arenas."+ args[2]+ ".arena1", Main.setLoc(p.getLocation(), true));
@@ -118,8 +106,6 @@ public class SpleefCommand implements CommandExecutor{
 							if (Main.arena.getConfig().contains("arenas." + args[1])) {
 									if ((Main.arena.getConfig().contains("arenas." + args[1] + ".spawn1")) && 
 										(Main.arena.getConfig().contains("arenas." + args[1] + ".spawn2"))&&
-										(Main.arena.getConfig().contains("arenas." + args[1] + ".death1")) &&
-										(Main.arena.getConfig().contains("arenas." + args[1] + ".death2")) &&
 										(Main.arena.getConfig().contains("arenas." + args[1] + ".arena1")) &&
 										(Main.arena.getConfig().contains("arenas." + args[1] + ".arena2")) &&
 										(Main.arena.getConfig().contains("arenas." + args[1] + ".spect"))  &&
@@ -132,6 +118,7 @@ public class SpleefCommand implements CommandExecutor{
 							String id = args[1];
 							String type = Main.arena.getConfig().getString("arenas." + args[1] + ".type");
 							p.sendMessage("§aArena creada!");
+							Main.arena.save();
 							GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2, spect, id, type);
 								} else {
 									p.sendMessage("§cNo se pudo crear esta arena, faltan localizaciones por definir. ");

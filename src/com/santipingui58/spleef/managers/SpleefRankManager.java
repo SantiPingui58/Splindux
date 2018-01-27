@@ -53,15 +53,15 @@ public class SpleefRankManager {
 			  } else if (level.equalsIgnoreCase("EliteV")) {
 				  return "§7[§6Elite V§7]";	  
 			  } else if (level.equalsIgnoreCase("ExpertoI")) {
-				  return "§7[§cExp I§7]";	  
+				  return "§7[§cExp. I§7]";	  
 			  } else if (level.equalsIgnoreCase("ExpertoII")) {
-				  return "§7[§cExp II§7]";	  
+				  return "§7[§cExp. II§7]";	  
 			  }else if (level.equalsIgnoreCase("ExpertoIII")) {
-				  return "§7[§cExp III§7]";	  
+				  return "§7[§cExp. III§7]";	  
 			  }else if (level.equalsIgnoreCase("ExpertoIV")) {
-				  return "§7[§cExp IV§7]";	  
+				  return "§7[§cExp. IV§7]";	  
 			  }else if (level.equalsIgnoreCase("ExpertoV")) {
-				  return "§7[§cExp V§7]";	  
+				  return "§7[§cExp. V§7]";	  
 			  } else if (level.equalsIgnoreCase("MasterI")) {
 				  return "§7[§4Master I§7]";	  
 			  } else if (level.equalsIgnoreCase("MasterII")) {
@@ -106,7 +106,7 @@ public class SpleefRankManager {
 			  
 			  int level = Main.data.getConfig().getInt("data." + p.getUniqueId() + ".level");
 			  level++;
-			  p.setLevel(DataManager.getLevel(p));
+			  SpleefRankManager.levelUpProgress(p);
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".level", level);
 			  Main.data.save();
 			  
@@ -505,97 +505,186 @@ public class SpleefRankManager {
 	
 	
 	  
-	  public void levelUpProgress(Player p) {
-		  int current_level = DataManager.getLevel(p);
-		  int next_level;
+	  public static void levelUpProgress(Player p) {
 		  
-		  if (getSpleefRank(p).equalsIgnoreCase("PrincipianteI")) {
+		  p.setExp(0);
+		  p.setLevel(0);
+		  int current_level = DataManager.getLevel(p);
+		  int next_level = 0;
+		  int prev_level = 0;
+		  int level = 0;
+		  
+		  String rank = Main.data.getConfig().getString("data." + p.getUniqueId() + ".spleefrank");
+		  if (rank.equalsIgnoreCase("PrincipianteI")) {
+			  prev_level = 0;
 			  next_level = 5;
-		  } else  if (getSpleefRank(p).equalsIgnoreCase("PrincipianteII")) {
-			  
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteIII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteIV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("PrincipianteV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioI")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioIII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioIV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("IntermedioV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoI")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoIII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoIV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("AvanzadoV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("EliteI")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteIII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteIV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("EliteV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoI")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoIII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoIV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("ExpertoV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterI")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterIII")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterIV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("MasterV")) {
-			  
-		  } else if (getSpleefRank(p).equalsIgnoreCase("VeteranI")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranV")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVI")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranVIII")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranIX")) {
-			  
-		  }  else if (getSpleefRank(p).equalsIgnoreCase("VeteranX")) {
-			  
-		  }
+			  level = 1;
+		  } else  if (rank.equalsIgnoreCase("PrincipianteII")) {
+			  prev_level = 5;
+			  next_level = 10;
+			  level = 2;
+		  }  else if (rank.equalsIgnoreCase("PrincipianteIII")) {
+			  prev_level = 10;
+			  next_level = 20;
+			  level = 3;
+		  }  else if (rank.equalsIgnoreCase("PrincipianteIV")) {
+			  prev_level = 20;
+			  next_level = 30;
+			  level = 4;
+		  }  else if (rank.equalsIgnoreCase("PrincipianteV")) {
+			  prev_level = 30;
+			  next_level = 40;
+			  level = 5;
+		  }  else if (rank.equalsIgnoreCase("IntermedioI")) {
+			  prev_level = 40;
+			  next_level = 50;
+			  level = 6;
+		  }  else if (rank.equalsIgnoreCase("IntermedioII")) {
+			  prev_level = 50;
+			  next_level = 75;
+			  level = 7;
+		  }  else if (rank.equalsIgnoreCase("IntermedioIII")) {
+			  prev_level = 75;
+			  next_level = 100;
+			  level = 8;
+		  }  else if (rank.equalsIgnoreCase("IntermedioIV")) {
+			  prev_level = 100;
+			  next_level = 125;
+			  level = 9;
+		  }  else if (rank.equalsIgnoreCase("IntermedioV")) {
+			  prev_level = 125;
+			  next_level = 150;
+			  level = 10;
+		  }  else if (rank.equalsIgnoreCase("AvanzadoI")) {
+			  prev_level = 150;
+			  next_level = 175;
+			  level = 11;
+		  } else if (rank.equalsIgnoreCase("AvanzadoII")) {
+			  prev_level = 175;
+			  next_level = 200;
+			  level = 12;
+		  } else if (rank.equalsIgnoreCase("AvanzadoIII")) {
+			  prev_level = 200;
+			  next_level = 250;
+			  level = 13;
+		  } else if (rank.equalsIgnoreCase("AvanzadoIV")) {
+			  prev_level = 250;
+			  next_level = 300;
+			  level = 14;
+		  } else if (rank.equalsIgnoreCase("AvanzadoV")) {
+			  prev_level = 300;
+			  next_level = 400;
+			  level = 15;
+		  }  else if (rank.equalsIgnoreCase("EliteI")) {
+			  prev_level = 400;
+			  next_level = 500;
+			  level = 16;
+		  } else if (rank.equalsIgnoreCase("EliteII")) {
+			  prev_level = 500;
+			  next_level = 600;
+			  level = 17;
+		  } else if (rank.equalsIgnoreCase("EliteIII")) {
+			  prev_level = 600;
+			  next_level = 700;
+			  level = 18;
+		  } else if (rank.equalsIgnoreCase("EliteIV")) {
+			  prev_level = 700;
+			  next_level = 800;
+			  level = 19;
+		  } else if (rank.equalsIgnoreCase("EliteV")) {
+			  prev_level = 800;
+			  next_level = 1000;
+			  level = 20;
+		  } else if (rank.equalsIgnoreCase("ExpertoI")) {
+			  prev_level = 1000;
+			  next_level = 1250;
+			  level = 21;
+		  } else if (rank.equalsIgnoreCase("ExpertoII")) {
+			  prev_level = 1250;
+			  next_level = 1500;
+			  level = 22;
+		  } else if (rank.equalsIgnoreCase("ExpertoIII")) {
+			  prev_level = 1500;
+			  next_level = 1750;
+			  level = 23;
+		  } else if (rank.equalsIgnoreCase("ExpertoIV")) {
+			  prev_level = 1750;
+			  next_level = 2000;
+			  level = 24;
+		  } else if (rank.equalsIgnoreCase("ExpertoV")) {
+			  prev_level = 2000;
+			  next_level = 3000;
+			  level = 25;
+		  } else if (rank.equalsIgnoreCase("MasterI")) {
+			  prev_level = 3000;
+			  next_level = 3500;
+			  level = 26;
+		  } else if (rank.equalsIgnoreCase("MasterII")) {
+			  prev_level = 3500;
+			  next_level = 4000;
+			  level = 27;
+		  } else if (rank.equalsIgnoreCase("MasterIII")) {
+			  prev_level = 4000;
+			  next_level = 4500;
+			  level =28;
+		  } else if (rank.equalsIgnoreCase("MasterIV")) {
+			  prev_level = 4500;
+			  next_level = 5000;
+			  level = 29;
+		  } else if (rank.equalsIgnoreCase("MasterV")) {
+			  prev_level = 5000;
+			  next_level = 6000;
+			  level = 30;
+		  } else if (rank.equalsIgnoreCase("VeteranI")) {
+			  prev_level = 6000;
+			  next_level = 7000;
+			  level = 31;
+		  }  else if (rank.equalsIgnoreCase("VeteranII")) {
+			  prev_level = 7000;
+			  next_level = 9000;
+			  level = 32;
+		  }  else if (rank.equalsIgnoreCase("VeteranIII")) {
+			  prev_level = 9000;
+			  next_level = 12000;
+			  level =33;
+		  }  else if (rank.equalsIgnoreCase("VeteranIV")) {
+			  prev_level = 12000;
+			  next_level = 16000;
+			  level = 34;
+		  }  else if (rank.equalsIgnoreCase("VeteranV")) {
+			  prev_level = 16000;
+			  next_level = 20000;
+			  level =35;
+		  }  else if (rank.equalsIgnoreCase("VeteranVI")) {
+			  prev_level = 20000;
+			  next_level = 25000;
+			  level = 36;
+		  }  else if (rank.equalsIgnoreCase("VeteranVII")) {
+			  prev_level = 25000;
+			  next_level = 31000;
+			  level = 37;
+		  }  else if (rank.equalsIgnoreCase("VeteranVIII")) {
+			  prev_level = 31000;
+			  next_level = 38000;
+			  level = 38;
+		  }  else if (rank.equalsIgnoreCase("VeteranIX")) {
+			  prev_level = 38000;
+			  next_level = 50000;
+			  level = 39;
+		  } 
 		   
 		  
 		  
+		  int piso = current_level - prev_level;
+		  int max = next_level - prev_level;
+		  
+		  
+		 
+		  double resultado = (double) piso/ (double) max;
+		  
+		  
+		  p.setExp((float) resultado);
+		  p.setLevel(level);
 		  
 		  
 	  }

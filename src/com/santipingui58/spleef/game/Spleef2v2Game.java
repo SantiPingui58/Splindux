@@ -2,9 +2,11 @@ package com.santipingui58.spleef.game;
 
 
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -28,7 +31,11 @@ public class Spleef2v2Game implements Listener  {
 
   public static int task;
   public static ItemStack pala = new ItemStack (Material.DIAMOND_SPADE);
-
+  public static ItemStack rojo = new ItemStack (Material.BANNER);
+  public static ItemStack azul = new ItemStack (Material.BANNER);
+  
+  
+  
   
 	  @SuppressWarnings("deprecation")
 	public static void startCountdown(String id) {
@@ -37,6 +44,15 @@ public class Spleef2v2Game implements Listener  {
 	      meta.spigot().setUnbreakable(true);
 	      meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 	      pala.setItemMeta(meta);
+	      
+	      BannerMeta metarojo = (BannerMeta) rojo.getItemMeta();
+	      metarojo.setBaseColor(DyeColor.RED);
+	      rojo.setItemMeta(metarojo);
+	      
+	      BannerMeta metaazul = (BannerMeta) azul.getItemMeta();
+	      metaazul.setBaseColor(DyeColor.BLUE);
+	      azul.setItemMeta(metaazul);
+	      Main.get().getLogger().info("ranked Spleef normal iniciado");
 	      final Game g = GameManager.getManager().getArena(id);
 	     final Player  p1A = g.getPlayer1().get(0);
 	     final Player  p1B = g.getPlayer1().get(1);
@@ -93,11 +109,11 @@ public class Spleef2v2Game implements Listener  {
 			   		p2A.getInventory().addItem(pala);
 			   		p2B.getInventory().addItem(pala);
 			   		
-				     p1A.getInventory().setHelmet(new ItemStack (Material.REDSTONE_BLOCK));   
-				     p1B.getInventory().setHelmet(new ItemStack (Material.REDSTONE_BLOCK));
+				     p1A.getInventory().setHelmet(rojo);   
+				     p1B.getInventory().setHelmet(rojo);
 				     
-				     p2A.getInventory().setHelmet(new ItemStack (Material.LAPIS_BLOCK));   
-				     p2B.getInventory().setHelmet(new ItemStack (Material.LAPIS_BLOCK));
+				     p2A.getInventory().setHelmet(azul);   
+				     p2B.getInventory().setHelmet(azul);
 				     p1A.setGameMode(GameMode.SURVIVAL);
 				     p2A.setGameMode(GameMode.SURVIVAL);
 				     p1B.setGameMode(GameMode.SURVIVAL);
@@ -130,7 +146,14 @@ public class Spleef2v2Game implements Listener  {
 	  		  
 	  		  g.resetRounds();
 	  		  GameManager.getManager().reinicio(g);
-	  		GameManager.getManager().removeInGameArena(g);
+	  		Iterator<Game> i = GameManager.getManager().getInGameArenas().iterator();
+			while (i.hasNext()) {
+				Game ga = i.next();
+				if (ga.equals(g)) {
+					i.remove();
+				}
+				
+			}
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  
@@ -341,8 +364,8 @@ public class Spleef2v2Game implements Listener  {
 		  b.setPitch(l.getPitch());
 		  b.setYaw(l.getYaw());
 		  
-		  p1.teleport(a);
-		  p2.teleport(b);
+		  p1.teleport(a.add(0.5, 0, 0.5));
+		  p2.teleport(b.add(0.5, 0, 0.5));
 		  
 		  
 	  }

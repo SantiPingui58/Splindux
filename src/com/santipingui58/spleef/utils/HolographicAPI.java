@@ -8,12 +8,13 @@ import org.bukkit.plugin.Plugin;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.santipingui58.spleef.Main;
+import com.santipingui58.spleef.listener.NPCListener;
 
 public class HolographicAPI {
 
-	public static void createTopFFASpleefWins() {
+	public static String createTopFFASpleefWins() {
 		
-		
+		String top1 = "SantiPingui58";
 		Plugin plugin = Main.get();
 		Location loc = Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true);
 		deleteHologram(loc);
@@ -27,18 +28,23 @@ public class HolographicAPI {
 			for(int i = 1; i < 11 ; i++){
 				try {
 					Entry<String, Integer> e = SortMapByValue.sortedMapFFASpleefWins.pollFirstEntry();
-				String pname = e.getKey();		            	 
+				String pname = e.getKey();	
+				
+				if (i==1) {
+					top1 = pname;
+				}
 				Integer score = e.getValue();
 				hologram.appendTextLine("§6#"+ i + "§a " + pname + "§7:§b " + score);
 	              } catch (Exception ex) {
 	         	  hologram.appendTextLine("§6#"+ i + "§a NO_PLAYER" + "§7:§b 0");
 	              }
 				}	
+			return top1;
 }
 	
-public static void createTopELOSpleef() {
+public static String createTopELOSpleef() {
 	
-	
+		String top1 = "SantiPingui58";
 		Plugin plugin = Main.get();
 		Location loc = Main.getLoc(Main.arena.getConfig().getString("hologramas.topelospleef"), true);
 		deleteHologram(loc);
@@ -52,13 +58,19 @@ public static void createTopELOSpleef() {
 			for(int i = 1; i < 11 ; i++){
 				try {
 					Entry<String, Integer> e = SortMapByValue.sortedMapSpleefELO.pollFirstEntry();
+					
 				String pname = e.getKey();		            	 
 				Integer score = e.getValue();
+				if (i==1) {
+					top1 = pname;
+				}
 				hologram.appendTextLine("§6#"+ i + "§a " + pname + "§7:§b " + score);
 	              } catch (Exception ex) {
 	         	  hologram.appendTextLine("§6#"+ i + "§a NO_PLAYER" + "§7:§b 0");
 	              }
 				}	
+			
+			return top1;
 }
 	
 	
@@ -88,8 +100,8 @@ public static void update () {
 	Main.data.save();
 	deleteHologram(tesl);
 	deleteHologram(tfsw);
-	createTopELOSpleef();
-	createTopFFASpleefWins();
+	NPCListener.updateSkins(createTopELOSpleef(), createTopFFASpleefWins());
+
 }
 	
 	

@@ -23,7 +23,8 @@ public class EndGameCommand implements CommandExecutor {
 		if(cmd.getName().equalsIgnoreCase("endgame")){
 			Player p = (Player) sender;
 			if (GameManager.getManager().isInGame(p)) {
-				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef")) {
+				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef") ||
+						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef2v2")) {
 					GameManager.getManager().endgameRequest(p);
 				} else {
 					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
