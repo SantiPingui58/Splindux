@@ -46,8 +46,9 @@ import com.santipingui58.spleef.menu.esp.UnrankedMenu;
 public class PlayerListener implements Listener {
 
 	public static HashMap<Player, Location> location = new HashMap<Player,Location>();
+	public static HashMap<Player, Location> ffalocation = new HashMap<Player,Location>();
 	public static HashMap<Player,Integer> afkqueue = new HashMap<Player, Integer>();
-	
+	public static HashMap<Player,Integer> antiAfkFFA = new HashMap<Player, Integer>();
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler (priority = EventPriority.HIGHEST)
@@ -99,10 +100,12 @@ public class PlayerListener implements Listener {
 		
 			if(e.getPlayer().getItemInHand().equals(Game.opcionesesp)) {
 				new OptionsMenu(e.getPlayer()).o(e.getPlayer());
+				return;
 			} 
 			
 			if(e.getPlayer().getItemInHand().equals(Game.opcioneseng)) {
 				new com.santipingui58.spleef.menu.eng.OptionsMenu(e.getPlayer()).o(e.getPlayer());
+				return;
 			} 
 			
 			if(e.getPlayer().getItemInHand().equals(Game.partieseng)) {
@@ -127,10 +130,12 @@ public class PlayerListener implements Listener {
 			
 			if(e.getPlayer().getItemInHand().equals(Game.leavequeueeng)) {
 				GameManager.getManager().leaveQueue(e.getPlayer());
+				return;
 			} 
 			
 			if(e.getPlayer().getItemInHand().equals(Game.leavequeueesp)) {
 				GameManager.getManager().leaveQueue(e.getPlayer());
+				return;
 			} 
 			
 		}
@@ -147,6 +152,7 @@ public class PlayerListener implements Listener {
 	  {
 	    Player p = (Player)e.getEntity().getShooter();
 	    if (GameManager.getManager().isInGame(p)) {
+	    	if (GameManager.getManager().getArenabyPlayer(p).getCanPlay()) {
 	    BlockIterator iterator = new BlockIterator(e.getEntity().getWorld(), e.getEntity().getLocation().toVector(), e.getEntity().getVelocity().normalize(), 0.0D, 4);
 	    Block hitblock = null;
 	    while (iterator.hasNext()) {
@@ -162,6 +168,8 @@ public class PlayerListener implements Listener {
 	      p.playSound(hitblock.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.5F, 2.0F);
 	      hitblock.setType(Material.AIR);
 	    }
+	    
+	    	}
 	  } 
 	    }
 	
@@ -213,6 +221,16 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public static void onPlace (BlockPlaceEvent e) {
 		Player p = e.getPlayer();
+		
+		if (GameManager.getManager().isInGame(p)) {
+			if (!e.getBlock().getType().equals(Material.SNOW_BLOCK)) {
+				e.setCancelled(true);
+			}
+		}
+		
+		if (GameManager.getManager().isInQueue(p)) {
+			e.setCancelled(true);
+		}
 		
 		if (p.getItemInHand().equals(Game.opcionesesp) ||
 				p.getItemInHand().equals(Game.opcioneseng) || 
@@ -271,9 +289,49 @@ public class PlayerListener implements Listener {
 	
 	
 	public static void onMove (Player p) {
-		if (p.hasPermission("splindux.afk")) {
+		
+		if (GameManager.getManager().isInFFAQueue(p)) {
+		if (ffalocation.containsKey(p)) {
+			if (ffalocation.get(p).equals(GameManager.getManager().getFFAQueue(p).getSpect())) {
+		if (antiAfkFFA.containsKey(p)) {
+			int time = antiAfkFFA.get(p);
+			time++;
+			antiAfkFFA.put(p, time);
+			if (time >= 200) {
+				ffalocation.remove(p);
+				antiAfkFFA.remove(p);
+				
+						
+						if (!GameManager.getManager().getFFAQueue(p).getPlayers().isEmpty()) {
+						GameManager.getManager().leaveQueue(p);
+						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+							p.sendMessage("§3[FFASpleef] §cAparentemente te encuentras AFK, por lo que has sido removido del juego.");
+						} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+							p.sendMessage("§3[FFASpleef] §cAparently you are AFK, so you have been removed from the game.");
+						}
+					
+						}
+					
+				
+			} 
+		} else {
+			antiAfkFFA.put(p, 1);
+		}
+		
+		
+		} 
+		
+		} else {
+			ffalocation.put(p, p.getLocation());
+		}
+		
+		}
+		
+		
+		
 		if (location.containsKey(p)) {
-			if (location.get(p).equals(p.getLocation())) {
+			if (location.get(p).equals(p.getLocation())) {			
+				if (p.hasPermission("splindux.afk")) {
 				if (afkqueue.containsKey(p)) {
 					int time = afkqueue.get(p);
 					time++;
@@ -288,6 +346,7 @@ public class PlayerListener implements Listener {
 				} else {
 					afkqueue.put(p, 1);
 				}
+				}
 			} else {
 				if (AfkCommand.isAfk(p)) {
 				AfkCommand.removeAfk(p);
@@ -299,7 +358,7 @@ public class PlayerListener implements Listener {
 		}
 		
 		
-		}
+		
 		
 		
 		if (p.getWorld().getName().equalsIgnoreCase("splindux")) {

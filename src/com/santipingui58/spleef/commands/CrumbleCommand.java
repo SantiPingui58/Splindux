@@ -110,7 +110,7 @@ public class CrumbleCommand implements CommandExecutor {
 								p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado crumblear la arena §7(§e"+por + "%§7)§a, coloca §b/crumble " 
 										+ por + "§a para hacerlo.");
 								} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
-									p2.sendMessage("3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
+									p2.sendMessage("§3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
 										+ por + "§a to do it.");
 								}
 							} else if (g.getPlayer2().contains(p)) {

@@ -27,8 +27,8 @@ public class Game {
 	public static ItemStack leavequeueeng = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aLeave the queue").build();
 	public static ItemStack partieseng = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3Party's Menu").build();
 	
-	 private final String id;
-	 private final String tipo;
+		private final String id;
+	 	private final String tipo;
 	    private final Location spawn1;
 	    private final Location spawn2;
 	    private final Location arena1;
@@ -42,6 +42,7 @@ public class Game {
 	    
 	    private int rounds;
 	    private boolean canPlay;
+	    private boolean isFFAStarting;
 	    private int arena_starting;
 	    private int points1;
 	    private int points2;
@@ -189,6 +190,19 @@ public class Game {
 	    public void falseCanPlay() {
 	    	this.canPlay = false;
 	    }
+	    
+	    public boolean isFFAStarting() {
+	    	return this.isFFAStarting;
+	    }
+	    
+	    public void trueFFAStarting() {
+	    	this.isFFAStarting = true;
+	    }
+	    
+	    public void falseFFAStarting() {
+	    	this.isFFAStarting = false;
+	    }
+	    
 	    
 	    public List<Player> getPlayer1() {
 	        return this.player1;

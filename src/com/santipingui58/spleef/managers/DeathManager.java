@@ -23,15 +23,14 @@ public class DeathManager {
 						
 				Player player1 = g.getPlayer1().get(0);
 				Player player2 = g.getPlayer2().get(0);
+				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + player1.getName() + " " + player2.getName());
 				g.addRounds();				
 				if (p == player1) {
 					g.addPoints2();
+								
+					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("puntos del jugador 2: " + g.getPoints2() + "/ " + g.getWin());
 					if (g.getPoints2() >= g.getWin()) {	
 						
-						
-						
-						p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));		
-						player1.teleport(Main.getLoc(Main.arena.get("lobby"), true));				
 						 if (player2.getInventory().contains(SpleefGame.pala)) {
 						 player2.getInventory().removeItem(SpleefGame.pala);
 						 }
@@ -46,6 +45,8 @@ public class DeathManager {
 						 }
 						 }	
 						
+						 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));		
+							player2.teleport(Main.getLoc(Main.arena.get("lobby"), true));		
 									
 					} else {		
 						p.teleport(g.getSpawn1());	
@@ -59,12 +60,13 @@ public class DeathManager {
 						}
 							if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
 							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda " + g.getRounds());
-							 } else if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+							 } else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
 							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round " + g.getRounds());
 							 }
-							if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+							
+							if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
 								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda " + g.getRounds());
-								 } else if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+								 } else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
 								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round " + g.getRounds());
 								 }
 							
@@ -77,9 +79,9 @@ public class DeathManager {
 			
 			} else if (p == player2) {
 				g.addPoints1();
+				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("puntos del jugador 1: " + g.getPoints1() + "/ " + g.getWin());
 				if (g.getPoints1() >= g.getWin()) {	
-					p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));
-					player2.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+					
 						 if (player1.getInventory().contains(SpleefGame.pala)) {
 						player1.getInventory().removeItem(SpleefGame.pala);
 						 }
@@ -87,10 +89,15 @@ public class DeathManager {
 						 p.getInventory().removeItem(SpleefGame.pala);
 						 }
 						 if (GameManager.getManager().isRanked(g)) {
+							 Main.get().getLogger().info("ranked terminado");
 							 RankedSpleefGame.gameOver(player1, player2,g.getId());
 						 } else {
+							 Main.get().getLogger().info("normal terminado");
 						SpleefGame.gameOver(player1, player2,g.getId());
 						 }
+						 
+						 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));
+							player1.teleport(Main.getLoc(Main.arena.get("lobby"), true));
 				} else {		
 					p.teleport(g.getSpawn2());
 					player1.teleport(g.getSpawn1());
@@ -131,9 +138,18 @@ public class DeathManager {
 				Player player1A = g.getPlayer1().get(0);
 				Player player1B = g.getPlayer1().get(1);
 				Player player2A = g.getPlayer2().get(0);
-				Player player2B = g.getPlayer2().get(1);			
+				Player player2B = g.getPlayer2().get(1);	
+				
+				
+				
+				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + player1A.getName() + " " + player1B.getName() +
+				//		" "+ player2A.getName() + " "+ player2B.getName());
+				
+				
+				
 				if (p == player1A) {
 					
+				
 					if (g.getInGameSpect().contains(player1B)) {
 						g.addPoints2();
 						if (g.getPoints2() >= g.getWin()) {	
@@ -142,6 +158,7 @@ public class DeathManager {
 						} else {
 							g.addRounds();	
 							g.getInGameSpect().clear();
+							//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 							player1A.setGameMode(GameMode.SURVIVAL);
 						    player2A.setGameMode(GameMode.SURVIVAL);
 						    player1B.setGameMode(GameMode.SURVIVAL);
@@ -188,6 +205,7 @@ public class DeathManager {
 						}
 					} else {
 						g.getInGameSpect().add(p);
+						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 						p.setGameMode(GameMode.SPECTATOR);
 						p.teleport(player1B);
 						for (Player sp : g.getSpectators()) {
@@ -233,6 +251,7 @@ public class DeathManager {
 				} else {
 					
 					g.getInGameSpect().clear();
+					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 					g.addRounds();	
 					player1A.setGameMode(GameMode.SURVIVAL);
 				    player2A.setGameMode(GameMode.SURVIVAL);
@@ -279,6 +298,7 @@ public class DeathManager {
 				}
 			} else {
 				g.getInGameSpect().add(p);
+				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 				p.setGameMode(GameMode.SPECTATOR);
 				p.teleport(player1A);
 				for (Player sp : g.getSpectators()) {
@@ -324,6 +344,7 @@ public class DeathManager {
 					} else {
 						g.addRounds();				
 						g.getInGameSpect().clear();
+						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 						player1A.setGameMode(GameMode.SURVIVAL);
 					    player2A.setGameMode(GameMode.SURVIVAL);
 					    player1B.setGameMode(GameMode.SURVIVAL);
@@ -369,6 +390,7 @@ public class DeathManager {
 					}
 				} else {
 					g.getInGameSpect().add(p);
+					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 					p.setGameMode(GameMode.SPECTATOR);
 					p.teleport(player2B);
 					for (Player sp : g.getSpectators()) {
@@ -413,7 +435,8 @@ public class DeathManager {
 							
 						} else {
 							g.addRounds();	
-							g.getSpectators().clear();
+							g.getInGameSpect().clear();
+							//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 							player1A.setGameMode(GameMode.SURVIVAL);
 						    player2A.setGameMode(GameMode.SURVIVAL);
 						    player1B.setGameMode(GameMode.SURVIVAL);
@@ -459,6 +482,7 @@ public class DeathManager {
 						}
 					} else {
 						g.getInGameSpect().add(p);
+						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 						p.setGameMode(GameMode.SPECTATOR);
 						p.teleport(player2A);
 						for (Player sp : g.getSpectators()) {

@@ -86,6 +86,19 @@ public class GameManager {
     	return null;
     }
     
+    
+    public Game getFFAQueue (Player p) {
+    	for (Game a : this.arenas) {
+    		if (a.getType().equalsIgnoreCase("ffaspleef")) {
+    		 if (a.getQueue().contains(p)) {
+    			return a;
+    		 }
+    		 }
+    	}
+    	return null;
+    }
+    
+    
  
     public Game loadArena(Location spawn1, Location spawn2,Location arena1, Location arena2, Location spect, String id, String tipo) {       
 
@@ -571,12 +584,24 @@ public class GameManager {
 		  Player p1 = g.getPlayer1().get(0);
 		  Player p2 = g.getPlayer2().get(0);
 		  
+		  Location p1block = new Location (p1.getWorld(), p1.getLocation().getBlockX(), p1.getLocation().getBlockY()-1,
+				  p1.getLocation().getBlockZ());
+		  
+		  Location p2block = new Location (p2.getWorld(), p2.getLocation().getBlockX(), p2.getLocation().getBlockY()-1,
+				  p2.getLocation().getBlockZ());
+		 
+		  Location spawn1 = new Location (g.getSpawn1().getWorld(),g.getSpawn1().getBlockX(),
+				  g.getSpawn1().getBlockY()-1, g.getSpawn1().getBlockZ());
+		  
+		  Location spawn2 = new Location (g.getSpawn2().getWorld(),g.getSpawn2().getBlockX(),
+				  g.getSpawn2().getBlockY()-1, g.getSpawn2().getBlockZ());
 		  
 		  for (int x = ax; x < bx; x++) {
 			  for (int z = az; z < bz; z++) {
-				  Location aire = new Location (a.getWorld(), x, y, z);
-				  if (!(p1.getLocation() == aire) || (!(p2.getLocation() == aire)) || 
-						  !(g.getSpawn1() == aire) || (!(g.getSpawn2() == aire))) {
+				  Location aire = new Location (a.getWorld(), x, y, z); 
+				  
+				  if (!(p1block == aire) || (!(p2block == aire)) || 
+						  !(spawn1 == aire) || (!(spawn2 == aire))) {
 				  if (aire.getBlock().getType().equals(Material.SNOW_BLOCK)) {
 				  aire.getBlock().setType(Material.AIR);
 				  }
@@ -622,6 +647,26 @@ public class GameManager {
         return false;
     }
     
+    
+    public boolean isInFFAQueue(Player p) {
+        for (Game a : this.arenas) {
+        		if (a.getType().equalsIgnoreCase("ffaspleef")) {
+        		 if (a.getQueue().contains(p))
+                     return true;
+        		}
+        }
+        return false;
+    }
+    
+    
+    public boolean isInQueue(Player p) {
+        for (Game a : this.arenas) {
+        		 if (a.getQueue().contains(p))
+                     return true;
+        		
+        }
+        return false;
+    }
     
     
     
@@ -728,6 +773,14 @@ public class GameManager {
     
     
     public void addSpleefFFAQueue (Player p) {
+    	
+    	for (Game g : this.arenas) {
+    		try {
+    			g.getQueue().remove(p);
+    		} catch (Exception e) {}
+    	}
+    	
+    	
     	for (final Game g : this.arenas) {
     			if (g.getType().equalsIgnoreCase("ffaspleef")) {
     				for (Game ga : this.arenas) {
@@ -767,6 +820,7 @@ public class GameManager {
     		    			p.sendMessage("§3[Spleef] §6Added to the queue for §aFFASpleef");
     		    		}
     					if (g.getQueue().size() >= 3) {
+    						if (!g.isFFAStarting()) {
     						for (Player pa : g.getQueue()) {
     							if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
     	    		    			pa.sendMessage("§3[Spleef] §6La partida comenzará en 5 segundos.");
@@ -785,6 +839,7 @@ public class GameManager {
     					        }
     					      }
     					      , 100L);
+    					}
     				}
     				}	
     				return;
@@ -808,6 +863,13 @@ public class GameManager {
     
     
     public void addSpleef2v2Queue (Player p, String id) {
+    	
+    	for (Game g : this.arenas) {
+    		try {
+    			g.getQueue().remove(p);
+    		} catch (Exception e) {}
+    	}
+    	
     	for (Game ga : this.arenas) {
 			try {
 				ga.getQueue().remove(p);
@@ -945,6 +1007,13 @@ public class GameManager {
   
     
     public void addUnrankedQueue(Player p, String id) {	
+    	
+    	for (Game g : this.arenas) {
+    		try {
+    			g.getQueue().remove(p);
+    		} catch (Exception e) {}
+    	}
+    	
     	if (id == null) { 	
     		for (Game g : this.arenas) {
     			if (g.getType().equalsIgnoreCase("spleef")) {
@@ -1077,6 +1146,13 @@ public class GameManager {
     
     
     public void addRankedQueue(Player p, String id) {	
+    	
+    	for (Game g : this.arenas) {
+    		try {
+    			g.getQueue().remove(p);
+    		} catch (Exception e) {}
+    	}
+    	
     	if (id == null) { 	
     		for (Game g : this.arenas) {
     			if (g.getType().equalsIgnoreCase("spleef")) {
@@ -1209,6 +1285,14 @@ public class GameManager {
 
 
 public void DuelGame (Player p1, Player p2, String id) {
+	
+	for (Game g : this.arenas) {
+		try {
+			g.getQueue().remove(p1);
+			g.getQueue().remove(p2);
+		} catch (Exception e) {}
+	}
+	
 	if (id == null) {
 		ArrayList<Game> av = new ArrayList<Game>();
 		 for (Game g : getArenasList()) {

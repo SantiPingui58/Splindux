@@ -12,18 +12,22 @@ import com.santipingui58.spleef.utils.ItemBuilder;
 public class LanguageMenu  {
 
 
-    static Menu menu = new Menu("Idiomas", 18, new Menu.OptionClickEventHandler() {
+    public static Menu menu = new Menu("Idiomas", 18, new Menu.OptionClickEventHandler() {
         @Override
         public void onOptionClick(Menu.OptionClickEvent event) {
         	if (event.getName().equalsIgnoreCase("§aEnglish")) {
-        		event.getPlayer().sendMessage("§aLanguage updated! Please re-join the Server and join again to see the changes.");
+        		event.getPlayer().sendMessage("§aLanguage updated!");
         		Main.data.getConfig().set("data." + event.getPlayer().getUniqueId() + ".lang", "ENG");
         		Main.data.save();
+        		event.getPlayer().getInventory().clear();
+        		Main.giveItems(event.getPlayer());
         		event.setWillClose(true);
         	} else if (event.getName().equalsIgnoreCase("§aEspañol")) {
-        		event.getPlayer().sendMessage("§aIdioma actualizado! Por favor vuelvea entrar al server para cargar los cambios.");
+        		event.getPlayer().sendMessage("§aIdioma actualizado!");
         		Main.data.getConfig().set("data." + event.getPlayer().getUniqueId() + ".lang", "ESP");	
         		Main.data.save();
+        		event.getPlayer().getInventory().clear();
+        		Main.giveItems(event.getPlayer());
         		event.setWillClose(true);
         	} else if (event.getName().equalsIgnoreCase("§cVolver")) {
         		new OptionsMenu(event.getPlayer()).o(event.getPlayer());

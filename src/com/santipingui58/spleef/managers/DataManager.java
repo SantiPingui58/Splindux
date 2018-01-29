@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
+import com.santipingui58.spleef.menu.esp.LanguageMenu;
 
 public class DataManager {
 
@@ -54,6 +55,9 @@ public class DataManager {
 	public static void onCreateData(Player p) {
 		
 		  if (!Main.data.getConfig().contains("data." + p.getUniqueId())) {
+			  
+			  LanguageMenu.menu.open(p);
+			  
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".name", p.getName());
 			  Main.data.save();
 			   Date date = new Date();

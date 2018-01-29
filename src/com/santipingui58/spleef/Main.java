@@ -13,14 +13,18 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -152,6 +156,20 @@ public class Main extends JavaPlugin {
 		    	p.performCommand("leave");
 		    }
 		    
+		    new BukkitRunnable() {
+				@Override
+				public void run() {
+					try {
+		    getServer().createWorld(new WorldCreator("splindux").environment(Environment.NORMAL));
+		    getServer().createWorld(new WorldCreator("construccion").environment(Environment.NORMAL));
+		    getServer().createWorld(new WorldCreator("arenas").environment(Environment.NORMAL));
+		    getServer().getLogger().info("Mapas cargados");
+					} catch (Exception e) {
+						  getServer().getLogger().info("Error al intentar cargar los mapas!");
+					}
+				}
+			}.runTaskLater(Main.get(), 5L);	
+		    
 		    
 		    
 		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
@@ -212,7 +230,8 @@ public class Main extends JavaPlugin {
 		        			} 
 		        		}
 	                          
-	             
+	                 
+	                 
 		        	for (final Game g : GameManager.getManager().getArenasList()) {
 		        		if (GameManager.getManager().getInGameArenas().contains(g)) {
 		        		try {
@@ -306,7 +325,7 @@ public class Main extends JavaPlugin {
 			     		        		        	}
 			        		        	 			
 			        		        	 		} else if (g.getTime() >= 299) {
-
+			        		        	 			
 			        		        	 			FFASpleefGame.gameOver(null, g.getId());
 			        		        	 		}
 				        		        }
@@ -459,6 +478,7 @@ public class Main extends JavaPlugin {
 	    }
 	  
 	  public static void giveItems(Player p) {
+		  p.setGameMode(GameMode.ADVENTURE);
 		  p.getInventory().clear();
 		  SpleefRankManager.levelUpProgress(p);
 		  for (PotionEffect effect : p.getActivePotionEffects())
@@ -468,12 +488,14 @@ public class Main extends JavaPlugin {
 			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 			p.getInventory().setItem(0, Game.rankeditemesp);
 			p.getInventory().setItem(1, Game.unrankeditemesp);
+			p.getInventory().setItem(5, Game.partiesesp);
 			p.getInventory().setItem(7, Game.torneosesp);
 			p.getInventory().setItem(8, Game.opcionesesp);
 			
 		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
 			p.getInventory().setItem(0, Game.rankeditemeng);
 			p.getInventory().setItem(1, Game.unrankeditemeng);
+			p.getInventory().setItem(5, Game.partieseng);
 			p.getInventory().setItem(7, Game.torneoseng);
 			p.getInventory().setItem(8, Game.opcioneseng);
 		} else {

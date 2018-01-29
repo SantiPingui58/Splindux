@@ -157,21 +157,20 @@ public class Spleef2v2Game implements Listener  {
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  
-	  		  if (ganador == null && perdedor == null) {
-	  			try {
-					  for (Player p1 : g.getPlayer1()) {
-						  p1.teleport(Main.getLoc(Main.arena.get("lobby"), true));
-						  Main.giveItems(p1);
-					  }
-					  
-					for (Player p2 : g.getPlayer2()) {
-						  p2.teleport(Main.getLoc(Main.arena.get("lobby"), true));
-						  Main.giveItems(p2);
+		  for (Player p1 : g.getPlayer1()) {
+			  p1.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+			  Main.giveItems(p1);
+		  }
+		  
+		for (Player p2 : g.getPlayer2()) {
+			  p2.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+			  Main.giveItems(p2);
 
-					
-					  }
-				  } catch (Exception e) {}
-				
+		
+		  }
+		  
+		  
+	  		  if (ganador == null && perdedor == null) {
 				g.resetPoints();
 				 g.getPlayer1().clear();
 				 g.getPlayer2().clear();

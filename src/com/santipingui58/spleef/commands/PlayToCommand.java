@@ -24,6 +24,7 @@ public class PlayToCommand implements CommandExecutor {
 			if (GameManager.getManager().isInGame(p)) {
 				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef") ||
 						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef2v2")) {
+					if (!GameManager.getManager().isRanked(GameManager.getManager().getArenabyPlayer(p))) {
 			if (args.length == 0 || args.length >= 2) {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§aUso: /playto <número>");
@@ -62,15 +63,19 @@ public class PlayToCommand implements CommandExecutor {
 					
 					
 				}
-					
 				} else {
 					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 						p.sendMessage("§cEste comando no puede ejecutarse aquí");
 					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 						p.sendMessage("§cThis command can't be executed here.");
 					}
-			
-			
+			} 
+				} else {
+					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+						p.sendMessage("§cEste comando no puede ejecutarse aquí");
+					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+						p.sendMessage("§cThis command can't be executed here.");
+					}
 			}  
 				
 				

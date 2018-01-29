@@ -79,7 +79,9 @@ public class RankedSpleefGame implements Listener  {
 	  
 	  
 	  public static void gameOver(Player ganador, Player perdedor, String id) {
-	  	
+	  
+		 //Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("terminado");
+		  
 		  Player player1 = null;
 		  Player player2 = null;
 		  Game g = GameManager.getManager().getArena(id);
