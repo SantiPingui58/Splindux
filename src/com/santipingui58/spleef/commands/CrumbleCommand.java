@@ -4,8 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
 
@@ -19,11 +17,13 @@ public class CrumbleCommand implements CommandExecutor {
 			return true;
 			
 		} else {
-		if(cmd.getName().equalsIgnoreCase("crumble")){
+		if(cmd.getName().equalsIgnoreCase("crumble")) {
 			Player p = (Player) sender;
 			
 			if (GameManager.getManager().isInGame(p)) {
-				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef")) {
+				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef") ||
+						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef2v2")) {
+					if (!GameManager.getManager().isRanked(GameManager.getManager().getArenabyPlayer(p))) {
 			if (args.length == 0 || args.length >= 2) {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§aUso: /crumble <porcentaje>");
@@ -47,93 +47,7 @@ public class CrumbleCommand implements CommandExecutor {
 					}
 					
 					if (por <= 90 && por >=10) {
-						Game g = GameManager.getManager().getArenabyPlayer(p);
-						Player rival = null;
-						
-						if (g.getPlayer1().contains(p)) {
-							rival = g.getPlayer2().get(0);
-						} else if (g.getPlayer2().contains(p)) {
-							rival = g.getPlayer1().get(0);
-						}
-						
-						
-					
-						if (g.getCrumble().containsKey(rival)) {
-						if (por == g.getCrumble().get(rival)) {
-						//
-							
-							GameManager.getManager().crumble(g, por);
-							g.getCrumble().clear();
-							return true;
-						
-						} else {
-							if (g.getPlayer1().contains(p) || g.getPlayer2().contains(p)) {
-								if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-								p.sendMessage("§3[Spleef]§6 Has solicitado crumblear la arena");
-								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-									p.sendMessage("§3[Spleef]§6 You have requested to crumble the arena");
-								}
-								if (g.getPlayer1().contains(p)) {
-									Player p2 = GameManager.getManager().getArenabyPlayer(p).getPlayer2().get(0);
-									if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
-									p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado crumblear la arena §7(§e"+por + "%§7)§a, coloca §b/crumble " 
-											+ por + "§a para hacerlo.");
-									} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
-										p2.sendMessage("§3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
-											+ por + "§a to do it.");
-									}
-								} else if (g.getPlayer2().contains(p)) {
-									Player p1 = GameManager.getManager().getArenabyPlayer(p).getPlayer1().get(0);
-									if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-									p1.sendMessage("§3[Spleef]§aTu oponente ha solicitado crumblear la arena §7(§e"+por + "%§7)§a, coloca §b/crumble " 
-											+ por + "§a para hacerlo.");
-									} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-										p1.sendMessage("§3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
-												+ por + "§a to do it.");
-									}
-								}
-									
-							}
-							g.getCrumble().put(p, por);
-						}
-						
-					} else {
-						if (g.getPlayer1().contains(p) || g.getPlayer2().contains(p)) {
-							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-							p.sendMessage("§3[Spleef]§6 Has solicitado crumblear la arena");
-							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-								p.sendMessage("§3[Spleef]§6 You have requested to crumble the arena");
-							}
-							if (g.getPlayer1().contains(p)) {
-								Player p2 = GameManager.getManager().getArenabyPlayer(p).getPlayer2().get(0);
-								if (DataManager.getLang(p2).equalsIgnoreCase("ESP")) {
-								p2.sendMessage("§3[Spleef]§aTu oponente ha solicitado crumblear la arena §7(§e"+por + "%§7)§a, coloca §b/crumble " 
-										+ por + "§a para hacerlo.");
-								} else if (DataManager.getLang(p2).equalsIgnoreCase("ENG")) {
-									p2.sendMessage("§3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
-										+ por + "§a to do it.");
-								}
-							} else if (g.getPlayer2().contains(p)) {
-								Player p1 = GameManager.getManager().getArenabyPlayer(p).getPlayer1().get(0);
-								if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-								p1.sendMessage("§3[Spleef]§aTu oponente ha solicitado crumblear la arena §7(§e"+por + "%§7)§a, coloca §b/crumble " 
-										+ por + "§a para hacerlo.");
-								} else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-									p1.sendMessage("§3[Spleef]§a Your oponent has requested to crumble the arena§7(§e"+por + "%§7)§a, type §b/crumble " 
-											+ por + "§a to do it.");
-								}
-							}
-								
-								
-								
-							
-						}
-						g.getCrumble().put(p, por);
-						return true;
-					}
-			
-							
-						
+					GameManager.getManager().crumbleRequest(p, por);
 					} else {
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 							p.sendMessage("§cEl porcentaje debe ser un número entre 10 y 90.");
@@ -141,12 +55,14 @@ public class CrumbleCommand implements CommandExecutor {
 							p.sendMessage("§cThe percentage must be a number between 10 and 90.");
 						}
 					}
-					
-					
-					
-					
 				}
-			
+				} else {
+					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+						p.sendMessage("§cEste comando no puede ejecutarse aquí");
+					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+						p.sendMessage("§cThis command can't be executed here.");
+					}
+				}
 			} else {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§cEste comando no puede ejecutarse aquí");

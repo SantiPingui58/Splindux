@@ -37,18 +37,22 @@ import com.santipingui58.spleef.commands.FriendsCommand;
 import com.santipingui58.spleef.commands.HGCommand;
 import com.santipingui58.spleef.commands.HeadCommand;
 import com.santipingui58.spleef.commands.LeaveCommand;
+import com.santipingui58.spleef.commands.MatchesCommand;
 import com.santipingui58.spleef.commands.MsgCommand;
 import com.santipingui58.spleef.commands.NickCommand;
 import com.santipingui58.spleef.commands.PartyCommand;
 import com.santipingui58.spleef.commands.PingCommand;
 import com.santipingui58.spleef.commands.PlayToCommand;
 import com.santipingui58.spleef.commands.RankCommand;
+import com.santipingui58.spleef.commands.RankingCommand;
 import com.santipingui58.spleef.commands.ResetCommand;
 import com.santipingui58.spleef.commands.RideCommand;
 import com.santipingui58.spleef.commands.SpectCommand;
 import com.santipingui58.spleef.commands.SpleefCommand;
 import com.santipingui58.spleef.commands.StaffCommand;
 import com.santipingui58.spleef.commands.StatsCommand;
+import com.santipingui58.spleef.commands.VoteNameMCCommand;
+import com.santipingui58.spleef.game.BuildSpleefPvPGame;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
@@ -59,9 +63,12 @@ import com.santipingui58.spleef.listener.PlayerChat;
 import com.santipingui58.spleef.listener.PlayerJoin;
 import com.santipingui58.spleef.listener.PlayerLeave;
 import com.santipingui58.spleef.listener.PlayerListener;
+import com.santipingui58.spleef.listener.VotifierListener;
 import com.santipingui58.spleef.managers.BroadcastManager;
+import com.santipingui58.spleef.managers.CapsuleManager;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.DeathManager;
+import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
 import com.santipingui58.spleef.utils.Configuration;
@@ -69,6 +76,7 @@ import com.santipingui58.spleef.utils.Cooldown1_9;
 import com.santipingui58.spleef.utils.Damage1_9;
 import com.santipingui58.spleef.utils.HolographicAPI;
 import com.santipingui58.spleef.utils.Scoreboard;
+import com.yapzhenyie.GadgetsMenu.economy.GEconomyProvider;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -79,7 +87,7 @@ public class Main extends JavaPlugin {
 	  private static Plugin pl;
 	  private static Game game;
 	  private static int maxplayers;
-	  public static Configuration arena, data, anuncios;
+	  public static Configuration arena, data, anuncios, ranking,votes;
 	  public static String mapa;
 	  static File config;
 	  File file;
@@ -114,11 +122,13 @@ public class Main extends JavaPlugin {
 		    }
 		    getConfig();
 		    saveDefaultConfig();
-		    arena = new Configuration(this, "arena");
-		    
+		    arena = new Configuration(this, "arena");    
 		    data = new Configuration(this, "data");
-		    
 		    anuncios = new Configuration(this, "anuncios");
+		    ranking = new Configuration(this, "ranking");
+		    votes = new Configuration(this, "votes");
+		    
+		    
 		    
 		    maxplayers = getConfig().getInt("maxplayers");
 		    
@@ -137,13 +147,20 @@ public class Main extends JavaPlugin {
 		    getCommand("leave").setExecutor(new LeaveCommand());
 		    getCommand("friends").setExecutor(new FriendsCommand());
 		    getCommand("party").setExecutor(new PartyCommand());
+		    getCommand("pchat").setExecutor(new PartyCommand());
+		    getCommand("pc").setExecutor(new PartyCommand());
 		    getCommand("hg").setExecutor(new HGCommand());
 		    getCommand("afk").setExecutor(new AfkCommand());
 		    getCommand("fly").setExecutor(new FlyCommand());
 		    getCommand("ride").setExecutor(new RideCommand());
 		    getCommand("head").setExecutor(new HeadCommand());
 		    getCommand("msg").setExecutor(new MsgCommand());
+		    getCommand("r").setExecutor(new MsgCommand());
 		    getCommand("staff").setExecutor(new StaffCommand());
+		    getCommand("schat").setExecutor(new StaffCommand());
+		    getCommand("matches").setExecutor(new MatchesCommand());
+		    getCommand("votenamemc").setExecutor(new VoteNameMCCommand());
+		    getCommand("ranking").setExecutor(new RankingCommand());
 		    
 		    getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		    getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
@@ -152,9 +169,13 @@ public class Main extends JavaPlugin {
 		    getServer().getPluginManager().registerEvents(new Cooldown1_9(), this);
 		    getServer().getPluginManager().registerEvents(new Damage1_9(), this);
 		    getServer().getPluginManager().registerEvents(new NPCListener(), this);
-		    for (Player p : Bukkit.getOnlinePlayers()) {
-		    	p.performCommand("leave");
-		    }
+		    getServer().getPluginManager().registerEvents(new VotifierListener(), this);
+		    getServer().getPluginManager().registerEvents(new BuildSpleefPvPGame(), this);
+		    
+		    GEconomyProvider.setMysteryDustStorage(new EconomyManager(this, "Splindux"));
+		   // for (Player p : Bukkit.getOnlinePlayers()) {
+		    	//p.performCommand("leave");
+		   // }
 		    
 		    new BukkitRunnable() {
 				@Override
@@ -180,6 +201,7 @@ public class Main extends JavaPlugin {
 		        		if (GameManager.getManager().isInGame(p)) {
 		        			
 		        		Game g = GameManager.getManager().getArenabyPlayer(p);
+		        		
 		        		if (!g.getInGameSpect().contains(p)) {
 		        		DeathManager.onWalk(p);
 		        	}
@@ -194,6 +216,29 @@ public class Main extends JavaPlugin {
 	      , 0L, 8L);
 		        
 	  
+		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
+		    {
+
+				public void run()
+		        { 
+					VotifierListener.voteTime();
+		        }
+			  }
+		      , 0L, 20*60L);
+					
+		       
+		    
+		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
+		    {
+
+				public void run()
+		        { 
+					HolographicAPI.rotar();
+		        }
+			  }
+		      , 0L, 20*20L);
+		    
+		    
 	  
 		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
 		    {
@@ -201,24 +246,37 @@ public class Main extends JavaPlugin {
 				@SuppressWarnings("deprecation")
 				public void run()
 		        {
+					
+				
 		        	
 	                Date date = new Date();
 	                
+	               
 	                 if (date.getHours() == 0 && date.getMinutes() == 0 && date.getSeconds() == 0) {
-	                	Set<String> rankeds = Main.data.getConfig().getConfigurationSection("data").getKeys(false);    	
-	                	for (String s : rankeds) {
-	                		if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).has("splindux.staff")) {
-	                			DataManager.setRankeds("data." + s + ".rankeds", 30);
-	                		} else if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).inGroup("extreme")) {
-	                			DataManager.setRankeds("data." + s + ".rankeds", 30);
-	                		} else if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).inGroup("epic")) {
-	                			DataManager.setRankeds("data." + s + ".rankeds", 20);
-	                		}  else if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).inGroup("vip")) {
-	                			DataManager.setRankeds("data." + s + ".rankeds", 15);
-	                		}  else {
-	                			DataManager.setRankeds("data." + s + ".rankeds", 10);
-	                		}
-	                	}
+	                	 
+	 	                if (date.getDate()==1){
+	 	                	DataManager.resetMonthlyFFAWins();
+	 	                }
+	 	               Set<String> rankeds = Main.data.getConfig().getConfigurationSection("data").getKeys(false);   
+	 	               
+	 	               Bukkit.getScheduler().runTaskAsynchronously(Main.get(), new Runnable() {
+	 	                  @Override
+	 	                  public void run() {
+	 	                	 for (String s : rankeds) {   
+	 	                		if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).has("splindux.extreme")) {
+	 	                			DataManager.setRankeds("data." + s + ".rankeds", 30);
+	 	                		} else if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).has("splindux.epic")) {
+	 	                			DataManager.setRankeds("data." + s + ".rankeds", 20);
+	 	                		}  else if (PermissionsEx.getUser(Main.data.getConfig().getString("data." + s + ".name")).has("splindux.vip")) {
+	 	                			DataManager.setRankeds("data." + s + ".rankeds", 15);
+	 	                		}  else {
+	 	                			DataManager.setRankeds("data." + s + ".rankeds", 10);
+	 	                		}
+	 	                	}
+	 	                  }
+	 	              });
+	                	
+	                	
 	                }
 		        	
 	                 
@@ -234,6 +292,39 @@ public class Main extends JavaPlugin {
 	                 
 		        	for (final Game g : GameManager.getManager().getArenasList()) {
 		        		if (GameManager.getManager().getInGameArenas().contains(g)) {
+		        			
+		        			if (g.getPoints1() >= g.getWin()) {
+		        				if (g.getType().equalsIgnoreCase("spleef")) {
+		        					if (GameManager.getManager().isRanked(g)) {
+		        						RankedSpleefGame.gameOver(g.getPlayer1().get(0), g.getPlayer2().get(0), g.getId());
+		        					} else {
+		        						SpleefGame.gameOver(g.getPlayer1().get(0), g.getPlayer2().get(0), g.getId());
+		        					}
+		        				} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+		        					if (GameManager.getManager().isRanked(g)) {
+		        						//RankedSpleefGame.gameOver(g.getPlayer1().get(0), g.getPlayer2().get(0), g.getId());
+		        					} else {
+		        						Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
+		        					}
+		        				}
+		        			} else if (g.getPoints2() >= g.getWin()) {
+		        				if (g.getType().equalsIgnoreCase("spleef")) {
+		        					if (GameManager.getManager().isRanked(g)) {
+		        						RankedSpleefGame.gameOver(g.getPlayer2().get(0), g.getPlayer1().get(0), g.getId());
+		        					} else {
+		        						SpleefGame.gameOver(g.getPlayer2().get(0), g.getPlayer1().get(0), g.getId());
+		        					}
+		        				} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+		        					if (GameManager.getManager().isRanked(g)) {
+		        						//RankedSpleefGame.gameOver(g.getPlayer1().get(0), g.getPlayer2().get(0), g.getId());
+		        					} else {
+		        						Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());
+		        					}
+		        				}
+		        			}
+		        			
+		        			
+		        			
 		        		try {
 		        		Set<Game> dup = findDuplicates(GameManager.getManager().getInGameArenas());
 		        			if (dup.contains(g)) {
@@ -249,7 +340,8 @@ public class Main extends JavaPlugin {
 		        		} catch (Exception e) {}
 		        		
 		        		        if (g.getCanPlay() == false) {
-		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")) {
+		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")
+		        		        			|| g.getType().equalsIgnoreCase("BuildSpleefPvP") || g.getType().equalsIgnoreCase("bowspleef")) {
 		        		        	if (g.getArenaStarting() > 1) {
 		        		        	g.ArenaStarting();
 		        		        
@@ -278,11 +370,16 @@ public class Main extends JavaPlugin {
 		        		        	  }
 		        		        	} else {
 		        		        		g.resetArenaStarting();
-		        		        		if (g.getType().equalsIgnoreCase("spleef")) {
-		        		        		GameManager.getManager().cristalquitar(g.getSpawn1(), g.getSpawn2());
+		        		        		if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("BuildSpleefPvP")
+		        		        				|| g.getType().equalsIgnoreCase("bowspleef")) {
+		        		        		CapsuleManager.removeCapsula(g.getSpawn1());
+		        		        		CapsuleManager.removeCapsula(g.getSpawn2());
+		        		        		
 		        		        		} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
-		        		        			GameManager.getManager().cristalquitar(g.getSpawn1A(), g.getSpawn1B());
-		        		        			GameManager.getManager().cristalquitar(g.getSpawn2A(), g.getSpawn2B());
+		        		        			CapsuleManager.removeCapsula(g.getSpawn1A());
+		        		        			CapsuleManager.removeCapsula(g.getSpawn1B());
+			        		        		CapsuleManager.removeCapsula(g.getSpawn2A());
+			        		        		CapsuleManager.removeCapsula(g.getSpawn2B());
 		        		        		}
 		        		        		g.trueCanPlay();
 		        		        		
@@ -328,52 +425,38 @@ public class Main extends JavaPlugin {
 			        		        	 			
 			        		        	 			FFASpleefGame.gameOver(null, g.getId());
 			        		        	 		}
-				        		        }
-		        		        
-		        		              
-		        	}
+				        		        }	              
+		        		        	 }
 		        	}
 	        }
 	      }
 	  }
 	      , 0L, 20L);
 		
-		    
-		    
-		    
-		    
 		    if (arena.getConfig().contains("arenas")) {
 		    	this.getLogger().info("Buscando arenas...");
 		    	try {
 		    		GameManager.getManager().loadArenas();
 		    	} catch(Exception e) {}
 		    }
-		    
-		    
 		      
 		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
 		    {
-
 				public void run()
 		        {
 					BroadcastManager.Broadcast(); 
-							HolographicAPI.update();
-							
+							HolographicAPI.update();			
 		        }
 		      }
-		      , 0L, 300*20L);
-		    
-		    
+		      , 0L, 300*20L);   
 	  }
 	  
 
 		    	
 	  @Override
 	 public void onDisable() {
-
 		  
 		  try {
-			  
 		 for (Game g : GameManager.getManager().getArenasList()) {
 			 g.getQueue().clear();
 	
@@ -480,7 +563,7 @@ public class Main extends JavaPlugin {
 	  public static void giveItems(Player p) {
 		  p.setGameMode(GameMode.ADVENTURE);
 		  p.getInventory().clear();
-		  SpleefRankManager.levelUpProgress(p);
+		  SpleefRankManager.checkLevel(p);
 		  for (PotionEffect effect : p.getActivePotionEffects())
 		        p.removePotionEffect(effect.getType());
 		  
@@ -488,14 +571,16 @@ public class Main extends JavaPlugin {
 			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 			p.getInventory().setItem(0, Game.rankeditemesp);
 			p.getInventory().setItem(1, Game.unrankeditemesp);
-			p.getInventory().setItem(5, Game.partiesesp);
+			p.getInventory().setItem(4, Game.gadgetsesp);
+			p.getInventory().setItem(6, Game.partiesesp);
 			p.getInventory().setItem(7, Game.torneosesp);
 			p.getInventory().setItem(8, Game.opcionesesp);
 			
 		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
 			p.getInventory().setItem(0, Game.rankeditemeng);
 			p.getInventory().setItem(1, Game.unrankeditemeng);
-			p.getInventory().setItem(5, Game.partieseng);
+			p.getInventory().setItem(4, Game.gadgetseng);
+			p.getInventory().setItem(6, Game.partieseng);
 			p.getInventory().setItem(7, Game.torneoseng);
 			p.getInventory().setItem(8, Game.opcioneseng);
 		} else {

@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
 
+
 public class BroadcastManager {
 
 	public static void Broadcast() {
-	
 		final String prefix_esp = "§c[§2Anuncio§c]  ";
 		final String prefix_eng = "§c[§2Alert§c]  ";
         

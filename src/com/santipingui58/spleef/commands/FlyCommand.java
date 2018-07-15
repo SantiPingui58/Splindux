@@ -1,6 +1,5 @@
 package com.santipingui58.spleef.commands;
 
-import java.util.ArrayList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +11,6 @@ import com.santipingui58.spleef.managers.GameManager;
 
 public class FlyCommand implements CommandExecutor{
 
-	static ArrayList<Player> fly = new ArrayList<Player>();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, final String[] args) {
@@ -28,8 +26,7 @@ public class FlyCommand implements CommandExecutor{
 			if (p.hasPermission("splindux.fly")) {
 				
 				if (!GameManager.getManager().isInGame(p)) {
-				if (fly.contains(p)) {
-					fly.remove(p);
+				if (p.isFlying()) {
 					p.setAllowFlight(false);
 					p.setFlying(false);		
 					
@@ -40,9 +37,7 @@ public class FlyCommand implements CommandExecutor{
 					}	
 				} else {
 					p.setAllowFlight(true);
-					p.setFlying(true);		
-					fly.add(p);
-					
+					p.setFlying(true);						
 					if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 						p.sendMessage("§aFly activado");
 					} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {

@@ -3,6 +3,7 @@ package com.santipingui58.spleef.commands;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class NickCommand implements CommandExecutor {
 		} else {
 		if(cmd.getName().equalsIgnoreCase("nick")){
 			Player p = (Player) sender;
-			if (p.hasPermission("splingdux.nick")) {
+			if (p.hasPermission("splindux.nick")) {
 				if (args.length == 0 || args.length >= 3) {
 					if (p.hasPermission("splingdux.admin")) {
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
@@ -41,7 +42,7 @@ public class NickCommand implements CommandExecutor {
 					}
 					}
 				} else if (args[0].equalsIgnoreCase("off")){
-					if (p.hasPermission("splingux.admin")) {
+					if (p.hasPermission("splindux.admin")) {
 						if (args.length == 2) {
 							Player pa = Bukkit.getServer().getPlayer(args[1]);
 							if (Bukkit.getOnlinePlayers().contains(pa)) {
@@ -75,7 +76,7 @@ public class NickCommand implements CommandExecutor {
 						}
 					}
 				} else if (args.length == 2) {
-					if (p.hasPermission("splingdux.admin")) {
+					if (p.hasPermission("splindux.admin")) {
 						if (args[0].length() < 20) {
 							if (args[0].length() > 3) {
 							Set<String> data = Main.data.getConfig().getConfigurationSection("data").getKeys(false);
@@ -120,9 +121,9 @@ public class NickCommand implements CommandExecutor {
 							if (Bukkit.getOnlinePlayers().contains(pa)) {
 								DataManager.setNick(pa, args[0]);
 							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-								p.sendMessage("§aNick del jugador §b" + pa.getName() + " §aestablecido a §b" + args[0]);
+								p.sendMessage("§aNick del jugador §b" + pa.getName() + " §aestablecido a §b" + ChatColor.translateAlternateColorCodes('&',args[0]));
 							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-								p.sendMessage("§aNick of the player §b" + pa.getName() + " §asaved as §b" + args[0]);
+								p.sendMessage("§aNick of the player §b" + pa.getName() + " §asaved as §b" + ChatColor.translateAlternateColorCodes('&',args[0]));
 								
 							}
 							} else {
@@ -187,9 +188,9 @@ public class NickCommand implements CommandExecutor {
 						DataManager.setNick(p, args[0]);
 								
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-						p.sendMessage("§aNick cambiado a §b" + args[0] );
+						p.sendMessage("§aNick cambiado a §b" + ChatColor.translateAlternateColorCodes('&',args[0]));
 						} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-							p.sendMessage("§aNick changed to §b" + args[0]);
+							p.sendMessage("§aNick changed to §b" + ChatColor.translateAlternateColorCodes('&',args[0]));
 						}
 					} else {
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,14 +19,18 @@ public class Game {
 	public static ItemStack opcionesesp = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOpciones").build();
 	public static ItemStack torneosesp = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lEventos").build();
 	public static ItemStack leavequeueesp = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aSalir de la cola").build();
-	public static ItemStack partiesesp = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3Menu de Party").build();
+	public static ItemStack partiesesp = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3§lMenu de Party").build();
+	public static ItemStack gadgetsesp = new ItemBuilder (Material.CHEST).setTitle("§5§lGadgets").build();
+	
 	
 	public static ItemStack rankeditemeng = new ItemBuilder (Material.DIAMOND_SPADE).setTitle("§b§lRanked Queue").build();
 	public static ItemStack unrankeditemeng = new ItemBuilder (Material.IRON_SPADE).setTitle("§b§lUnranked Queue").build();
 	public static ItemStack opcioneseng = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOptions").build();
 	public static ItemStack torneoseng = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lTournaments").build();
 	public static ItemStack leavequeueeng = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aLeave the queue").build();
-	public static ItemStack partieseng = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3Party's Menu").build();
+	public static ItemStack partieseng = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3§lParty Menu").build();
+	public static ItemStack gadgetseng = new ItemBuilder (Material.CHEST).setTitle("§5§lGadgets").build();
+	
 	
 		private final String id;
 	 	private final String tipo;
@@ -38,11 +43,14 @@ public class Game {
 	    private final List<Player> player2 = new ArrayList<Player>(); 
 	    private final List<Player> ffaplayers = new ArrayList<Player>(); 
 	    private final List<Player> queue = new ArrayList<Player>();
-	  
 	    
+	    private  ArrayList<Player> tempPlayer1_2v2 = new ArrayList<Player>();
+	    private  ArrayList<Player> tempPlayer2_2v2 = new ArrayList<Player>();
+	     
 	    private int rounds;
 	    private boolean canPlay;
 	    private boolean isFFAStarting;
+	    
 	    private int arena_starting;
 	    private int points1;
 	    private int points2;
@@ -56,7 +64,7 @@ public class Game {
 	    private final HashMap<Player, Integer> playtorequest = new HashMap<Player,Integer>();
 	    private final List<Player>  endgamereset = new ArrayList<Player>();
 	    private final List<Player> reset = new ArrayList<Player>();
-
+	    private final List<Block> placedblocks = new ArrayList<Block>();
 	    
 	    
 	    
@@ -72,7 +80,24 @@ public class Game {
 
 	    }
 	    	 
+	    public List<Block> getPlacedBlocks() {
+	    	return placedblocks;
+	    }
+	    
+	    public void cleanPlacedBlocks() {
+	    	for (Block b : this.placedblocks) {
+	    		b.setType(Material.AIR);
+	    	}
+	    }
+	    
+		  public List<Player> getTempPlayer1_2v2() {
+			  return this.tempPlayer1_2v2;
+		  }
 		  
+		  
+		  public List<Player> getTempPlayer2_2v2() {
+			  return this.tempPlayer2_2v2;
+		  }
 	    
 	    public List<Player> getReset() {
 	    	return this.reset;
@@ -164,7 +189,7 @@ public class Game {
 	    }
 	    
 	    public void resetRounds() {
-	    	this.rounds = 0;
+	    	this.rounds = 1;
 	    }
 	 
 	    public int getArenaStarting() {

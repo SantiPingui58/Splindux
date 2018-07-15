@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.managers.DataManager;
+import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
 import com.santipingui58.spleef.utils.Scoreboard;
@@ -31,8 +30,9 @@ public class Spleef2v2Game implements Listener  {
 
   public static int task;
   public static ItemStack pala = new ItemStack (Material.DIAMOND_SPADE);
-  public static ItemStack rojo = new ItemStack (Material.BANNER);
-  public static ItemStack azul = new ItemStack (Material.BANNER);
+  
+public static ItemStack rojo = new ItemStack (Material.STAINED_GLASS,1, (short)14);
+public static ItemStack azul = new ItemStack (Material.STAINED_GLASS,1,(short)11 );
   
   
   
@@ -44,21 +44,17 @@ public class Spleef2v2Game implements Listener  {
 	      meta.spigot().setUnbreakable(true);
 	      meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 	      pala.setItemMeta(meta);
+ 
 	      
-	      BannerMeta metarojo = (BannerMeta) rojo.getItemMeta();
-	      metarojo.setBaseColor(DyeColor.RED);
-	      rojo.setItemMeta(metarojo);
 	      
-	      BannerMeta metaazul = (BannerMeta) azul.getItemMeta();
-	      metaazul.setBaseColor(DyeColor.BLUE);
-	      azul.setItemMeta(metaazul);
-	      Main.get().getLogger().info("ranked Spleef normal iniciado");
 	      final Game g = GameManager.getManager().getArena(id);
 	     final Player  p1A = g.getPlayer1().get(0);
 	     final Player  p1B = g.getPlayer1().get(1);
 	     
 	     final Player  p2A = g.getPlayer2().get(0);
 	     final Player  p2B = g.getPlayer2().get(1);
+	     
+	     
 	     
 	     p1A.setFlying(false);
 	     p2A.setFlying(false);
@@ -75,25 +71,25 @@ public class Spleef2v2Game implements Listener  {
 
 	     
 	     
-	     teamTeleport(p1A, p1B, g.getSpawn1());
-	     teamTeleport(p2A, p2B, g.getSpawn2());
+	     teamTeleport(g.getPlayer1(), g.getSpawn1());
+	     teamTeleport(g.getPlayer2(), g.getSpawn2());
 	     
 	     
 	     
 	     if (DataManager.getNightVision(p1A)) {
-	    	 p1A.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p1A.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	     
 	     if (DataManager.getNightVision(p1B)) {
-	    	 p1B.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p1B.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	     
 	     if (DataManager.getNightVision(p2A)) {
-	    	 p2A.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p2A.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	     
 	     if (DataManager.getNightVision(p2B)) {
-	    	 p2B.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p2B.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	     
 	     
@@ -110,10 +106,19 @@ public class Spleef2v2Game implements Listener  {
 			   		p2B.getInventory().addItem(pala);
 			   		
 				     p1A.getInventory().setHelmet(rojo);   
-				     p1B.getInventory().setHelmet(rojo);
+				     p1A.getInventory().setItem(8,new ItemStack(Material.INK_SACK, 1, (short)1)); 
 				     
-				     p2A.getInventory().setHelmet(azul);   
-				     p2B.getInventory().setHelmet(azul);
+				     p1B.getInventory().setHelmet(rojo);
+				     p1B.getInventory().setItem(8,new ItemStack(Material.INK_SACK, 1, (short)1)); 
+				     
+				     
+				     p2A.getInventory().setHelmet(azul); 
+				     p2B.getInventory().setItem(8,new ItemStack(Material.INK_SACK, 1, (short)4));
+				     
+				     p2B.getInventory().setHelmet(azul); 
+				     p2B.getInventory().setItem(8,new ItemStack(Material.INK_SACK, 1, (short)4));
+				     
+				     
 				     p1A.setGameMode(GameMode.SURVIVAL);
 				     p2A.setGameMode(GameMode.SURVIVAL);
 				     p1B.setGameMode(GameMode.SURVIVAL);
@@ -135,16 +140,16 @@ public class Spleef2v2Game implements Listener  {
 	  public static void gameOver(List<Player> ganador, List<Player> perdedor, String id) {
 	  	
 		  Game g = GameManager.getManager().getArena(id);
+		  g.getInGameSpect().clear();
+		  g.getTempPlayer1_2v2().clear();
+  		  g.getTempPlayer2_2v2().clear();
+		  String team1 = teamNames(g.getPlayer1());
+		  String team2 = teamNames(g.getPlayer2());
 		  
-		  String team1 = g.getPlayer1().get(0).getName() + "-"+  g.getPlayer1().get(1).getName();
-		  String team2 = g.getPlayer2().get(0).getName() + "-" + g.getPlayer2().get(1).getName();
-
 		  
 		  
 		  
 		  try {
-	  		  
-	  		  g.resetRounds();
 	  		  GameManager.getManager().reinicio(g);
 	  		Iterator<Game> i = GameManager.getManager().getInGameArenas().iterator();
 			while (i.hasNext()) {
@@ -154,7 +159,9 @@ public class Spleef2v2Game implements Listener  {
 				}
 				
 			}
+			  g.resetRounds();
 	  		  g.resetTime();
+	  		
 		  } catch (Exception e) {}
 	  		  
 		  for (Player p1 : g.getPlayer1()) {
@@ -168,7 +175,8 @@ public class Spleef2v2Game implements Listener  {
 
 		
 		  }
-		  
+		
+		GameManager.getManager().removeInGameArena(g);
 		  
 	  		  if (ganador == null && perdedor == null) {
 				g.resetPoints();
@@ -178,11 +186,14 @@ public class Spleef2v2Game implements Listener  {
 	  		  } else if (g.getPoints1() >= 5) {
 	
 	  			for (Player pa : ganador) {
-	  				SpleefRankManager.levelUp(pa);
+	  			  
+		  			SpleefRankManager.giveExp(pa,2);
+	  	  			EconomyManager.addCoins(pa, 10,true);
 	  			  }
 	  			
 	  			for (Player pa : perdedor) {
-	  				SpleefRankManager.levelUp(pa);
+	  				SpleefRankManager.giveExp(pa,1);
+	  			EconomyManager.addCoins(pa, 1,true);
 	  			  }
 		  		   
 	
@@ -209,13 +220,15 @@ public class Spleef2v2Game implements Listener  {
 	  			  } else if (g.getPoints2() >= 5) {
 
 	  				for (Player pa : ganador) {
-		  				SpleefRankManager.levelUp(pa);
+	  	  			  
+			  			SpleefRankManager.giveExp(pa,2);
+			  			EconomyManager.addCoins(pa, 10,true);
 		  			  }
 		  			
 		  			for (Player pa : perdedor) {
-		  				SpleefRankManager.levelUp(pa);
+		  				SpleefRankManager.giveExp(pa,1);
+		  			EconomyManager.addCoins(pa, 1,true);
 		  			  }
-	  	  		   
 	  	  		   for (Player sp : g.getSpectators()) {
 	  	  			 sp.sendMessage("§3[Spleef] §a" + team2 + " §7le ha ganado a §c" + team1
 	  				  + " §7(§e" + g.getPoints2() + "§7-§e" + g.getPoints1() + "§7)");
@@ -242,14 +255,16 @@ public class Spleef2v2Game implements Listener  {
 	  					
 	  			  } else if (ganador == g.getPlayer1()) {
 
-	  	  			for (Player pa : ganador) {
-	  	  				SpleefRankManager.levelUp(pa);
-	  	  			  }
-	  	  			
-	  	  			for (Player pa : perdedor) {
-	  	  				SpleefRankManager.levelUp(pa);
-	  	  			  }
-	  		  		   
+	  				for (Player pa : ganador) {
+	  	  			  
+			  			SpleefRankManager.giveExp(pa,2);
+			  			EconomyManager.addCoins(pa, 10,true);
+		  			  }
+		  			
+		  			for (Player pa : perdedor) {
+		  				SpleefRankManager.giveExp(pa,1);
+		  			EconomyManager.addCoins(pa, 1,true);
+		  			  }
 	  	
 	  		  		   for (Player sp : g.getSpectators()) {
 	  		  			 sp.sendMessage("§3[Spleef] §a" + team1 + " §7le ha ganado a §c" + team2 
@@ -273,14 +288,16 @@ public class Spleef2v2Game implements Listener  {
 	  			  } else if (ganador == g.getPlayer2()) {
 	  				  
 
-		  				for (Player pa : ganador) {
-			  				SpleefRankManager.levelUp(pa);
-			  			  }
-			  			
-			  			for (Player pa : perdedor) {
-			  				SpleefRankManager.levelUp(pa);
-			  			  }
-		  	  		   
+	  				for (Player pa : ganador) {
+	  	  			  
+			  			SpleefRankManager.giveExp(pa,2);
+			  			EconomyManager.addCoins(pa, 10,true);
+		  			  }
+		  			
+		  			for (Player pa : perdedor) {
+		  				SpleefRankManager.giveExp(pa,1);
+		  			EconomyManager.addCoins(pa, 1,true);
+		  			  }
 		  	  		   for (Player sp : g.getSpectators()) {
 		  	  			 sp.sendMessage("§3[Spleef] §a" + team2 + " §7le ha ganado a §c" + team1
 		  				  + " §7(§e" + g.getPoints2() + "§7-§e" + g.getPoints1() + "§7)");
@@ -343,7 +360,7 @@ public class Spleef2v2Game implements Listener  {
 	  	  }
 	  
 
-	  public static void teamTeleport(Player p1, Player p2, Location l) {
+	  public static void teamTeleport(List<Player> players, Location l) {
 		  
 		  int spawn1X = l.getBlockX() +2;
 		  int spawn1Y = l.getBlockY();
@@ -361,14 +378,30 @@ public class Spleef2v2Game implements Listener  {
 		  
 		  b.setDirection(l.getDirection());
 		  b.setPitch(l.getPitch());
-		  b.setYaw(l.getYaw());
-		  
-		  p1.teleport(a.add(0.5, 0, 0.5));
-		  p2.teleport(b.add(0.5, 0, 0.5));
-		  
+		  b.setYaw(l.getYaw()); 
+		  try {
+		  players.get(0).teleport(a.add(0.5, 0, 0.5));
+		  } catch (Exception e) {}
+
+		  try {
+			  players.get(1).teleport(b.add(0.5, 0, 0.5));
+		  } catch (Exception e) {}
 		  
 	  }
 	  
+	  
+	  public static String teamNames(List<Player> players) {
+		  String name = null;
+		  for (Player p : players) {
+			  if (name == null) {
+			  name =  p.getName();
+		  } else {
+		  name = name +"-"+ p.getName();
+		  }
+		  }
+		  
+		  return name;
+	  }
 	  
 	  
 	  

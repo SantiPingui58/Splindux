@@ -11,10 +11,8 @@ public class Party {
 	List<Player> players =  new ArrayList<Player>();
 	
 	
-	  public Party(Player leader, List<Player> players) {
+	  public Party(Player leader) {
 	        this.leader = leader;
-	        this.players = players;
-
 	    }
 	
 	  
@@ -23,6 +21,7 @@ public class Party {
 	  }
 	  public void setLeader(Player p) {
 		  players.add(this.leader);
+		  this.players.remove(p);
 		  this.leader = p;  
 	  }
 	  
@@ -35,7 +34,7 @@ public class Party {
 	  }
 	  
 	  public int getPartySize() {
-		  int size = this.players.size() + 1;
+		  int size = this.players.size();
 		  return size;
 
 	  }

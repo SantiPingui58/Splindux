@@ -27,7 +27,7 @@ public class HeadCommand implements CommandExecutor {
 			if (p.hasPermission("splindux.head")) {
 				if (args.length == 0) {
 					
-					 ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short)3);       
+						ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short)3);       
 				        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 				        headMeta.setOwner(p.getName());
 				        head.setItemMeta(headMeta);
@@ -72,11 +72,11 @@ public class HeadCommand implements CommandExecutor {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§cNo tienes permiso para ejecutar este comando.");
 					p.sendMessage("§aNecesitass un rango "
-							+ "§a§l[VIP]§a o superior para poder usar esto, visita la tienda para más información: §bhttp://splinduxstore.buycraft.net/");
+							+ "§5§l[Extreme]§a para poder usar esto, visita la tienda para más información: §bhttp://splinduxstore.buycraft.net/");
 				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 					p.sendMessage("§cYou don't have permission to execute this command.");
 					p.sendMessage("§aYou need a rank "
-							+ "§a§l[VIP] §aor higher to use this, visit the store for more info: §bhttp://splinduxstore.buycraft.net/");
+							+ "§5§l[Extreme] §ato use this, visit the store for more info: §bhttp://splinduxstore.buycraft.net/");
 				
 				} 
 			} 

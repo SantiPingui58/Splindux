@@ -70,7 +70,19 @@ public class RideCommand implements CommandExecutor {
 			} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 				p.sendMessage("§cYou can't execute this command in spectator mode.");
 			}
-		}}}
+		}
+				}else {
+			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+				p.sendMessage("§cNo tienes permiso para ejecutar este comando.");
+				p.sendMessage("§aNecesitass un rango "
+						+ "§5§l[Extreme]§a para poder usar esto, visita la tienda para más información: §bhttp://splinduxstore.buycraft.net/");
+			} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+				p.sendMessage("§cYou don't have permission to execute this command.");
+				p.sendMessage("§aYou need a rank "
+						+ "§5§l[Extreme] §ato use this, visit the store for more info: §bhttp://splinduxstore.buycraft.net/");
+			
+			} 
+		}}
 		}
 	
 	return false;

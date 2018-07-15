@@ -1,11 +1,17 @@
 package com.santipingui58.spleef.managers;
 
 
+
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
+import com.santipingui58.spleef.game.BowSpleefGame;
+import com.santipingui58.spleef.game.BuildSpleefPvPGame;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
@@ -19,16 +25,15 @@ public class DeathManager {
 		
 			Game g = GameManager.getManager().getArenabyPlayer(p);
 			if (g.getType().equalsIgnoreCase("spleef")) {
+				
 					if (getDeath(p.getLocation(),g)) {
 						
 				Player player1 = g.getPlayer1().get(0);
 				Player player2 = g.getPlayer2().get(0);
-				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + player1.getName() + " " + player2.getName());
-				g.addRounds();				
+							
 				if (p == player1) {
 					g.addPoints2();
 								
-					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("puntos del jugador 2: " + g.getPoints2() + "/ " + g.getWin());
 					if (g.getPoints2() >= g.getWin()) {	
 						
 						 if (player2.getInventory().contains(SpleefGame.pala)) {
@@ -36,6 +41,7 @@ public class DeathManager {
 						 }
 						 if (p.getInventory().contains(SpleefGame.pala)) {
 						 p.getInventory().removeItem(SpleefGame.pala);
+						 }
 						 if (GameManager.getManager().isRanked(g)) {
 							  Main.get().getLogger().info("ranked terminado");
 							 RankedSpleefGame.gameOver(player2, player1, g.getId());
@@ -43,7 +49,7 @@ public class DeathManager {
 							  Main.get().getLogger().info("Spleef normal terminado");
 							SpleefGame.gameOver(player2, player1, g.getId());
 						 }
-						 }	
+						 
 						
 						 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));		
 							player2.teleport(Main.getLoc(Main.arena.get("lobby"), true));		
@@ -51,25 +57,27 @@ public class DeathManager {
 					} else {		
 						p.teleport(g.getSpawn1());	
 						player2.teleport(g.getSpawn2());
+						
+						try {
 						for (Player sp : g.getSpectators()) {		
 							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-							sp.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda " + g.getRounds());
+							sp.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 							} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-								sp.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round " + g.getRounds());
+								sp.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
 							}
 						}
 							if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
-							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda " + g.getRounds());
+							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 							 } else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
-							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round " + g.getRounds());
+							player1.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
 							 }
 							
 							if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
-								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda " + g.getRounds());
+								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 								 } else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
-								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round " + g.getRounds());
+								player2.sendMessage("§3[Spleef] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
 								 }
-							
+						} catch (Exception e) {}
  						GameManager.getManager().Countdown(g);
 						
 						
@@ -79,7 +87,6 @@ public class DeathManager {
 			
 			} else if (p == player2) {
 				g.addPoints1();
-				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("puntos del jugador 1: " + g.getPoints1() + "/ " + g.getWin());
 				if (g.getPoints1() >= g.getWin()) {	
 					
 						 if (player1.getInventory().contains(SpleefGame.pala)) {
@@ -101,26 +108,28 @@ public class DeathManager {
 				} else {		
 					p.teleport(g.getSpawn2());
 					player1.teleport(g.getSpawn1());
-									
+									try {
 					for (Player sp : g.getSpectators()) {		
 						if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-						sp.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda " + g.getRounds());
+						sp.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 						} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-							sp.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round " + g.getRounds());
+							sp.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
 						}
 					}
 					
 					if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
-						player1.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda " + g.getRounds());
+						player1.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 						} else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
-							player1.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round " + g.getRounds());
+							player1.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
 						}
 					if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
-						player2.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda " + g.getRounds());
+						player2.sendMessage("§3[Spleef] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
 						} else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
-							player2.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round " + g.getRounds());
+							player2.sendMessage("§3[Spleef] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
 						}
-					
+			} catch (Exception e) {}
+									
+													
 					GameManager.getManager().Countdown(g);
 				}
 				}
@@ -128,404 +137,399 @@ public class DeathManager {
 					g.getReset().clear();
 					g.getCrumble().clear();
 					g.getEndGame().clear();
+					g.addRounds();	
 				}
 			
-		} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+					
+					
+					
+		} else if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
 			
 			if (getDeath(p.getLocation(),g)) {
 				
-				
-				Player player1A = g.getPlayer1().get(0);
-				Player player1B = g.getPlayer1().get(1);
-				Player player2A = g.getPlayer2().get(0);
-				Player player2B = g.getPlayer2().get(1);	
-				
-				
-				
-				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + player1A.getName() + " " + player1B.getName() +
-				//		" "+ player2A.getName() + " "+ player2B.getName());
-				
-				
-				
-				if (p == player1A) {
+		Player player1 = g.getPlayer1().get(0);
+		Player player2 = g.getPlayer2().get(0);
 					
+		if (p == player1) {
+			g.addPoints2();
+						
+			if (g.getPoints2() >= g.getWin()) {	
 				
-					if (g.getInGameSpect().contains(player1B)) {
+
+				 if (GameManager.getManager().isRanked(g)) {
+					  Main.get().getLogger().info("ranked terminado");
+				 } else {
+					  Main.get().getLogger().info("Spleef normal terminado");
+					BuildSpleefPvPGame.gameOver(player2, player1, g.getId());
+				 }
+				 
+				
+				 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));		
+					player2.teleport(Main.getLoc(Main.arena.get("lobby"), true));		
+							
+			} else {		
+				p.teleport(g.getSpawn1());	
+				player2.teleport(g.getSpawn2());
+				BuildSpleefPvPGame.giveGameItems(p);
+				BuildSpleefPvPGame.giveGameItems(player2);
+				
+				try {
+				for (Player sp : g.getSpectators()) {		
+					if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
+					sp.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+					} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
+						sp.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+					}
+				}
+					if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+					 } else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+					 }
+					
+					if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
+						player2.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+						 } else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
+						player2.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+						 }
+				} catch (Exception e) {}
+					GameManager.getManager().Countdown(g);
+				
+				
+				}
+			
+	
+	
+	} else if (p == player2) {
+		g.addPoints1();
+		if (g.getPoints1() >= g.getWin()) {	
+			
+				 if (GameManager.getManager().isRanked(g)) {
+					 Main.get().getLogger().info("ranked terminado");
+				 } else {
+					 Main.get().getLogger().info("normal terminado");
+					 BuildSpleefPvPGame.gameOver(player1, player2,g.getId());
+				 }
+				 
+				 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));
+					player1.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+		} else {		
+			p.teleport(g.getSpawn2());
+			player1.teleport(g.getSpawn1());
+			BuildSpleefPvPGame.giveGameItems(p);
+			BuildSpleefPvPGame.giveGameItems(player1);
+							try {
+			for (Player sp : g.getSpectators()) {		
+				if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
+				sp.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
+					sp.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+			}
+			
+			if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+				player1.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+			if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
+				player2.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
+					player2.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+	} catch (Exception e) {}
+							
+											
+			GameManager.getManager().Countdown(g);
+		}
+		}
+		
+			g.getReset().clear();
+			g.getCrumble().clear();
+			g.getEndGame().clear();
+			g.addRounds();	
+		}
+	
+			
+			
+			
+} else if (g.getType().equalsIgnoreCase("bowspleef")) {
+			
+			if (getDeath(p.getLocation(),g)) {
+				
+		Player player1 = g.getPlayer1().get(0);
+		Player player2 = g.getPlayer2().get(0);
+					
+		if (p == player1) {
+			g.addPoints2();
+						
+			if (g.getPoints2() >= g.getWin()) {	
+				
+
+				 if (GameManager.getManager().isRanked(g)) {
+					  Main.get().getLogger().info("ranked terminado");
+				 } else {
+					  Main.get().getLogger().info("Spleef normal terminado");
+					BowSpleefGame.gameOver(player2, player1, g.getId());
+				 }
+				 
+				
+				 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));		
+					player2.teleport(Main.getLoc(Main.arena.get("lobby"), true));		
+							
+			} else {		
+				p.teleport(g.getSpawn1());	
+				player2.teleport(g.getSpawn2());
+				
+				try {
+				for (Player sp : g.getSpectators()) {		
+					if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
+					sp.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+					} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
+						sp.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+					}
+				}
+					if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+					 } else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+					 }
+					
+					if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
+						player2.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+						 } else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
+						player2.sendMessage("§3[BuildSpleefPvP] §b" + player2.getName() + "§a has won the round §c" + g.getRounds());
+						 }
+				} catch (Exception e) {}
+					GameManager.getManager().Countdown(g);
+				
+				
+				}
+			
+	
+	
+	} else if (p == player2) {
+		g.addPoints1();
+		if (g.getPoints1() >= g.getWin()) {	
+			
+				 if (GameManager.getManager().isRanked(g)) {
+					 Main.get().getLogger().info("ranked terminado");
+				 } else {
+					 Main.get().getLogger().info("normal terminado");
+					 BowSpleefGame.gameOver(player1, player2,g.getId());
+				 }
+				 
+				 	p.teleport(Main.getLoc(Main.arena.get("lobby" ), true));
+					player1.teleport(Main.getLoc(Main.arena.get("lobby"), true));
+		} else {		
+			p.teleport(g.getSpawn2());
+			player1.teleport(g.getSpawn1());
+							try {
+			for (Player sp : g.getSpectators()) {		
+				if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
+				sp.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
+					sp.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+			}
+			
+			if (DataManager.getLang(player1).equalsIgnoreCase("ESP")) {
+				player1.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(player1).equalsIgnoreCase("ENG")) {
+					player1.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+			if (DataManager.getLang(player2).equalsIgnoreCase("ESP")) {
+				player2.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a ha ganado la Ronda §c" + g.getRounds());
+				} else if (DataManager.getLang(player2).equalsIgnoreCase("ENG")) {
+					player2.sendMessage("§3[BuildSpleefPvP] §b" + player1.getName() + "§a has won the round §c" + g.getRounds());
+				}
+	} catch (Exception e) {}
+							
+											
+			GameManager.getManager().Countdown(g);
+		}
+		}
+		
+			g.getReset().clear();
+			g.getCrumble().clear();
+			g.getEndGame().clear();
+			g.addRounds();	
+		}
+	
+			
+			
+			
+} else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+			
+			if (getDeath(p.getLocation(),g)) {
+				
+				if (g.getPlayer1().contains(p)) {					
+					if (isTeamDead(g.getPlayer1(),g)) {
 						g.addPoints2();
+						
+						
 						if (g.getPoints2() >= g.getWin()) {	
-							Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());
-							
+							Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());		
 						} else {
-							g.addRounds();	
 							g.getInGameSpect().clear();
-							//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-							player1A.setGameMode(GameMode.SURVIVAL);
-						    player2A.setGameMode(GameMode.SURVIVAL);
-						    player1B.setGameMode(GameMode.SURVIVAL);
-						    player2B.setGameMode(GameMode.SURVIVAL);
-							
-							Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
-							Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
+						    for (Player p1 : g.getPlayer1()) {
+						    	p1.setGameMode(GameMode.SURVIVAL);
+						    }
+						    for (Player p2 : g.getPlayer2()) {
+						    	p2.setGameMode(GameMode.SURVIVAL);
+						    }
+						    
+							Spleef2v2Game.teamTeleport(g.getPlayer1(), g.getSpawn1());
+							Spleef2v2Game.teamTeleport(g.getPlayer2(), g.getSpawn2());
 							
 							for (Player sp : g.getSpectators()) {		
 								if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-								sp.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
+								sp.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a han ganado la Ronda §c" + g.getRounds());
 								} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-									sp.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
+									sp.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a has won the round §c" + g.getRounds());
 								}
 							}
-							
-							if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-								player1A.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-									player1A.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
+							for (Player pa : g.getPlayer1()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a han ganado la Ronda §c" + g.getRounds());
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a has won the round §c" + g.getRounds());
 								}
-							
-							if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-								player1B.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-									player1B.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
+							}
+					
+							for (Player pa : g.getPlayer2()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a han ganado la Ronda §c" + g.getRounds());
+									} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+										pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer2()) + "§a has won the round §c" + g.getRounds());
+									}
 								}
+						//	} catch (Exception e) {}
 							
-							if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-								player2A.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-									player2A.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-								player2B.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-									player2B.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							
-							
+							g.addRounds();	
 							GameManager.getManager().Countdown(g);
 						}
 					} else {
 						g.getInGameSpect().add(p);
-						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 						p.setGameMode(GameMode.SPECTATOR);
-						p.teleport(player1B);
+						p.teleport(g.getSpect());
+						
+						try {
 						for (Player sp : g.getSpectators()) {
 							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-								sp.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
+								sp.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
 								} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-									sp.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
+									sp.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
 								}
 						}
-						if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-							player1A.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-								player1A.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-							player1B.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-								player1B.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-							player2A.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído!");
-							} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-								player2A.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-							player2B.sendMessage("§3[Spleef] §c" + player1A.getName() + "§a ha caído!");
-							} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-								player2B.sendMessage("§3[Spleef] §b" + player1A.getName() + "§a has fallen!");  
-							}
+						for (Player pa : g.getPlayer1()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
+								}
+						}
 						
 						
-					}
-		} else if (p == player1B) {
-			
-			if (g.getInGameSpect().contains(player1A)) {
-				g.addPoints2();
-				if (g.getPoints2() >= g.getWin()) {	
-					Spleef2v2Game.gameOver(g.getPlayer2(), g.getPlayer1(), g.getId());
-					
-				} else {
-					
-					g.getInGameSpect().clear();
-					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-					g.addRounds();	
-					player1A.setGameMode(GameMode.SURVIVAL);
-				    player2A.setGameMode(GameMode.SURVIVAL);
-				    player1B.setGameMode(GameMode.SURVIVAL);
-				    player2B.setGameMode(GameMode.SURVIVAL);
-					Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
-					Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
-					
-					for (Player sp : g.getSpectators()) {		
-						if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-						sp.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-						} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-							sp.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
+						for (Player pa : g.getPlayer2()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
+								}
 						}
-					}
-					
-					if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-						player1A.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-						} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-							player1A.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-						}
-					
-					if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-						player1B.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-						} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-							player1B.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-						}
-					
-					if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-						player2A.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-						} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-							player2A.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-						}
-					
-					if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-						player2B.sendMessage("§3[Spleef] §b" + player2A.getName() + "-" + player2B.getName() + "§a han ganado la Ronda " + g.getRounds());
-						} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-							player2B.sendMessage("§3[Spleef] §b" + player2A.getName()  + "-" + player2B.getName() + "§a has won the round " + g.getRounds());
-						}
-					
-					
-					
-					GameManager.getManager().Countdown(g);
-				}
-			} else {
-				g.getInGameSpect().add(p);
-				//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-				p.setGameMode(GameMode.SPECTATOR);
-				p.teleport(player1A);
-				for (Player sp : g.getSpectators()) {
-					if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-						sp.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
-						} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-							sp.sendMessage("§3[Spleef] §b" + player1B.getName() + "§a has fallen!");  
-						}
-				}
-				if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-					player1A.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
-					} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-						player1A.sendMessage("§3[Spleef] §b" + player1B.getName() + "§a has fallen!");  
+						
+						} catch (Exception e) {}
 					}
 				
-				if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-					player1B.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
-					} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-						player1B.sendMessage("§3[Spleef] §b" + player1B.getName() + "§a has fallen!");  
-					}
-				
-				if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-					player2A.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
-					} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-						player2A.sendMessage("§3[Spleef] §b" + player1B.getName() + "§a has fallen!");  
-					}
-				
-				if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-					player2B.sendMessage("§3[Spleef] §c" + player1B.getName() + "§a ha caído! ");
-					} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-						player2B.sendMessage("§3[Spleef] §b" + player1B.getName() + "§a has fallen!");  
-					}
-				
-				
-			}
-			}  else if (p == player2A) {
-				
-				if (g.getInGameSpect().contains(player2B)) {
+		} else if (g.getPlayer2().contains(p)) {
+						
+				if (isTeamDead(g.getPlayer2(),g)) {
 					g.addPoints1();
 					if (g.getPoints1() >= g.getWin()) {	
-						Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
-						
+						Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());		
 					} else {
-						g.addRounds();				
 						g.getInGameSpect().clear();
-						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-						player1A.setGameMode(GameMode.SURVIVAL);
-					    player2A.setGameMode(GameMode.SURVIVAL);
-					    player1B.setGameMode(GameMode.SURVIVAL);
-					    player2B.setGameMode(GameMode.SURVIVAL);
-						Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
-						Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
+					    for (Player p1 : g.getPlayer1()) {
+					    	p1.setGameMode(GameMode.SURVIVAL);
+					    }
+					    for (Player p2 : g.getPlayer2()) {
+					    	p2.setGameMode(GameMode.SURVIVAL);
+					    }
+					    
+						Spleef2v2Game.teamTeleport(g.getPlayer1(), g.getSpawn1());
+						Spleef2v2Game.teamTeleport(g.getPlayer2(), g.getSpawn2());
 						
+						try {
 						for (Player sp : g.getSpectators()) {		
 							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-							sp.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
+							sp.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a han ganado la Ronda §c" + g.getRounds());
 							} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-								sp.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
+								sp.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a has won the round §c" + g.getRounds());
 							}
 						}
-						
-						if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-							player1A.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-							} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-								player1A.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
+						for (Player pa : g.getPlayer1()) {
+						if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+							pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a han ganado la Ronda §c" + g.getRounds());
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a has won the round §c" + g.getRounds());
 							}
-						
-						if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-							player1B.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-							} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-								player1B.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
+						}
+				
+						for (Player pa : g.getPlayer2()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a han ganado la Ronda §c" + g.getRounds());
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3[Spleef] §b" + Spleef2v2Game.teamNames(g.getPlayer1()) + "§a has won the round §c" + g.getRounds());
+								}
 							}
+						} catch (Exception e) {}
 						
-						if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-							player2A.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-							} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-								player2A.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-							}
-						
-						if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-							player2B.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-							} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-								player2B.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-							}
-						
-						
-						
+						g.addRounds();	
 						GameManager.getManager().Countdown(g);
 					}
 				} else {
 					g.getInGameSpect().add(p);
-					//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
 					p.setGameMode(GameMode.SPECTATOR);
-					p.teleport(player2B);
+					p.teleport(g.getSpect());
+					
+					try {
 					for (Player sp : g.getSpectators()) {
 						if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-							sp.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
+							sp.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
 							} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-								sp.sendMessage("§3[Spleef] §b" + player2A.getName() + "§a has fallen!");  
+								sp.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
 							}
 					}
-					if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-						player1A.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
-						} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-							player1A.sendMessage("§3[Spleef] §b" + player2A.getName() + "§a has fallen!");  
-						}
-					
-					if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-						player1B.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
-						} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-							player1B.sendMessage("§3[Spleef] §b" + player2A.getName() + "§a has fallen!");  
-						}
-					
-					if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-						player2A.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
-						} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-							player2A.sendMessage("§3[Spleef] §b" + player2A.getName() + "§a has fallen!");  
-						}
-					
-					if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-						player2B.sendMessage("§3[Spleef] §c" + player2A.getName() + "§a ha caído! ");
-						} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-							player2B.sendMessage("§3[Spleef] §b" + player2A.getName() + "§a has fallen!");  
-						}
+					for (Player pa : g.getPlayer1()) {
+						if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+							pa.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
+							}
+					}
 					
 					
+					for (Player pa : g.getPlayer2()) {
+						if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+							pa.sendMessage("§3[Spleef] §c" + p.getName() + "§a ha caído! ");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3[Spleef] §b" + p.getName() + "§a has fallen!");  
+							}
+					}
+					
+					} catch (Exception e) {}
 				}
-				}  else if (p == player2B) {
-					
-					if (g.getInGameSpect().contains(player2A)) {
-						g.addPoints1();
-						if (g.getPoints1() >= g.getWin()) {	
-							Spleef2v2Game.gameOver(g.getPlayer1(), g.getPlayer2(), g.getId());
-							
-						} else {
-							g.addRounds();	
-							g.getInGameSpect().clear();
-							//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-							player1A.setGameMode(GameMode.SURVIVAL);
-						    player2A.setGameMode(GameMode.SURVIVAL);
-						    player1B.setGameMode(GameMode.SURVIVAL);
-						    player2B.setGameMode(GameMode.SURVIVAL);
-							Spleef2v2Game.teamTeleport(player1A, player1B, g.getSpawn1());
-							Spleef2v2Game.teamTeleport(player2A, player2B, g.getSpawn2());
-							
-							for (Player sp : g.getSpectators()) {		
-								if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-								sp.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-									sp.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-								}
-							}
-							
-							if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-								player1A.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-									player1A.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-								player1B.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player1B).equalsIgnoreCase("ENG")) {
-									player1B.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-								player2A.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-									player2A.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-								player2B.sendMessage("§3[Spleef] §b" + player1A.getName() + "-" + player1B.getName() + "§a han ganado la Ronda " + g.getRounds());
-								} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-									player2B.sendMessage("§3[Spleef] §b" + player1A.getName()  + "-" + player1B.getName() + "§a has won the round " + g.getRounds());
-								}
-							
-							
-							
-							GameManager.getManager().Countdown(g);
-						}
-					} else {
-						g.getInGameSpect().add(p);
-						//Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("" + g.getInGameSpect());
-						p.setGameMode(GameMode.SPECTATOR);
-						p.teleport(player2A);
-						for (Player sp : g.getSpectators()) {
-							if (DataManager.getLang(sp).equalsIgnoreCase("ESP")) {
-								sp.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
-								} else if (DataManager.getLang(sp).equalsIgnoreCase("ENG")) {
-									sp.sendMessage("§3[Spleef] §b" + player2B.getName() + "§a has fallen!");  
-								}
-						}
-						if (DataManager.getLang(player1A).equalsIgnoreCase("ESP")) {
-							player1A.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player1A).equalsIgnoreCase("ENG")) {
-								player1A.sendMessage("§3[Spleef] §b" + player2B.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player1B).equalsIgnoreCase("ESP")) {
-							player1B.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-								player1B.sendMessage("§3[Spleef] §b" + player2B.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player2A).equalsIgnoreCase("ESP")) {
-							player2A.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player2A).equalsIgnoreCase("ENG")) {
-								player2A.sendMessage("§3[Spleef] §b" + player2B.getName() + "§a has fallen!");  
-							}
-						
-						if (DataManager.getLang(player2B).equalsIgnoreCase("ESP")) {
-							player2B.sendMessage("§3[Spleef] §c" + player2B.getName() + "§a ha caído! ");
-							} else if (DataManager.getLang(player2B).equalsIgnoreCase("ENG")) {
-								player2B.sendMessage("§3[Spleef] §b" + player2B.getName() + "§a has fallen!");  
-							}
-						
-						
-					}
-					} 
+			
+	} 
+			
 			}
 		}  else if (g.getType().equalsIgnoreCase("ffaspleef")) {
 			
 			
 			if (GameManager.getManager().isInGame(p)) {
 				if (getDeath(p.getLocation(),g)) {
-					SpleefRankManager.levelUp(p);
+						SpleefRankManager.giveExp(p, 1);
 						g.getPlayers().remove(p);
 						g.getQueue().add(p);
 						p.getInventory().clear();
@@ -534,11 +538,11 @@ public class DeathManager {
 						p.teleport(g.getSpect());
 						DataManager.addFFASpleefGames(p);
 					if (g.getPlayers().size() <= 1) {
-						
-						
-						
-						
+						try {
 						FFASpleefGame.gameOver(g.getPlayers().get(0), g.getId());
+						} catch (Exception e) {
+							FFASpleefGame.gameOver(null, g.getId());
+						}
 				} else {
 					
 				
@@ -559,7 +563,7 @@ public class DeathManager {
 					}
 						}							}		
 			}
-			}	
+		}
 					}
 
 	
@@ -586,5 +590,18 @@ public class DeathManager {
 		  	} 
 		  	return true;
 		  }
-	
+	 
+
+	public static boolean isTeamDead(List<Player> list, Game g) {		
+		if (list.size()<=1) {
+			return true;
+		} else {
+			if (!Collections.disjoint(g.getInGameSpect(), list)) {
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
 }

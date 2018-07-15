@@ -1,5 +1,7 @@
 package com.santipingui58.spleef.commands;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +11,8 @@ import org.bukkit.entity.Player;
 import com.santipingui58.spleef.managers.DataManager;
 
 public class MsgCommand implements CommandExecutor {
+	
+	private static HashMap<Player,Player> respond = new HashMap<Player,Player>();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, final String[] args) {
@@ -41,6 +45,11 @@ public class MsgCommand implements CommandExecutor {
 			  
 				receptor.sendMessage("§6[" + p.getName() + " -> me] §f" + message);
 				p.sendMessage("§6[me -> " + receptor.getName() + "] §f" + message);
+				respond.put(receptor, p);
+				respond.put(p, receptor);
+				
+				
+				
 			} else {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 					p.sendMessage("§cEl jugador §b" + args[0] + "§c no existe o no se encuentra conectado.");
@@ -51,7 +60,43 @@ public class MsgCommand implements CommandExecutor {
 		}
 		
 	
+	} else if (cmd.getName().equalsIgnoreCase("r")) {
+		final Player p = (Player) sender;
+		if (args.length >= 1) {
+		if (respond.containsKey(p)) {
+			if (Bukkit.getServer().getOnlinePlayers().contains(respond.get(p))) {
+				
+				StringBuilder builder = new StringBuilder();
+			    for (int i = 0; i < args.length; i++)
+			    {
+			      builder.append(args[i]).append(" ");
+			    }
+			  String message = builder.toString();
+				
+				respond.get(p).sendMessage("§6[" + p.getName() + " -> me] §f" + message);
+				p.sendMessage("§6[me -> " + respond.get(p).getName() + "] §f" + message);
+			} else {
+				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+					p.sendMessage("§cNo tienes a nadie a quien responder.");
+				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+					p.sendMessage("§cYou don't have anyone to reply.");
+				}
+			}
+		} else {
+			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+				p.sendMessage("§cNo tienes a nadie a quien responder.");
+			} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+				p.sendMessage("§cYou don't have anyone to reply.");
+			}
+			}
+	} else {
+		if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+			p.sendMessage("§aUso del comando: /r <mensaje>");
+		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+			p.sendMessage("§aUse of command: /r <message>");
+		}
 	}
+		}
 	}
 	return false;
 	}

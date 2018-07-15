@@ -9,12 +9,15 @@ import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.GameManager;
 
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 public class SpleefCommand implements CommandExecutor{
 
-
+	
+	
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!(sender instanceof Player)) {

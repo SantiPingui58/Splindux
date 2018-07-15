@@ -9,9 +9,12 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.listener.NPCListener;
+import com.santipingui58.spleef.managers.DataManager;
 
 public class HolographicAPI {
 
+	static boolean rotar;
+	
 	public static String createTopFFASpleefWins() {
 		
 		String top1 = "SantiPingui58";
@@ -20,6 +23,7 @@ public class HolographicAPI {
 		deleteHologram(loc);
 		Hologram hologram = HologramsAPI.createHologram(plugin, Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true));
 			
+			hologram.appendTextLine("§e§lHISTORICO");
 			hologram.appendTextLine("§aTop 10 Wins §b§lFFASpleef");
 
 			
@@ -41,6 +45,50 @@ public class HolographicAPI {
 				}	
 			return top1;
 }
+	
+	
+
+	public static String createMonthlyTopFFASpleefWins() {
+		
+		String top1 = "SantiPingui58";
+		Plugin plugin = Main.get();
+		Location loc = Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true);
+		deleteHologram(loc);
+		Hologram hologram = HologramsAPI.createHologram(plugin, Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true));
+		
+			hologram.appendTextLine("§e§lMENSUAL");
+			hologram.appendTextLine("§aTop 10 Wins §b§lFFASpleef");
+
+			
+			SortMapByValue.sortMapMonthlyFFASpleefWins();
+			
+			for(int i = 1; i < 11 ; i++){
+				try {
+					Entry<String, Integer> e = SortMapByValue.sortedMapMonthlyFFASpleefWins.pollFirstEntry();
+				String pname = e.getKey();	
+				
+				if (i==1) {
+					top1 = pname;
+				}
+				Integer score = e.getValue();
+				hologram.appendTextLine("§6#"+ i + "§a " + DataManager.getName(pname) + "§7:§b " + score);
+	              } catch (Exception ex) {
+	         	  hologram.appendTextLine("§6#"+ i + "§a NO_PLAYER" + "§7:§b 0");
+	              }
+				}	
+			return top1;
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 public static String createTopELOSpleef() {
 	
@@ -94,15 +142,28 @@ public static void deleteHolograms() {
 
 
 
-public static void update () {
+public static void update() {
 	Location tesl = Main.getLoc(Main.arena.getConfig().getString("hologramas.topelospleef"), true);
 	Location tfsw = Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true);
 	Main.data.save();
 	deleteHologram(tesl);
 	deleteHologram(tfsw);
-	NPCListener.updateSkins(createTopELOSpleef(), createTopFFASpleefWins());
+	NPCListener.updateSkins(createTopELOSpleef(), createMonthlyTopFFASpleefWins());
 
 }
 	
+
+public static void rotar() {
+	Location tfsw = Main.getLoc(Main.arena.getConfig().getString("hologramas.ffaspleefwins"), true);
+	Main.data.save();
+	deleteHologram(tfsw);
+	if (rotar==true) {
+	createTopFFASpleefWins();
+	rotar = false;
+	} else {
+		rotar = true;
+		createMonthlyTopFFASpleefWins();
+	}
+}
 	
 }

@@ -52,6 +52,8 @@ public class AfkCommand implements CommandExecutor {
 			
 }
 }
+		
+		
 		return false;
 	}
 	

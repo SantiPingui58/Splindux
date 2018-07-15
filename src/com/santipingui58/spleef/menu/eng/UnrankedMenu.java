@@ -18,7 +18,9 @@ public class UnrankedMenu extends MenuBuilder {
 		s(0, new ItemBuilder(Material.DIAMOND_SPADE).setTitle("§aSpleef 1vs1").
 				build());
 		
-		s(1, new ItemBuilder(Material.BOW).setTitle("§aBowSpleef 1vs1").
+		s(1, new ItemBuilder(Material.DIAMOND_SWORD).setTitle("§aBuild Spleef PvP 1vs1").
+				build());
+		s(2, new ItemBuilder(Material.BOW).setTitle("§aBowSpleef 1vs1").
 				build());
 		
 		
@@ -38,9 +40,11 @@ public class UnrankedMenu extends MenuBuilder {
 	public void onClick(Player p, ItemStack stack, int slot) {
 		if (slot == 0) {
 			new SpleefMenu(p).o(p);
-		} else if (slot == 1) {
+		} else if (slot==1) {
+			new BuildSpleefPvPMenu(p).o(p);
+		}else if (slot == 2) {
 			p.closeInventory();
-			p.sendMessage("§o§cComing soon...");		
+			new BowSpleefMenu(p).o(p);		
 		} else if (slot == 18) {
 			GameManager.getManager().addSpleefFFAQueue(p);
 		} else if (slot == 25) {

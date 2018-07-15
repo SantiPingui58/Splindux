@@ -1,5 +1,6 @@
 package com.santipingui58.spleef.managers;
 
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,11 +10,16 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
-import com.santipingui58.spleef.menu.esp.LanguageMenu;
 
 public class DataManager {
 
 
+	
+	
+	
+	
+	
+	
 	  public static void updateName(Player p) {
 		  if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
 			  
@@ -47,6 +53,11 @@ public class DataManager {
 					   + String.valueOf (date.getYear()) + " " + date.getHours() + ":" + date.getMinutes() + ":"
 					   + date.getSeconds());
 			   Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", lastconnect);
+			   Main.data.save();
+			   
+			   InetAddress ip = p.getAddress().getAddress();
+			   Main.data.getConfig().set("data." + p.getUniqueId() + ".IP", ip.toString());
+			   Main.data.save();
 		  }
 	  }
 	  
@@ -55,16 +66,19 @@ public class DataManager {
 	public static void onCreateData(Player p) {
 		
 		  if (!Main.data.getConfig().contains("data." + p.getUniqueId())) {
-			  
-			  LanguageMenu.menu.open(p);
-			  
+			  		  
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".name", p.getName());
 			  Main.data.save();
 			   Date date = new Date();
 			   String lastconnect = String.valueOf(date.getDay() + "/" + String.valueOf (date.getMonth()) + "/" 
 					   + String.valueOf (date.getYear()) + " " + date.getHours() + ":" + date.getMinutes() + ":"
 					   + date.getSeconds());
-			   Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", lastconnect);
+			   
+			   InetAddress ip = p.getAddress().getAddress();
+			  
+			  Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", lastconnect);
+			  Main.data.save();
+			  Main.data.getConfig().set("data." + p.getUniqueId() + ".IP",  ip.toString());
 			  Main.data.save();
 			  Main.data.getConfig().set("data." + p.getUniqueId()+ ".Ganadas", 0);
 			  Main.data.save();
@@ -94,10 +108,39 @@ public class DataManager {
 			  Main.data.save();
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".friends", "");	  		
 			  Main.data.save();
-			  Main.data.getConfig().set("data." + p.getUniqueId() + ".nightvision", false);	  		
+			  Main.data.getConfig().set("data." + p.getUniqueId() + ".nightvision", false);	  		  
+			  
 			  Main.data.save();
 		  }
 	  }
+	  
+	  
+	  public static boolean hasTranslate(Player p) {
+		  if (Main.data.getConfig().contains("data." + p.getUniqueId() + ".translate")) {
+			  return true;
+		  }
+		  return false;
+	  }
+	  
+	  public static void removeTranslate(Player p) {
+		  if (Main.data.getConfig().contains("data." + p.getUniqueId() + ".translate")) {
+			  Main.data.getConfig().set("data."+p.getUniqueId() + ".translate", null);
+		  }
+	  }
+	  
+	  public static String getTranslate(Player p) {
+		  if (Main.data.getConfig().contains("data." + p.getUniqueId() + ".translate")) {
+			  return Main.data.getConfig().getString("data." + p.getUniqueId() + ".translate");
+		  }
+		  return "ESP->ENG";
+	  }
+	  
+	  public static void setTranslate(Player p,String lang) {
+		  if (Main.data.getConfig().contains("data." + p.getUniqueId() + ".translate")) {
+			  Main.data.getConfig().set("data."+p.getUniqueId() + ".translate", lang);
+		  }
+	  }
+	  
 	  	  
 	  public static boolean getNightVision (Player p) {
 		  if (Main.data.getConfig().contains("data." + p.getUniqueId() + ".nightvision")) {
@@ -105,6 +148,7 @@ public class DataManager {
 		  }
 		  return false;
 	  }
+	  
 	  
 	  public static void trueNightVision (Player p) {
 		  if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
@@ -136,7 +180,7 @@ public class DataManager {
 	  
 	  public static String getNick (Player p) {
 		  if (Main.data.getConfig().contains("data."+ p.getUniqueId())) {
-				 return  Main.data.getConfig().getString("data." + p.getUniqueId() + ".nick");		  
+				 return Main.data.getConfig().getString("data." + p.getUniqueId() + ".nick");		  
 			  }
 			  return null;  
 	  }
@@ -170,6 +214,7 @@ public class DataManager {
 	  }
 	  
 	  public static void addFFASpleefWins(Player p) {
+		  addMonthlyFFASpleefWins(p);
 		  if (Main.data.getConfig().contains("data."+ p.getUniqueId())) {
 			  int wins = getFFASpleefWins(p);
 			  wins++;
@@ -260,6 +305,13 @@ public class DataManager {
 			  Main.data.save();
 		  
 	  }
+	  
+	  public static void setRankeds(Player p, int r) {
+		  	if (Main.data.getConfig().contains("data."+p.getUniqueId())) {
+				  Main.data.getConfig().set("data." + p.getUniqueId() + ".rankeds", r);
+				  Main.data.save();
+			  }
+	  }
 
 	  public static double newElo(Player ganador, int difpuntos, Player perdedor) {
 		  
@@ -336,6 +388,9 @@ public class DataManager {
 	  
 	  
 	  
+	  
+	  
+	  
 	@SuppressWarnings("deprecation")
 	public static String getLastConnection (Player p, Player p1) {
 		if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
@@ -392,5 +447,42 @@ public class DataManager {
 
 		  
 	  }
+	
+	public static String getName(String uuid) {
+		if (Main.data.getConfig().contains("data."+uuid)) {
+			return Main.data.getConfig().getString("data."+uuid+".name");
+		}
+		return "null";
+	}
+	
+	
+	
+	public static void addMonthlyFFASpleefWins (Player p) {
+		if (Main.data.getConfig().contains("ffa_monthly."+p.getUniqueId())) {
+			int wins = Main.data.getConfig().getInt("ffa_monthly."+p.getUniqueId());
+			wins++;
+			Main.data.getConfig().set("ffa_monthly."+p.getUniqueId(), wins);
+		
+		} else {
+			Main.data.getConfig().set("ffa_monthly."+p.getUniqueId(), 1);
+		}
+		Main.data.save();
+	}
+	
+	
+	public static int getMonthlyFFASpleefWins(Player p) {
+		if (Main.data.getConfig().contains("ffa_monthly."+p.getUniqueId())) {
+			return Main.data.getConfig().getInt("ffa_monthly."+p.getUniqueId());
+		}
+		
+		return 0;
+	}
+	
+	
+	public static void resetMonthlyFFAWins() {
+		Main.data.getConfig().set("ffa_monthly", null);
+	}
+	
+	
 	
 }

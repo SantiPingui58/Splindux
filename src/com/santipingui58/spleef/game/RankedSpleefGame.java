@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.managers.DataManager;
+import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
 import com.santipingui58.spleef.utils.Scoreboard;
@@ -52,10 +53,10 @@ public class RankedSpleefGame implements Listener  {
 	     p2.teleport(g.getSpawn2());
 	     
 	     if (DataManager.getNightVision(p1)) {
-	    	 p1.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p1.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	     if (DataManager.getNightVision(p2)) {
-	    	 p2.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 10000, 0));
+	    	 p2.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
 	  		
 	   		new BukkitRunnable() {
@@ -80,7 +81,6 @@ public class RankedSpleefGame implements Listener  {
 	  
 	  public static void gameOver(Player ganador, Player perdedor, String id) {
 	  
-		 //Bukkit.getServer().getPlayer("SantiPingui58").sendMessage("terminado");
 		  
 		  Player player1 = null;
 		  Player player2 = null;
@@ -127,9 +127,12 @@ public class RankedSpleefGame implements Listener  {
   				  + "§7) §c(-" + elodif + ")" + 
   							" §7(§e" + g.getPoints1() + "§7-§e" + g.getPoints2() + "§7)");
 	  			  
-	  			SpleefRankManager.levelUp(perdedor);
-	  			SpleefRankManager.levelUp(ganador);
-	  				
+	  			SpleefRankManager.giveExp(perdedor,2);
+  	  			SpleefRankManager.giveExp(ganador, 5);
+  	  			EconomyManager.addCoins(ganador, 20,true);
+  	  			EconomyManager.addCoins(perdedor, 2,true);
+  	  			
+  	  			
 	  				  perdedor.teleport(Main.getLoc(Main.arena.get("lobby"), true));
 	  				  ganador.teleport(Main.getLoc(Main.arena.get("lobby"), true));
 	  				  g.resetPoints();
@@ -148,9 +151,11 @@ public class RankedSpleefGame implements Listener  {
 
 	  				 int diferencia = g.getPoints2() - g.getPoints1();
 	  				  int elodif =  (int) DataManager.newElo(ganador, diferencia, perdedor);
-	  				SpleefRankManager.levelUp(perdedor);
-	  				SpleefRankManager.levelUp(ganador);
-
+	  				  
+	  				SpleefRankManager.giveExp(perdedor,2);
+	  	  			SpleefRankManager.giveExp(ganador, 5);
+	  	  		EconomyManager.addCoins(ganador, 20,true);
+  	  			EconomyManager.addCoins(perdedor, 2,true);
 	  					  Bukkit.broadcastMessage("§3[Spleef] §aEl jugador §b" + ganador.getName() + "§7(§e" +DataManager.getElo(ganador) 
 	  					  + "§7) §a(+" + elodif + ")"
 	  					  + "§a le ha ganado a §b" + perdedor.getName()  + "§7(§e" +DataManager.getElo(perdedor) 
@@ -168,8 +173,11 @@ public class RankedSpleefGame implements Listener  {
 	  					
 	  			  } else if (ganador == player1) {
 	  				  
-	  				SpleefRankManager.levelUp(perdedor);
-	  				SpleefRankManager.levelUp(ganador);
+	  				  
+	  	  			SpleefRankManager.giveExp(perdedor,1);
+	  	  			SpleefRankManager.giveExp(ganador, 3);
+	  	  		EconomyManager.addCoins(ganador, 20,true);
+  	  			EconomyManager.addCoins(perdedor, 2,true);
 	  				 int diferencia = g.getPoints1() - g.getPoints2();
 	  				 int elodif =  (int) DataManager.newElo(ganador, diferencia, perdedor);
 	  				  
@@ -193,9 +201,11 @@ public class RankedSpleefGame implements Listener  {
 	  			  } else if (ganador == player2) {
 	  				  
 	  				
-	  				SpleefRankManager.levelUp(perdedor);
-	  				SpleefRankManager.levelUp(ganador);
-	  				
+	  				  
+	  	  			SpleefRankManager.giveExp(perdedor,2);
+	  	  			SpleefRankManager.giveExp(ganador, 5);
+	  	  		EconomyManager.addCoins(ganador, 20,true);
+  	  			EconomyManager.addCoins(perdedor, 2,true);
 	  				int diferencia = g.getPoints2() - g.getPoints1();
 	  				  int elodif =  (int) DataManager.newElo(ganador, diferencia, perdedor);	  
 	  					  Bukkit.broadcastMessage("§3[Spleef] §aEl jugador §b" + ganador.getName() + "§7(§e" +DataManager.getElo(ganador) 

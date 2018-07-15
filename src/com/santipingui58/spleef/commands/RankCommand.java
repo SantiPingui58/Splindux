@@ -6,6 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.santipingui58.spleef.managers.DataManager;
+
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class RankCommand implements CommandExecutor {
@@ -48,14 +50,18 @@ public class RankCommand implements CommandExecutor {
 				if (args[2].equalsIgnoreCase("vip")) {
 					Player p = Bukkit.getServer().getPlayer(args[1]);
 					PermissionsEx.getUser(p).removeGroup("vip");
-					
+					DataManager.deleteNick(p);
 				} else if (args[2].equalsIgnoreCase("epic")) {
 					Player p = Bukkit.getServer().getPlayer(args[1]);
 					PermissionsEx.getUser(p).removeGroup("epic");
+					DataManager.deleteNick(p);
 				} else if (args[2].equalsIgnoreCase("extreme")) {
 					Player p = Bukkit.getServer().getPlayer(args[1]);
 					PermissionsEx.getUser(p).removeGroup("extreme");
+					DataManager.deleteNick(p);
 				}
+				
+				
 			}
 		
 	

@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.managers.DataManager;
+import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
 
@@ -48,15 +49,16 @@ public static void startCountdown(String id) {
       
      for (final Player p : g.getQueue()) {
     	 g.getPlayers().add(p);
-     p.setFlying(false);
-     p.setAllowFlight(false);
-     p.setGameMode(GameMode.SURVIVAL);
-     p.getPassengers().clear();
-     p.teleport(g.getSpawn1());
+    	 if (p.hasPermission("splindux.disguise")) Bukkit.dispatchCommand(Main.get().getServer().getConsoleSender(), "ud " + p.getName());
+    	 p.setFlying(false);
+    	 p.setAllowFlight(false);
+    	 p.setGameMode(GameMode.SURVIVAL);
+    	 p.getPassengers().clear();
+    	 p.teleport(g.getSpawn1());
      
      
      if (DataManager.getNightVision(p)) {
-    	 p.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 0, 100000));
+    	 p.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, 0, Integer.MAX_VALUE));
      }
      
      
@@ -116,8 +118,8 @@ public static void gameOver(Player winner, String id) {
 		winner.teleport(g.getSpect());
 		DataManager.addFFASpleefGames(winner);
 		DataManager.addFFASpleefWins(winner);
-		SpleefRankManager.levelUp(winner);
-		SpleefRankManager.levelUp(winner);
+		SpleefRankManager.giveExp(winner, 2);
+		EconomyManager.addCoins(winner, 3,true);
 		g.getQueue().add(winner);
 		if (g.getQueue().size() >= 3) {
 		for (Player pl : g.getPlayers()) {
@@ -184,7 +186,6 @@ public static void gameOver(Player winner, String id) {
 		
 		} catch (Exception e) {}
 	  } else {
-		  
 		  if (g.getQueue().size()+g.getPlayers().size() >= 3) {
 		  for (Player pl : g.getPlayers()) {
 				if (DataManager.getLang(pl).equalsIgnoreCase("ESP")) {
@@ -211,6 +212,7 @@ public static void gameOver(Player winner, String id) {
 			if (g.getQueue().size() >= 3) {
       	startCountdown(g.getId());
         } else {
+        	g.falseFFAStarting();
       	  for (Player pa : g.getQueue()) {
       	  if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
 					pa.sendMessage("§3[FFASpleef] §cNo hay suficientes jugadores, partida cancelada.");
@@ -224,7 +226,6 @@ public static void gameOver(Player winner, String id) {
     }
     , 200L);
 	  } else {
-		  
 
 		  
 		  for (Player pl : g.getPlayers()) {

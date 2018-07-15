@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
 
 import com.nametagedit.plugin.NametagEdit;
 import com.santipingui58.spleef.commands.AfkCommand;
+import com.santipingui58.spleef.game.BuildSpleefPvPGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
+import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -70,6 +72,9 @@ public class Scoreboard {
 						cache.add("§fRank: §3User");
 					}
 				}
+				cache.add("§fCoins: §6" + EconomyManager.getManager().getMysteryDust(EconomyManager.getPlayerManager(p)));
+				cache.add("§fSplinduxCoins:§3 0");
+				cache.add("§f§f§f§f§f§f");
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 				cache.add("§7Jugadores Online: §a" + Bukkit.getOnlinePlayers().size());
 				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
@@ -116,11 +121,12 @@ public class Scoreboard {
 						cache.add("§f§f§f");
 						if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 							cache.add("§fGanadas: §a" + DataManager.getFFASpleefWins(p));
-							cache.add("§fJugadas: §a" + DataManager.getFFASpleefGames(p));
+							cache.add("§fJugadas: §a" + DataManager.getFFASpleefGames(p));		
 						} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 							cache.add("§fWins: §a" + DataManager.getFFASpleefWins(p));
 							cache.add("§fGames: §a" + DataManager.getFFASpleefGames(p));
 						}
+						cache.add("§f§f§f§f§f§f§f");
 						
 						cache.add("§f§f§f§f");
 						cache.add("§f§f§f§f§f§f");
@@ -154,7 +160,70 @@ public class Scoreboard {
 					}
 					
 					BoardAPI.ScoreboardUtil.unrankedSidebarDisplay(p, data);
-					 } else if (g.getType().equalsIgnoreCase("spleef2v2")) {
+					 }else if (g.getType().equalsIgnoreCase("bowspleef")){
+							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+								cache.add("§7Tiempo: §6" + convert(g.getTime()));
+								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+									cache.add("§7Time: §6" + convert(g.getTime()));
+								}
+								if (g.getPoints1() > g.getPoints2()) {
+									
+								cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
+								cache.add("§a"+ g.getPlayer2().get(0).getName() + "§7:§b " + g.getPoints2());
+								} else {
+									
+									cache.add("§a"+ g.getPlayer2().get(0).getName()+ "§7:§b " + g.getPoints2());	
+									cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
+								}
+								
+								for(int i = 0; i < cache.size(); i++){
+									data = cache.toArray(new String[i]);
+								}
+								
+								BoardAPI.ScoreboardUtil.unrankedSidebarDisplay(p, data);
+								 }   else if (g.getType().equalsIgnoreCase("BuildSpleefPvP")){
+							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+								cache.add("§7Tiempo: §6" + convert(g.getTime()));
+								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+									cache.add("§7Time: §6" + convert(g.getTime()));
+								}
+								if (g.getPoints1() > g.getPoints2()) {
+									
+								cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
+								cache.add("§a"+ g.getPlayer2().get(0).getName() + "§7:§b " + g.getPoints2());
+								} else {
+									
+									cache.add("§a"+ g.getPlayer2().get(0).getName()+ "§7:§b " + g.getPoints2());	
+									cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
+								}
+								
+								cache.add("§f§f§f");
+								cache.add("§f§f§f§f");
+								int nieve = BuildSpleefPvPGame.nieve.get(p);
+								if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {			
+								if (nieve >50) {
+								cache.add("§7Nieve: §a" + nieve);
+								}  else if (nieve >20) {
+									cache.add("§7Nieve: §6" + nieve);
+									} else {
+										cache.add("§7Nieve: §c" + nieve);
+									}
+								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+								if (nieve >50) {
+								cache.add("§7Snow: §a" + nieve);
+								}  else if (nieve >20) {
+									cache.add("§7Snow: §6" + nieve);
+									} else {
+										cache.add("§7Snow: §c" + nieve);
+									}
+								}
+								
+								for(int i = 0; i < cache.size(); i++){
+									data = cache.toArray(new String[i]);
+								}
+								
+								BoardAPI.ScoreboardUtil.unrankedSidebarDisplay(p, data);
+								 } else if (g.getType().equalsIgnoreCase("spleef2v2")) {
 						 if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 								cache.add("§7Tiempo: §6" + convert(g.getTime()));
 								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
@@ -226,38 +295,12 @@ public class Scoreboard {
 				 } 
 				 }
 	
-	public static String convert(int seconds)
-	  {
-	    if (seconds >= 60) {
-	      int segundos = seconds % 60;
-	      int minutos = seconds / 60 % 60;
+	public static String convert(int s)  {
+		int hours = s / 3600;
+		int minutes = (s % 3600) / 60;
+		int seconds = s % 60;
 
-	      if (segundos < 10)
-	      {
-	        if (minutos < 10)
-	        {
-	          return "0" + minutos + ":0" + segundos;
-	        }
-
-	        return minutos + ":0" + segundos;
-	      }
-
-	      if (minutos < 10) {
-	        return "0" + minutos + ":" + segundos;
-	      }
-
-	      return minutos + ":" + segundos;
-	    }
-
-	    int segundos = seconds % 60;
-	    int minutos = seconds / 60 % 60;
-
-	    if (segundos < 10)
-	    {
-	      return minutos + "0:0" + segundos;
-	    }
-
-	    return "00:" + seconds;
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	  }
 	
 }

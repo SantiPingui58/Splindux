@@ -9,6 +9,7 @@ import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
+import com.santipingui58.spleef.menu.eng.DuelRequestMenu;
 
 import java.util.HashMap;
 
@@ -18,9 +19,13 @@ import org.bukkit.ChatColor;
 public class DuelCommand implements CommandExecutor{
 
 
-	private static HashMap<Player,Player> duelrequest = new HashMap<Player, Player>();
-	private static HashMap<Player,Player> duelrequestmap = new HashMap<Player, Player>();
-	private static HashMap<Player, String> map = new HashMap<Player,String>();
+	public static HashMap<Player,Player> duelrequest = new HashMap<Player, Player>();
+	
+	public static HashMap<Player,String> game = new HashMap<Player,String>();
+	public static HashMap<Player, String> map = new HashMap<Player,String>();
+	
+	public static HashMap<Player,Player> temprequest = new HashMap<Player, Player>();
+	
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, final String[] args) {
@@ -36,9 +41,9 @@ public class DuelCommand implements CommandExecutor{
 			if (!GameManager.getManager().isInGame(p)) {
 			if(args.length == 0 || args.length >= 3) {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aUso del comando: /duel <jugador> <mapa>"));
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aUso del comando: /duel <jugador>"));
 				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aUse of command: /duel <player> <map>"));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aUse of command: /duel <player>"));
 				}
 				return true;
 			} 
@@ -52,28 +57,36 @@ public class DuelCommand implements CommandExecutor{
 							if (!(p==pa)) {
 								duelrequest.remove(pa, p);
 								try {
-									duelrequestmap.remove(pa, p);
+										duelrequest.remove(pa);
+										for (Game g : GameManager.getManager().getArenasList()) {
+											g.getQueue().remove(pa);
+											g.getQueue().remove(p);
+										}
 								} catch (Exception e) {}
-								GameManager.getManager().DuelGame(p, pa, null);
+								
+								if (!map.containsKey(pa)) {
+								if (game.get(pa).equalsIgnoreCase("spleef")) {
+								GameManager.getManager().DuelGame(p, pa, null); 
+								} else if (game.get(pa).equalsIgnoreCase("BuildSpleefPvP")) {
+									GameManager.getManager().DuelGameBSP(p, pa, null);
+								}  else if (game.get(pa).equalsIgnoreCase("bowspleef")) {
+									GameManager.getManager().DuelGameBowSpleef(p, pa, null);
+								} 
+								game.remove(pa);
 								return true;
+							} else {
+								if (game.get(pa).equalsIgnoreCase("spleef")) {
+									GameManager.getManager().DuelGame(p, pa, map.get(pa)); 
+									} else if (game.get(pa).equalsIgnoreCase("BuildSpleefPvP")) {
+										GameManager.getManager().DuelGameBSP(p, pa, map.get(pa));
+									}  else if (game.get(pa).equalsIgnoreCase("bowspleef")) {
+										GameManager.getManager().DuelGameBowSpleef(p, pa, map.get(pa));
+									} 
+									game.remove(pa);
+									return true;
 							}
-						} else if (duelrequestmap.containsKey(pa) && duelrequestmap.containsValue(p)) {
-							if (!(p==pa)) {
-								duelrequestmap.remove(pa, p);
-								try {
-									duelrequest.remove(pa,p);
-									for (Game g : GameManager.getManager().getArenasList()) {
-										g.getQueue().remove(pa);
-										g.getQueue().remove(p);
-									}
-									
-									
-								} catch(Exception e) {}
-								GameManager.getManager().DuelGame(p, pa, map.get(pa));
-								map.remove(pa);
-								return true;
-							}
-						}
+								}
+						} 
 						else {
 							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 								p.sendMessage("§cNo tienes una solicitud de duelo del jugador §b" + pa.getName());
@@ -115,93 +128,23 @@ public class DuelCommand implements CommandExecutor{
 						if (!(p==pa)) {
 						if (!GameManager.getManager().isInGame(pa)) {
 						if(args.length == 1) {
-							
-							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-							p.sendMessage("§aLe has enviado un duelo a §b" + pa.getName() + "§a, "
-									+ "el jugador tiene 1 minuto para aceptarlo.");
-							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-								p.sendMessage("§aYou have sent a duel to §b" + pa.getName() + "§a, the "
-										+ "player has 1 minute to accept it.");
-							}
-								if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-								pa.sendMessage("§3[Spleef] §aHas recibido un duelo de §b" + p.getName() + "§a, coloca §b/duel accept " + p.getName() +
-										 "§a para aceptarla §7(La solicitud expira en 1 minuto.)");
-								} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §aYou have received a duel of §b" + p.getName() + "§a, type §b/duel accept " + p.getName() +
-									"§a to accept it §7(The request will expire in 1 minute.");
-								}
-								duelrequest.put(p, pa);
-								
+							DuelRequestMenu.page.put(p, 1);
+							temprequest.put(p, pa);
+							new DuelRequestMenu(p).o(p);
 								@SuppressWarnings("unused")
 								int task = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.get(), new Runnable()
 							    {
-
 									@Override
 									public void run() {
 										duelrequest.remove(p, pa);
 										try {
-											duelrequestmap.remove(p,pa);						
+											temprequest.remove(p);
 										} catch (Exception e) {}
 									}
 							    }
 							    , 1200L);
-								
-								
-							
-						} else if (args.length == 2) {
-							for(Game g : GameManager.getManager().getArenasList()) {
-								if (Main.containsIgnoreCase(args[1], g.getId())) {
-									if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
-									if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-										p.sendMessage("§aLe has enviado un duelo a §b" + pa.getName() + "§a, "
-												+ "el jugador tiene 1 minuto para aceptarlo.");
-										} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-											p.sendMessage("§aYou have sent a duel to §b" + pa.getName() + "§a, the "
-													+ "player has 1 minute to accept it.");
-										}
-									
-									if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-										pa.sendMessage("§3[Spleef] §aHas recibido un duelo de §b" + p.getName() + "§a, coloca §b/duel accept " + p.getName() +
-												 "§a para aceptarla §7(La solicitud expira en 1 minuto.)");
-										} else if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-											pa.sendMessage("§3[Spleef] §aYou have received a duel of §b" + p.getName() + "§a, type §b/duel accept" + p.getName() +
-											"§ato accept it §7(The request will expire in 1 minute.");
-										}
-									
-											duelrequestmap.put(p, pa);
-											map.put(p, args[1]);
-											@SuppressWarnings("unused")
-											int task = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.get(), new Runnable()
-										    {
-
-												@Override
-												public void run() {
-													try {
-														duelrequest.remove(p, pa);
-													} catch(Exception e) {}
-													map.remove(p,args[1]);
-													duelrequestmap.remove(p, pa);
-												}
-										    }
-										    , 1200L);
-											
-											
-											return true;
-											
-									}
-								} 
-							}
-							
-							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-								p.sendMessage("§cNo se ha podido enviar el duelo, puede que la arena §b " + args[1] 
-										+ " §cno exista o que no hayan arenas disponibles.");
-								} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-									p.sendMessage("§cCould not send the duel, it could be because the arena §b " 
-											+ args[1] + " §cdoesn't exists o there are not available arenas.");
-								}
-							return false;
-							
-						}
+						
+							} 
 						} else {
 							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 								p.sendMessage("§cEste jugador ya se encuentra en una partida.");

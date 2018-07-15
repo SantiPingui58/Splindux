@@ -13,17 +13,20 @@ import com.santipingui58.spleef.utils.ItemBuilder;
 public class TournamentsMenu extends MenuBuilder {
 
 	public TournamentsMenu(Player p) {
-		super("§eEvents and Tournaments", 3);
+		super("§eEventos y Torneos", 3);
 		
-		s(0, new ItemBuilder(Material.SIGN).setTitle("§aCurrent season:").
-				addLore("§eSeason 0").
-				addLore("§2July 2017/Febrary 2018").
+		s(0, new ItemBuilder(Material.SIGN).setTitle("§aCurrent Season:").
+				addLore("§6§lSeason 1").
+				addLore("§2March 2018/May 2018").
 				build());
 		
-
+		s(1, new ItemBuilder(Material.EMERALD).setTitle("§aActual Ranking").build());
 		
-		s(13, new ItemBuilder(Material.NETHER_STAR).setTitle("§5§lSplindux §cC§ah§cr§ai§cs§at§cm§aa§cs §aT§co§au§cr§an§ca§am§ce§an§ct §6§lIV").
-				addLore("§2December 2017/January 2018").
+		s(12, new ItemBuilder(Material.NETHER_STAR).setTitle("§5§lProSpleef Tournament 1vs1").
+				addLore("§2March 2018").
+				build());
+		s(14, new ItemBuilder(Material.NETHER_STAR).setTitle("§5Spleef 2vs2 Tournament").
+				addLore("§2Febraury 2018/March 2018").
 				build());
 	}
 	
@@ -31,11 +34,21 @@ public class TournamentsMenu extends MenuBuilder {
 	@Override
 	public void onClick(Player p, ItemStack stack, int slot) {
 		
-		if (slot == 13) {
+		if (slot == 12) {
 			p.closeInventory();
-			p.sendMessage("§fIncriptions: §cCLOSED");
-			p.sendMessage("§aChristmas Tourney realized in SpleefLeague-Splindux server.");
-			p.sendMessage("§3http://challonge.com/SplinduxNavidad");
+			p.sendMessage("§fInscriptions: §cCLOSED");
+			p.sendMessage("§aTournament realized in Splindux of ProSpleef");
+			p.sendMessage("§3http://challonge.com/SplinduxProSpleef1v1");
+			p.sendMessage("§6https://goo.gl/5FnPBs");
+		} else if (slot ==1) {
+			p.closeInventory();
+			RankingMenu.page.put(p, 0);
+			new RankingMenu(p).o(p);
+		} else if (slot == 14) {
+			p.closeInventory();
+			p.sendMessage("§fInscripciones: §cCLOSED");
+			p.sendMessage("§aTou8rnament realized in Splindux of ProSpleef");
+			p.sendMessage("§3http://challonge.com/Splindux2vs2");
 		}
 	}
 	

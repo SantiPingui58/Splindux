@@ -36,6 +36,12 @@ public class RankedMapSelectorMenu extends MenuBuilder {
 		s(3, new ItemBuilder(Material.MAP).setTitle("§a§lIgnition").
 				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListRanked("kraken")).
 				build());
+		s(5, new ItemBuilder(Material.MAP).setTitle("§a§lNeon").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("neon")).
+				build());
+		s(6, new ItemBuilder(Material.MAP).setTitle("§a§lRuinas").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("ruinas")).
+				build());
 		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cBack").
 				build());
 	
@@ -84,6 +90,25 @@ public class RankedMapSelectorMenu extends MenuBuilder {
 		if(slot == 4) {
 			for (Game s :  GameManager.getManager().getArenasList()) {
 				if (Main.containsIgnoreCase(s.getId(), "ignition")) {
+					GameManager.getManager().addRankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}
+		
+		if(slot == 5) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "neon")) {
+					GameManager.getManager().addRankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}
+		if(slot == 6) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "ruinas")) {
 					GameManager.getManager().addRankedQueue(p, s.getId());
 					break;
 			
