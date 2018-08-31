@@ -1,5 +1,9 @@
 package com.santipingui58.spleef.commands;
 
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,12 +13,6 @@ import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
-import com.santipingui58.spleef.menu.eng.DuelRequestMenu;
-
-import java.util.HashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 public class DuelCommand implements CommandExecutor{
 
@@ -128,9 +126,18 @@ public class DuelCommand implements CommandExecutor{
 						if (!(p==pa)) {
 						if (!GameManager.getManager().isInGame(pa)) {
 						if(args.length == 1) {
-							DuelRequestMenu.page.put(p, 1);
-							temprequest.put(p, pa);
-							new DuelRequestMenu(p).o(p);
+							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+								com.santipingui58.spleef.menu.esp.DuelRequestMenu.page.put(p, 1);
+								temprequest.put(p, pa);
+								new com.santipingui58.spleef.menu.esp.DuelRequestMenu(p).o(p);
+							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+								com.santipingui58.spleef.menu.eng.DuelRequestMenu.page.put(p, 1);
+								temprequest.put(p, pa);
+								new com.santipingui58.spleef.menu.eng.DuelRequestMenu(p).o(p);
+							}
+							
+							
+							
 								@SuppressWarnings("unused")
 								int task = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.get(), new Runnable()
 							    {

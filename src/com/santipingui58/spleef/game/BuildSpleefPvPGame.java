@@ -57,10 +57,10 @@ public static int task;
 	      pala_1.addUnsafeEnchantment(Enchantment.DIG_SPEED, 10);
 	      pala_1.setItemMeta(meta);
 	      
-	      pala_2.setDurability((short) 30);
+	      pala_2.setDurability((short) 225);
 	      pala_2.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
 	      
-	      pala_3.setDurability((short) 10);
+	      pala_3.setDurability((short) 121);
 	      pala_3.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
 	      
 	      final Game g = GameManager.getManager().getArena(id);
@@ -83,6 +83,7 @@ public static int task;
 	     if (DataManager.getNightVision(p2)) {
 	    	 p2.addPotionEffect(new PotionEffect (PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0));
 	     }
+	     
 	     
 	     
 	     
@@ -109,6 +110,8 @@ public static int task;
 		  Player player1 = null;
 		  Player player2 = null;
 		  Game g = GameManager.getManager().getArena(id);
+		  g.falseCanPlay();
+		  GameManager.getManager().getInGameArenas().remove(g);
 		  try {
 	  		   player1 = g.getPlayer1().get(0);
 	  		   player2 = g.getPlayer2().get(0);
@@ -125,7 +128,7 @@ public static int task;
 			}
 	  		  g.resetTime();
 		  } catch (Exception e) {}
-		  GameManager.getManager().removeInGameArena(g);
+		  
 	  		  if (ganador == null && perdedor == null) {
 	  			try {
 					  for (Player p1 : g.getPlayer1()) {
@@ -318,6 +321,7 @@ public static int task;
 	  
 	 
 		
+		
 		@EventHandler
 		public void snowBall(ProjectileLaunchEvent e) {
 			if (e.getEntity().getShooter() instanceof Player) {
@@ -332,7 +336,7 @@ public static int task;
 							 new BukkitRunnable() {
 									@Override
 									public void run() {
-										p.getInventory().setItem(7, snowball);
+										p.getInventory().addItem(new ItemStack(Material.SNOW_BALL));
 									}
 								}.runTaskLater(Main.get(), 2L);	
 								
@@ -363,7 +367,7 @@ public static int task;
 					if (n>4) {
 						n = n-4;
 						nieve.put(p,n);
-						p.getInventory().setItem(8, snowblock);
+						p.getInventory().addItem(new ItemStack(Material.SNOW_BLOCK));
 						g.getPlacedBlocks().add(e.getBlock());
 						  new Scoreboard().createScoreboardGame(p);
 					} else {

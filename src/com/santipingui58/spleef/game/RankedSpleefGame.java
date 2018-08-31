@@ -85,13 +85,13 @@ public class RankedSpleefGame implements Listener  {
 		  Player player1 = null;
 		  Player player2 = null;
 		  Game g = GameManager.getManager().getArena(id);
+		  GameManager.getManager().getRankedGames().remove(g);
+		  g.falseCanPlay();
 		  try {
 	  		   player1 = g.getPlayer1().get(0);
 	  		   player2 = g.getPlayer2().get(0);
-	  		 GameManager.getManager().getRankedGames().remove(g);
 	  		  g.resetRounds();
 	  		RankedSpleefGame.reinicio(g);
-	  		GameManager.getManager().removeInGameArena(g);
 	  		  g.resetTime();
 		  } catch (Exception e) {}
 	  		  

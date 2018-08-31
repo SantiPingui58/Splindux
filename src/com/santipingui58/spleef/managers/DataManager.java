@@ -1,24 +1,20 @@
 package com.santipingui58.spleef.managers;
 
 import java.net.InetAddress;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
 
 public class DataManager {
 
-
-	
-	
-	
-	
-	
 	
 	  public static void updateName(Player p) {
 		  if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
@@ -45,14 +41,59 @@ public class DataManager {
 		  
 	  }
 	  
-	  @SuppressWarnings("deprecation")
+
+		public static String getLastConnection (OfflinePlayer p) {
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US);
+			String time = Main.data.getConfig().getString("data."+p.getUniqueId()+".lastconnect");
+			Date date;
+			try {
+				date = format.parse(time);
+			} catch (ParseException e) {
+			return "???";
+			}
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			
+			Date ahora = new Date();
+			Calendar now = Calendar.getInstance();
+			now.setTime(ahora);
+			
+			int year = now.get(Calendar.YEAR)-calendar.get(Calendar.YEAR);
+			int month = now.get(Calendar.MONTH)-calendar.get(Calendar.MONTH);
+			int day = now.get(Calendar.DAY_OF_MONTH)-calendar.get(Calendar.DAY_OF_MONTH);
+			int hours = now.get(Calendar.HOUR_OF_DAY)-calendar.get(Calendar.HOUR_OF_DAY);
+			int minutes = now.get(Calendar.MINUTE)-calendar.get(Calendar.MINUTE);
+			
+			if (year==0) {
+				if (month==0) {
+					if (day==0) {
+						if (hours==0) {
+							if (minutes==0) {
+								return "hace unos segundos.";
+							} else {
+								return "hace " + minutes + " minutos.";
+							}
+						} else {
+							return "hace " + hours + " horas.";
+						}
+					} else {
+						return "hace " + day + " dias.";
+					}
+				} else {
+					return "hace " + month + " meses.";
+				}
+			} else {
+				return "hace " + year + " años.";
+			}
+		  }
+	  
+	  
 	public static void updateLastConnection(Player p) {
 		  if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
-			  Date date = new Date();
-			   String lastconnect = String.valueOf(date.getDay() + "/" + String.valueOf (date.getMonth()) + "/" 
-					   + String.valueOf (date.getYear()) + " " + date.getHours() + ":" + date.getMinutes() + ":"
-					   + date.getSeconds());
-			   Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", lastconnect);
+			  SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			    Date now = new Date();
+			    String strDate = sdfDate.format(now);
+			  Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", strDate);
 			   Main.data.save();
 			   
 			   InetAddress ip = p.getAddress().getAddress();
@@ -62,22 +103,15 @@ public class DataManager {
 	  }
 	  
 	  
-	  @SuppressWarnings("deprecation")
+	  
 	public static void onCreateData(Player p) {
 		
 		  if (!Main.data.getConfig().contains("data." + p.getUniqueId())) {
-			  		  
+		
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".name", p.getName());
 			  Main.data.save();
-			   Date date = new Date();
-			   String lastconnect = String.valueOf(date.getDay() + "/" + String.valueOf (date.getMonth()) + "/" 
-					   + String.valueOf (date.getYear()) + " " + date.getHours() + ":" + date.getMinutes() + ":"
-					   + date.getSeconds());
-			   
-			   InetAddress ip = p.getAddress().getAddress();
-			  
-			  Main.data.getConfig().set("data." + p.getUniqueId() + ".lastconnect", lastconnect);
-			  Main.data.save();
+			 updateLastConnection(p);
+			   InetAddress ip = p.getAddress().getAddress();  
 			  Main.data.getConfig().set("data." + p.getUniqueId() + ".IP",  ip.toString());
 			  Main.data.save();
 			  Main.data.getConfig().set("data." + p.getUniqueId()+ ".Ganadas", 0);
@@ -185,7 +219,7 @@ public class DataManager {
 			  return null;  
 	  }
 	  
-	  public static void deleteNick (Player p) {
+	  public static void deleteNick (OfflinePlayer p) {
 		  if (Main.data.getConfig().contains("data."+ p.getUniqueId())) {
 				  Main.data.getConfig().set("data." + p.getUniqueId() + ".nick", null);	
 				  Main.data.save();
@@ -390,63 +424,7 @@ public class DataManager {
 	  
 	  
 	  
-	  
-	@SuppressWarnings("deprecation")
-	public static String getLastConnection (Player p, Player p1) {
-		if (Main.data.getConfig().contains("data." + p.getUniqueId())) {
-			  
-			   String lastconnect = Main.data.getConfig().getString("data." + p.getUniqueId() + ".lastconnect");
-			   DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-			   Date lc = new Date();
-			   Date date = new Date();
-			   try {
-				   lc = format.parse(lastconnect);
-			} catch (ParseException e) {
-			}
-			      
-			   if (!p.isOnline()) {
-			   if (date.getYear() <= lc.getYear()) {
-				   if (date.getMonth() <= lc.getMonth()) {
-					   if (date.getDay() <= lc.getDay()) {
-						   
-					   } else {
-						   int dia = date.getDay() - lc.getDay();
-						   
-						   if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-							   return "§chace más de " + dia  + " dia(s)";
-						   } else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-							   return "§cover " + dia  + " day(s) ago";
-						   }
-					   }
-				   } else {
-					   int Mes = date.getMonth() - lc.getMonth();
-					   
-					   if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-						   return "§chace más de " + Mes  + " mes(es)";
-					   } else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-						   return "§cover " + Mes  + " month(s) ago";
-					   }
-				   }
-			   } else {
-				   if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-					   return "§chace más de 1 año";
-				   } else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-					   return "§cover 1 year ago";
-				   }
-			   }
-			   } else {
-				   if (DataManager.getLang(p1).equalsIgnoreCase("ESP")) {
-					   return "§aestá conectado";
-				   } else if (DataManager.getLang(p1).equalsIgnoreCase("ENG")) {
-					   return "§ais online";
-				   }
-			   }
-		}
-		return null;
-		  
-
-		  
-	  }
+	
 	
 	public static String getName(String uuid) {
 		if (Main.data.getConfig().contains("data."+uuid)) {
@@ -482,6 +460,47 @@ public class DataManager {
 	public static void resetMonthlyFFAWins() {
 		Main.data.getConfig().set("ffa_monthly", null);
 	}
+	
+	
+	
+	
+	public static void addSC(String UUID,int coins) {
+		Set<String> data = Main.data.getConfig().getConfigurationSection("data").getKeys(false);   
+		
+		for (String u : data) {
+			if (Main.data.getConfig().getString(u).equalsIgnoreCase(UUID)) {
+				int sc = 0;
+				if (Main.data.getConfig().contains(UUID+".splinduxcoins")) {
+					 sc = Main.data.getConfig().getInt(UUID+".splinduxcoins");
+				}
+				sc = sc + coins;
+				Main.data.getConfig().set(UUID+".splinduxcoins", sc);
+				Main.data.save();
+			}
+ 		}
+	} 
+	
+	public static void removeSC(String UUID,int coins) {
+		Set<String> data = Main.data.getConfig().getConfigurationSection("data").getKeys(false);   
+		
+		for (String u : data) {
+			if (Main.data.getConfig().getString(u).equalsIgnoreCase(UUID)) {
+				int sc = 0;
+				if (Main.data.getConfig().contains(UUID+".splinduxcoins")) {
+					 sc = Main.data.getConfig().getInt(UUID+".splinduxcoins");
+				}
+				sc = sc - coins;
+				Main.data.getConfig().set(UUID+".splinduxcoins", sc);
+				Main.data.save();
+			}
+ 		}
+	} 
+	
+	
+	
+	
+	
+	
 	
 	
 	

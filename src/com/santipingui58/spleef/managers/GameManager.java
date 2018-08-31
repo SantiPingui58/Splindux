@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.BowSpleefGame;
@@ -20,6 +21,7 @@ import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
 import com.santipingui58.spleef.game.Spleef2v2Game;
 import com.santipingui58.spleef.game.SpleefGame;
+
 
 
 
@@ -121,9 +123,14 @@ public class GameManager {
     
     
  
-    public Game loadArena(Location spawn1, Location spawn2,Location arena1, Location arena2, Location spect, String id, String tipo) {       
-
-        Game a = new Game(spawn1, spawn2, arena1, arena2,spect, id, tipo);
+    public Game loadArena(Location spawn1, Location spawn2,Location arena1, Location arena2,Location death1,Location death2, Location spect, String id, String tipo) {       
+    	 Game a;
+    	if (tipo.equalsIgnoreCase("BuildSpleefPvP")) {
+    		a= new Game(spawn1, spawn2, arena1, arena2,death1,death2,spect, id, tipo);
+    	} else {
+    		  a= new Game(spawn1, spawn2, arena1, arena2,null,null,spect, id, tipo);
+    	}
+      
         this.arenas.add(a);
         
 
@@ -140,10 +147,19 @@ public class GameManager {
 				Location spawn2 = Main.getLoc(Main.arena.getConfig().getString("arenas." + b + ".spawn2"), true);
 				Location arena1 = Main.getLoc(Main.arena.getConfig().getString("arenas." + b + ".arena1"), true);
 				Location arena2 = Main.getLoc(Main.arena.getConfig().getString("arenas." + b + ".arena2"), true);
+				
+				
 				Location spect = Main.getLoc(Main.arena.getConfig().getString("arenas." +b + ".spect"), true);
 				String tipo = Main.arena.getConfig().getString("arenas." +b + ".type");
+				if (tipo.equalsIgnoreCase("BuildSpleefPvP")) {
+					Location death1 = Main.getLoc(Main.arena.getConfig().getString("arenas." + b + ".death1"), true);
+					Location death2 = Main.getLoc(Main.arena.getConfig().getString("arenas." + b + ".death2"), true);
+					GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2,death1,death2, spect, b, tipo);
+				} else {
+					GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2,null,null, spect, b, tipo);
+				}
 				arenasint++;
-				GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2, spect, b, tipo);
+				
     		}
     		
     		Main.get().getLogger().info(arenasint+ " arenas cargadas!");
@@ -156,6 +172,15 @@ public class GameManager {
     		reinicio(g);
     		if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("BuildSpleefPvP")
     				|| g.getType().equalsIgnoreCase("bowspleef")) {
+    			if (g.getType().equalsIgnoreCase("bowspleef")) {
+    				for (Player p1 : g.getPlayer1()) {
+    					p1.getInventory().removeItem(new ItemStack(Material.ARROW));
+    				}
+    				for (Player p2 : g.getPlayer2()) {
+    					p2.getInventory().removeItem(new ItemStack(Material.ARROW));
+    				}
+    			}
+    			
     			CapsuleManager.generateCapsula(g.getPlayer1().get(0), g.getSpawn1());
     			CapsuleManager.generateCapsula(g.getPlayer2().get(0), g.getSpawn2());
     		} else if (g.getType().equalsIgnoreCase("spleef2v2")){
@@ -182,33 +207,73 @@ public class GameManager {
     
     
     public void reinicio(Game g) {
-    		if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
-    			g.cleanPlacedBlocks();
-    		}
-		  Location a = g.getArena1();
+    	
+    	 Location a = g.getArena1();
 		  Location b =g.getArena2();
 		  int ax = a.getBlockX();
 		  int az = a.getBlockZ();
 		  
-		  int y = a.getBlockY();
+		
 		  
 		  int bx = b.getBlockX();
 		  int bz = b.getBlockZ();
-		  
-		  	
-		  for (int x = ax; x < bx; x++) {
-			  for (int z = az; z < bz; z++) {
-				  Location aire = new Location (a.getWorld(), x, y, z);
-				  if (aire.getBlock().getType().equals(Material.AIR)) {
-					  if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2") ||
-							  g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
-				  aire.getBlock().setType(Material.SNOW_BLOCK); 
-				  } else if (g.getType().equalsIgnoreCase("bowspleef")) {
-					  aire.getBlock().setType(Material.TNT); 
-				  }
-				  }
-			  }
-		  }
+    	
+    		if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
+    			g.cleanPlacedBlocks();
+    			List<Location> list = new ArrayList<Location>();
+    			  Set<String> set = Main.arena.getConfig().getConfigurationSection(g.getId()+".arenablocks").getKeys(false);   
+    			  for (String f : set) {
+    				  list.add(Main.getLoc(f));
+    			  }
+    			  
+    			int ay = a.getBlockY();
+    			int by = b.getBlockY();
+
+    					if (ay==by) {
+    						 for (int x = ax; x < bx; x++) {
+    		        			  for (int z = az; z < bz; z++) {		 
+    		        				  Location aire = new Location (a.getWorld(), x, a.getBlockY(), z);
+    		        				  for (Location l :list ) {
+    		        					  if (l==aire) {
+    		        						  aire.getBlock().setType(Material.SNOW_BLOCK);
+    		        					  }
+    		        				  }
+    		        				  }
+    		        		  }	
+    					} else {
+    			 for (int x = ax; x < bx; x++) {
+    				 for (int y = ay; y < by; y++) {
+        			  for (int z = az; z < bz; z++) {		 
+        				  Location aire = new Location (a.getWorld(), x, y, z);
+        				  for (Location l : list) {
+        					  if (l==aire) {
+        						  aire.getBlock().setType(Material.SNOW_BLOCK);
+        					  }
+        				  }
+        			  }
+        				  }
+        		  }	
+    			 }
+    			
+    			
+    		} else {
+    			  int y = a.getBlockY();	  
+            	   for (int x = ax; x < bx; x++) {
+         			  for (int z = az; z < bz; z++) {
+         				  Location aire = new Location (a.getWorld(), x, y, z);
+         				  if (aire.getBlock().getType().equals(Material.AIR)) {
+         					  if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2") ||
+         							 g.getType().equalsIgnoreCase("ffaspleef")) {
+         				  aire.getBlock().setType(Material.SNOW_BLOCK); 
+         				  } else if (g.getType().equalsIgnoreCase("bowspleef")) {
+         					  aire.getBlock().setType(Material.TNT); 
+         				  }
+         				  }
+         			  }
+         		  }
+               
+           
+    		} 
 	  }
     
     
@@ -652,20 +717,21 @@ public class GameManager {
 						  && p2block.getBlockZ() == aire.getBlockZ()) || (spawn1.getBlockX() == aire.getBlockX() && spawn1.getBlockY() == aire.getBlockY() 
 						  && spawn1.getBlockZ() == aire.getBlockZ()) ||(spawn2.getBlockX() == aire.getBlockX() && spawn2.getBlockY() == aire.getBlockY() 
 						  && spawn2.getBlockZ() == aire.getBlockZ())) {
-				  if (aire.getBlock().getType().equals(Material.AIR)) {
-					  aire.getBlock().setType(Material.SNOW_BLOCK);
-				  }
-				    
 				  } else {
-					  int randomNum = ThreadLocalRandom.current().nextInt(1, 100 + 1);
-					  if (randomNum<por) {
-						  if (aire.getBlock().getType().equals(Material.SNOW_BLOCK)) {
-							  aire.getBlock().setType(Material.AIR);
+					  if (aire.getBlock().getType().equals(Material.AIR)) {
+						  aire.getBlock().setType(Material.SNOW_BLOCK);
+					  }   else {
+						  int randomNum = ThreadLocalRandom.current().nextInt(1, 100 + 1);
+						  if (randomNum<por) {
+							  if (aire.getBlock().getType().equals(Material.SNOW_BLOCK)) {
+								  aire.getBlock().setType(Material.AIR);
+							  }
 						  }
-					  }
+						  }
 				  }
 			  }
 		  }
+		  
 		  
     }
     
@@ -779,13 +845,8 @@ public class GameManager {
     	return this.arenasingame;
     }
     
-    public void addInGameArena(Game g) {
-    	this.arenasingame.add(g);
-    }
+   
   
-    public void removeInGameArena(Game g) {
-    	this.arenasingame.remove(g);
-    }
     
     
     
@@ -1210,7 +1271,7 @@ public class GameManager {
     		}
     			}
     		
-    			ArrayList<Game> av = new ArrayList<Game>();
+    			List<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
     				if (g.getType().equalsIgnoreCase("BowSpleef")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1275,7 +1336,7 @@ public class GameManager {
     				}
     		}
     				
-    					ArrayList<Game> av = new ArrayList<Game>();
+    					List<Game> av = new ArrayList<Game>();
     		    			for (Game g : this.arenas) {
     		    				if (g.getType().equalsIgnoreCase("BowSpleef")) {
     		    				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1347,7 +1408,7 @@ public class GameManager {
     		}
     			}
     		
-    			ArrayList<Game> av = new ArrayList<Game>();
+    			List<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
     				if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1412,7 +1473,7 @@ public class GameManager {
     				}
     		}
     				
-    					ArrayList<Game> av = new ArrayList<Game>();
+    					List<Game> av = new ArrayList<Game>();
     		    			for (Game g : this.arenas) {
     		    				if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
     		    				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1493,7 +1554,7 @@ public class GameManager {
     		
     		}
     	}
-    	ArrayList<Game> av = new ArrayList<Game>();
+    	List<Game> av = new ArrayList<Game>();
 		for (Game g : this.arenas) {
 			if (g.getType().equalsIgnoreCase("spleef2v2")) {
 			if (!this.arenasingame.contains(p)) {
@@ -1551,7 +1612,7 @@ public class GameManager {
 		}
 }
 		
-			ArrayList<Game> av = new ArrayList<Game>();
+			List<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
     				if (g.getType().equalsIgnoreCase("spleef2v2")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1625,7 +1686,7 @@ public class GameManager {
     		}
     			}
     		
-    			ArrayList<Game> av = new ArrayList<Game>();
+    			List<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
     				if (g.getType().equalsIgnoreCase("spleef")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1690,7 +1751,7 @@ public class GameManager {
     				}
     		}
     				
-    					ArrayList<Game> av = new ArrayList<Game>();
+    					List<Game> av = new ArrayList<Game>();
     		    			for (Game g : this.arenas) {
     		    				if (g.getType().equalsIgnoreCase("spleef")) {
     		    				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1761,7 +1822,7 @@ public class GameManager {
     		}  
     			}
     	}
-    			ArrayList<Game> av = new ArrayList<Game>();
+    			List<Game> av = new ArrayList<Game>();
     			for (Game g : this.arenas) {
     				if (g.getType().equalsIgnoreCase("spleef")) {
     				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1825,7 +1886,7 @@ public class GameManager {
     					}
     		}
     				
-    				ArrayList<Game> av = new ArrayList<Game>();
+    				List<Game> av = new ArrayList<Game>();
     		    			for (Game g : this.arenas) {
     		    				if (g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
     		    				if (Main.containsIgnoreCase(g.getId(), id)) {
@@ -1884,7 +1945,7 @@ public void DuelGame2v2 (Player p1, Player p2, Player p3,Player p4, String id) {
 	leave(p4);
 	
 	if (id == null) {
-		ArrayList<Game> av = new ArrayList<Game>();
+		List<Game> av = new ArrayList<Game>();
 		 for (Game g : getArenasList()) {
 			 if (g.getType().equalsIgnoreCase("spleef2v2")) {
 			 if (g.getQueue().size() == 0 && g.getPlayer1().isEmpty() && g.getPlayer2().isEmpty()) {
@@ -1962,7 +2023,7 @@ public void DuelGameBowSpleef (Player p1, Player p2, String id) {
 	leave(p2);
 	
 	if (id == null) {
-		ArrayList<Game> av = new ArrayList<Game>();
+		List<Game> av = new ArrayList<Game>();
 		 for (Game g : getArenasList()) {
 			 if (g.getType().equalsIgnoreCase("bowspleef")) {
 			 if (g.getQueue().size() == 0) {
@@ -2034,7 +2095,7 @@ public void DuelGameBSP (Player p1, Player p2, String id) {
 	leave(p2);
 	
 	if (id == null) {
-		ArrayList<Game> av = new ArrayList<Game>();
+		List<Game> av = new ArrayList<Game>();
 		 for (Game g : getArenasList()) {
 			 if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
 			 if (g.getQueue().size() == 0) {
@@ -2106,7 +2167,7 @@ public void DuelGame (Player p1, Player p2, String id) {
 	leave(p2);
 	
 	if (id == null) {
-		ArrayList<Game> av = new ArrayList<Game>();
+		List<Game> av = new ArrayList<Game>();
 		 for (Game g : getArenasList()) {
 			 if (g.getType().equalsIgnoreCase("spleef")) {
 			 if (g.getQueue().size() == 0) {
@@ -2398,7 +2459,6 @@ public void checkQueue(Game g, boolean isranked) {
 		   	      p2.getPassengers().clear();
 		   	      DataManager.playedRanked(p1);
 		   	      DataManager.playedRanked(p2);
-		   	      
 		        RankedSpleefGame.startCountdown(g.getId());
 		        
 		        } else  { 
@@ -2881,7 +2941,25 @@ public void playToRequest(Player p, Integer por) {
 }
 
 
-public static String getGamePrefix(Player p) {
+public List<Location> saveArenaBlocks(Location l1, Location l2) {
+	  List<Location> arenablocks = new ArrayList<Location>();
+	  for (int x = l1.getBlockX(); x <= l2.getBlockX(); x++) {
+        for (int y = l1.getBlockY(); y <= l2.getBlockY(); y++) {
+            for (int z = l1.getBlockZ(); z <= l2.getBlockZ(); z++) {
+               Location block = new Location(l1.getWorld(),x,y,z);
+                if (block.getBlock().getType().equals(Material.SNOW_BLOCK)) {
+                	arenablocks.add(block);        	
+                } 
+            }
+        }
+    }
+    return arenablocks;
+}
+
+
+
+
+public String getGamePrefix(Player p) {
 	if (GameManager.getManager().isInGame(p)) {
 		Game g = GameManager.getManager().getArenabyPlayer(p);
 		if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")) {

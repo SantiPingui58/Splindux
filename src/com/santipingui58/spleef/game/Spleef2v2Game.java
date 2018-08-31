@@ -140,6 +140,8 @@ public static ItemStack azul = new ItemStack (Material.STAINED_GLASS,1,(short)11
 	  public static void gameOver(List<Player> ganador, List<Player> perdedor, String id) {
 	  	
 		  Game g = GameManager.getManager().getArena(id);
+		  GameManager.getManager().getInGameArenas().remove(g);
+		  g.falseCanPlay();
 		  g.getInGameSpect().clear();
 		  g.getTempPlayer1_2v2().clear();
   		  g.getTempPlayer2_2v2().clear();
@@ -176,7 +178,7 @@ public static ItemStack azul = new ItemStack (Material.STAINED_GLASS,1,(short)11
 		
 		  }
 		
-		GameManager.getManager().removeInGameArena(g);
+		
 		  
 	  		  if (ganador == null && perdedor == null) {
 				g.resetPoints();

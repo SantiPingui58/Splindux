@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.santipingui58.spleef.menu.MenuBuilder;
-import com.santipingui58.spleef.menu.eng.RankingMenu;
+import com.santipingui58.spleef.menu.RankingMenu;
 import com.santipingui58.spleef.utils.ItemBuilder;
 
 

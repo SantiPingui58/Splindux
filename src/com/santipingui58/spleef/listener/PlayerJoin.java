@@ -5,11 +5,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
@@ -21,18 +18,18 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PlayerJoin implements Listener {
 	
-	@EventHandler (priority=EventPriority.MONITOR)
-	public void onTryJoin(PlayerLoginEvent event)  {
-		Player p = event.getPlayer();
-		if (!p.hasPermission("splindux.staff")) {
-				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
-				event.disallow(Result.KICK_OTHER, "§aEl servidor se encuentra en §c§lMANTENIMIENTO, §avolveremos pronto!");
-			} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
-				event.disallow(Result.KICK_OTHER, "§aThe server is currently under §c§lMAINTENANCE, §awe will be back soon!");
-			}
-				
-		}
-	}
+	//@EventHandler (priority=EventPriority.MONITOR)
+	//public void onTryJoin(PlayerLoginEvent event)  {
+	//	Player p = event.getPlayer();
+	//	if (!p.hasPermission("splindux.staff")) {
+	//			if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+	//			event.disallow(Result.KICK_OTHER, "§aEl servidor se encuentra en §c§lMANTENIMIENTO, §avolveremos pronto!");
+	//		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+	//			event.disallow(Result.KICK_OTHER, "§aThe server is currently under §c§lMAINTENANCE, §awe will be back soon!");
+	//		}
+	//			
+	//	}
+//	}
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {

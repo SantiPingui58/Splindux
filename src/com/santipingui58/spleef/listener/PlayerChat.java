@@ -40,6 +40,7 @@ public class PlayerChat implements Listener {
 			for (Player party :PartyManager.getManager().getPartyByAnyPlayer(p).getPlayers()) {
 				  party.sendMessage("§5[Party]§f " + p.getName() + "§a: §f" + event.getMessage());
 			}
+			Main.get().getServer().getLogger().info("§5[Party]§f " + p.getName() + "§a: §f" + event.getMessage());
 			PartyManager.getManager().getPartyByAnyPlayer(p).getLeader().sendMessage("§5[Party]§f " + p.getName() + "§a: §f" + event.getMessage());
 			return;
 			

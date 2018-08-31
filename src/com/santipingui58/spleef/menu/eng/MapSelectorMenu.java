@@ -41,7 +41,9 @@ public class MapSelectorMenu extends MenuBuilder {
 		s(6, new ItemBuilder(Material.MAP).setTitle("§a§lRuinas").
 				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("ruinas")).
 				build());
-		
+		s(7, new ItemBuilder(Material.MAP).setTitle("§a§lMinispleef").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("minispleef")).
+				build());
 		
 		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cBack").
 				build());
@@ -113,6 +115,15 @@ public class MapSelectorMenu extends MenuBuilder {
 		if(slot == 6) {
 			for (Game s :  GameManager.getManager().getArenasList()) {
 				if (Main.containsIgnoreCase(s.getId(), "ruinas")) {
+					GameManager.getManager().addUnrankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}  
+		if(slot == 7) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "minispleef")) {
 					GameManager.getManager().addUnrankedQueue(p, s.getId());
 					break;
 			

@@ -35,6 +35,16 @@ public class MapSelectorMenu extends MenuBuilder {
 		s(4, new ItemBuilder(Material.MAP).setTitle("§a§lIgnition").
 				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("ignition")).
 				build());
+		s(5, new ItemBuilder(Material.MAP).setTitle("§a§lNeon").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("neon")).
+				build());
+		s(6, new ItemBuilder(Material.MAP).setTitle("§a§lRuinas").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("ruinas")).
+				build());
+		s(7, new ItemBuilder(Material.MAP).setTitle("§a§lMinispleef").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("minispleef")).
+				build());
+		
 		
 		s(17, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cVolver").
 				build());
@@ -90,6 +100,34 @@ public class MapSelectorMenu extends MenuBuilder {
 	} 
 	}
 }   
+		
+		if(slot == 5) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "neon")) {
+					GameManager.getManager().addUnrankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}  
+		if(slot == 6) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "ruinas")) {
+					GameManager.getManager().addUnrankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}  
+		if(slot == 7) {
+			for (Game s :  GameManager.getManager().getArenasList()) {
+				if (Main.containsIgnoreCase(s.getId(), "minispleef")) {
+					GameManager.getManager().addUnrankedQueue(p, s.getId());
+					break;
+			
+		} 
+		}
+	}  
 		
 		if (slot == 17) {
 	new SpleefMenu(p).o(p);

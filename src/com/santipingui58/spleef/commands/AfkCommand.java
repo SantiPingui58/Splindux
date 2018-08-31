@@ -2,6 +2,7 @@ package com.santipingui58.spleef.commands;
 
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -62,16 +63,17 @@ public class AfkCommand implements CommandExecutor {
 		afk.add(p);
 		
 		for (String fr : FriendsManager.getFriends(p)) {
-			if (Bukkit.getPlayer(fr).isOnline()) {
-				Player friend = Bukkit.getPlayer(fr);
-				if (DataManager.getLang(friend).equalsIgnoreCase("ESP")) {
-					friend.sendMessage("§dTu amigo §b" + p.getName() + "§d ahora se encuentra §7AFK");
-				} else if (DataManager.getLang(friend).equalsIgnoreCase("ENG")) {
-					friend.sendMessage("§dYour friend §b" + p.getName() + "§d is now §7AFK");
+			Player target = Bukkit.getServer().getPlayer(UUID.fromString(fr));
+			if (Bukkit.getServer().getOnlinePlayers().contains(target)) {
+				if (DataManager.getLang(target).equalsIgnoreCase("ESP")) {
+					target.sendMessage("§dTu amigo §b" + p.getName() + "§d ahora se encuentra §7AFK");
+				} else if (DataManager.getLang(target).equalsIgnoreCase("ENG")) {
+					target.sendMessage("§dYour friend §b" + p.getName() + "§d is now §7AFK");
 				}
 				
 			}
 		}
+		
 		if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 		p.sendMessage("§7Ahora te encuentras AFK");
 		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
@@ -82,12 +84,12 @@ public class AfkCommand implements CommandExecutor {
 	public static void removeAfk (Player p) {
 		afk.remove(p);
 		for (String fr : FriendsManager.getFriends(p)) {
-			if (Bukkit.getPlayer(fr).isOnline()) {
-				Player friend = Bukkit.getPlayer(fr);
-				if (DataManager.getLang(friend).equalsIgnoreCase("ESP")) {
-					friend.sendMessage("§dTu amigo §b" + p.getName() + "§d ya no se encuentra §7AFK");
-				} else if (DataManager.getLang(friend).equalsIgnoreCase("ENG")) {
-					friend.sendMessage("§dYour friend §b" + p.getName() + "§d is not longer §7AFK");
+			Player target = Bukkit.getServer().getPlayer(UUID.fromString(fr));
+			if (Bukkit.getServer().getOnlinePlayers().contains(target)) {
+				if (DataManager.getLang(target).equalsIgnoreCase("ESP")) {
+					target.sendMessage("§dTu amigo §b" + p.getName() + "§d ya no se encuentra §7AFK");
+				} else if (DataManager.getLang(target).equalsIgnoreCase("ENG")) {
+					target.sendMessage("§dYour friend §b" + p.getName() + "§d is not longer §7AFK");
 				}
 				
 			

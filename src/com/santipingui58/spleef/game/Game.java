@@ -17,7 +17,7 @@ public class Game {
 	public static ItemStack rankeditemesp = new ItemBuilder (Material.DIAMOND_SPADE).setTitle("§b§lCola para ranked").build();
 	public static ItemStack unrankeditemesp = new ItemBuilder (Material.IRON_SPADE).setTitle("§b§lCola para Unranked").build();
 	public static ItemStack opcionesesp = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOpciones").build();
-	public static ItemStack torneosesp = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lEventos").build();
+	public static ItemStack giftsesp = new ItemBuilder (Material.RED_SHULKER_BOX).setTitle("§c§l§oProximamente...").build();
 	public static ItemStack leavequeueesp = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aSalir de la cola").build();
 	public static ItemStack partiesesp = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3§lMenu de Party").build();
 	public static ItemStack gadgetsesp = new ItemBuilder (Material.CHEST).setTitle("§5§lGadgets").build();
@@ -26,7 +26,7 @@ public class Game {
 	public static ItemStack rankeditemeng = new ItemBuilder (Material.DIAMOND_SPADE).setTitle("§b§lRanked Queue").build();
 	public static ItemStack unrankeditemeng = new ItemBuilder (Material.IRON_SPADE).setTitle("§b§lUnranked Queue").build();
 	public static ItemStack opcioneseng = new ItemBuilder (Material.REDSTONE_COMPARATOR).setTitle("§c§lOptions").build();
-	public static ItemStack torneoseng = new ItemBuilder (Material.GOLD_INGOT).setTitle("§6§lTournaments").build();
+	public static ItemStack giftseng = new ItemBuilder (Material.RED_SHULKER_BOX).setTitle("§6c§lsoComing soon...").build();
 	public static ItemStack leavequeueeng = new ItemBuilder (Material.REDSTONE_TORCH_ON).setTitle("§aLeave the queue").build();
 	public static ItemStack partieseng = new ItemBuilder (Material.BLAZE_POWDER).setTitle("§3§lParty Menu").build();
 	public static ItemStack gadgetseng = new ItemBuilder (Material.CHEST).setTitle("§5§lGadgets").build();
@@ -38,6 +38,8 @@ public class Game {
 	    private final Location spawn2;
 	    private final Location arena1;
 	    private final Location arena2;
+	    private final Location death1;
+	    private final Location death2;
 	    private final Location spect;
 	    private final List<Player> player1 = new ArrayList<Player>();
 	    private final List<Player> player2 = new ArrayList<Player>(); 
@@ -64,12 +66,12 @@ public class Game {
 	    private final HashMap<Player, Integer> playtorequest = new HashMap<Player,Integer>();
 	    private final List<Player>  endgamereset = new ArrayList<Player>();
 	    private final List<Player> reset = new ArrayList<Player>();
+	    
 	    private final List<Block> placedblocks = new ArrayList<Block>();
 	    
 	    
-	    
 	    public Game(Location spawn1, Location spawn2, Location arena1,
-	    		Location arena2, Location spect, String id, String tipo) {
+	    		Location arena2, Location death1, Location death2,Location spect, String id, String tipo) {
 	        this.spawn1 = spawn1;
 	        this.spawn2 = spawn2;
 	        this.arena1 = arena1;
@@ -77,6 +79,8 @@ public class Game {
 	        this.spect = spect;
 	        this.id = id;
 	        this.tipo = tipo;
+	        this.death1=death1;
+	        this.death2=death2;
 
 	    }
 	    	 
@@ -89,6 +93,7 @@ public class Game {
 	    		b.setType(Material.AIR);
 	    	}
 	    }
+	    
 	    
 		  public List<Player> getTempPlayer1_2v2() {
 			  return this.tempPlayer1_2v2;
@@ -294,6 +299,13 @@ public class Game {
 	    	return this.arena2;
 	    }
 	    
+	    public Location getDeath1() {
+	    	return this.death1;
+	    }
+	    
+	    public Location getDeath2() {
+	    	return this.death2;
+	    }
 	    
 	    public Location getSpect() {
 	    	return this.spect;

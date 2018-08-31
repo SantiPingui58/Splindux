@@ -85,6 +85,8 @@ public class SpleefGame implements Listener  {
 		  Player player1 = null;
 		  Player player2 = null;
 		  Game g = GameManager.getManager().getArena(id);
+		  g.falseCanPlay();
+		  GameManager.getManager().getInGameArenas().remove(g);
 		  try {
 	  		   player1 = g.getPlayer1().get(0);
 	  		   player2 = g.getPlayer2().get(0);
@@ -101,7 +103,7 @@ public class SpleefGame implements Listener  {
 			}
 	  		  g.resetTime();
 		  } catch (Exception e) {}
-		  GameManager.getManager().removeInGameArena(g);
+		 
 	  		  if (ganador == null && perdedor == null) {
 	  			try {
 					  for (Player p1 : g.getPlayer1()) {
@@ -274,7 +276,7 @@ public class SpleefGame implements Listener  {
 	  			  }
 	  				
 	  				 g.getSpectators().clear();
-	  		  
+	  				 g.trueCanPlay();
 	  		  
 	  	  }
 	  

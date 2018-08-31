@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.santipingui58.spleef.game.BowSpleefGame;
+import com.santipingui58.spleef.game.BuildSpleefPvPGame;
 import com.santipingui58.spleef.game.FFASpleefGame;
 import com.santipingui58.spleef.game.Game;
 import com.santipingui58.spleef.game.RankedSpleefGame;
@@ -49,25 +51,25 @@ public class PlayerLeave implements Listener {
 						}
 						for (Player pa : g.getPlayer1()) {
 							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-								pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-								pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 							}
 						}
 						
 						for (Player pa : g.getPlayer2()) {
 							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-								pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-								pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 							}
 						}
 						
 						for (Player pa : g.getSpectators()) {
 							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-								pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-								pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 							}
 						}
 						RankedSpleefGame.gameOver(ganador, p, g.getId());
@@ -80,31 +82,161 @@ public class PlayerLeave implements Listener {
 							}
 							for (Player pa : g.getPlayer1()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getPlayer2()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getSpectators()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							SpleefGame.gameOver(ganador, p, g.getId());
 							
 						}
-					} else if (g.getType().equalsIgnoreCase("ffaspleef")) {
+					} else if (g.getType().equalsIgnoreCase("bowspleef")) {
+						if (GameManager.getManager().isRanked(g)) {
+						Player ganador = null;
+						if (g.getPlayer1().contains(p)){
+							ganador = g.getPlayer2().get(0);
+						} else {
+							ganador = g.getPlayer1().get(0);
+						}
+						for (Player pa : g.getPlayer1()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						
+						for (Player pa : g.getPlayer2()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						
+						for (Player pa : g.getSpectators()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						RankedSpleefGame.gameOver(ganador, p, g.getId());
+						} else {
+							Player ganador = null;
+							if (g.getPlayer1().contains(p)){
+								ganador = g.getPlayer2().get(0);
+							} else {
+								ganador = g.getPlayer1().get(0);
+							}
+							for (Player pa : g.getPlayer1()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							
+							for (Player pa : g.getPlayer2()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							
+							for (Player pa : g.getSpectators()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							BowSpleefGame.gameOver(ganador, p, g.getId());
+							
+						}
+					}else if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
+						if (GameManager.getManager().isRanked(g)) {
+						Player ganador = null;
+						if (g.getPlayer1().contains(p)){
+							ganador = g.getPlayer2().get(0);
+						} else {
+							ganador = g.getPlayer1().get(0);
+						}
+						for (Player pa : g.getPlayer1()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						
+						for (Player pa : g.getPlayer2()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						
+						for (Player pa : g.getSpectators()) {
+							if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+							} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+								pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+							}
+						}
+						RankedSpleefGame.gameOver(ganador, p, g.getId());
+						} else {
+							Player ganador = null;
+							if (g.getPlayer1().contains(p)){
+								ganador = g.getPlayer2().get(0);
+							} else {
+								ganador = g.getPlayer1().get(0);
+							}
+							for (Player pa : g.getPlayer1()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							
+							for (Player pa : g.getPlayer2()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							
+							for (Player pa : g.getSpectators()) {
+								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
+								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+								}
+							}
+							BuildSpleefPvPGame.gameOver(ganador, p, g.getId());
+							
+						}
+					}else if (g.getType().equalsIgnoreCase("ffaspleef")) {
 						try {
 						g.getQueue().remove(p);
 						} catch (Exception ex) {}
@@ -138,25 +270,25 @@ public class PlayerLeave implements Listener {
 							
 							for (Player pa : g.getPlayer1()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getPlayer2()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getSpectators()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
@@ -169,25 +301,25 @@ public class PlayerLeave implements Listener {
 						}
 							for (Player pa : g.getPlayer1()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getPlayer2()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 							
 							for (Player pa : g.getSpectators()) {
 								if (DataManager.getLang(pa).equalsIgnoreCase("ENG")) {
-									pa.sendMessage("§3[Spleef] §cThe player §b" + p.getName() + " §chas disconnected!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cThe player §b" + p.getName() + " §chas disconnected!");
 								} else if (DataManager.getLang(pa).equalsIgnoreCase("ESP")) {
-									pa.sendMessage("§3[Spleef] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
+									pa.sendMessage("§3["+GameManager.getManager().getGamePrefix(p)+"] §cEl jugador §b" + p.getName() + " §cse ha desconectado!");
 								}
 							}
 						}

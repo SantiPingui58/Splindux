@@ -18,10 +18,9 @@ public class MapSelectorBSPMenu extends MenuBuilder {
 	public MapSelectorBSPMenu(Player p) {
 		super("§aSelecciona un mapa", 1);
 		
-		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lTest").
-				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("Test")).
+		s(0, new ItemBuilder(Material.MAP).setTitle("§a§lVoid").
+				addLore("§aQueue: §b" + GameManager.getManager().getQueueMapListUnranked("Void")).
 				build());
-		
 		
 		s(8, new ItemBuilder(Material.FIREWORK_CHARGE).setTitle("§cVolver").
 				build());
@@ -34,7 +33,7 @@ public class MapSelectorBSPMenu extends MenuBuilder {
 	public void onClick(Player p, ItemStack stack, int slot) {
 		if(slot == 0) {
 			for (Game s :  GameManager.getManager().getArenasList()) {
-				if (Main.containsIgnoreCase(s.getId(), "Test")) {
+				if (Main.containsIgnoreCase(s.getId(), "Void")) {
 					GameManager.getManager().addUnrankedQueue(p, s.getId());
 					break;
 			

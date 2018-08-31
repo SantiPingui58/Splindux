@@ -22,7 +22,6 @@ import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.EconomyManager;
 import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.SpleefRankManager;
-import com.santipingui58.spleef.utils.ItemBuilder;
 import com.santipingui58.spleef.utils.Scoreboard;
 
 public class BowSpleefGame implements Listener  {
@@ -31,7 +30,7 @@ public class BowSpleefGame implements Listener  {
 
 
 public static int task;
-  public static ItemStack bow = new ItemBuilder (Material.BOW).addEnchantment(Enchantment.ARROW_FIRE, 1).addEnchantment(Enchantment.ARROW_INFINITE, 1).build();
+  public static ItemStack bow = new ItemStack(Material.BOW);
   
   
   
@@ -39,12 +38,12 @@ public static int task;
 	public static void startCountdown(String id) {
 		  
 		  
-		  
 		  ItemMeta meta = bow.getItemMeta();
 	      meta.spigot().setUnbreakable(true);
 	      meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 	      bow.setItemMeta(meta);
-	      
+	      bow.addEnchantment(Enchantment.ARROW_FIRE, 1);
+	      bow.addEnchantment(Enchantment.ARROW_INFINITE, 1);
 	      
 	     final Game g = GameManager.getManager().getArena(id);
 	     final Player  p1 = g.getPlayer1().get(0);
@@ -71,12 +70,9 @@ public static int task;
 	     p2.getInventory().clear();
 	     new BukkitRunnable() {
 				@Override
-				public void run() {
-					
-					p1.getInventory().setItem(0,bow);
-					p1.getInventory().addItem(new ItemStack(Material.ARROW));
-					p2.getInventory().setItem(0,bow);
-					p2.getInventory().addItem(new ItemStack(Material.ARROW));
+				public void run() {				
+					p1.getInventory().addItem(bow);				
+					p2.getInventory().addItem(bow);
 			      
 				}
 			}.runTaskLater(Main.get(), 3L);	
@@ -95,6 +91,8 @@ public static int task;
 		  Player player1 = null;
 		  Player player2 = null;
 		  Game g = GameManager.getManager().getArena(id);
+		  g.falseCanPlay();
+		  GameManager.getManager().getInGameArenas().remove(g);
 		  try {
 	  		   player1 = g.getPlayer1().get(0);
 	  		   player2 = g.getPlayer2().get(0);
@@ -111,7 +109,7 @@ public static int task;
 			}
 	  		  g.resetTime();
 		  } catch (Exception e) {}
-		  GameManager.getManager().removeInGameArena(g);
+		  
 	  		  if (ganador == null && perdedor == null) {
 	  			try {
 					  for (Player p1 : g.getPlayer1()) {

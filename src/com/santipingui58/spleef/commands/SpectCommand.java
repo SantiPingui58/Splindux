@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
@@ -40,7 +41,7 @@ public class SpectCommand implements CommandExecutor {
 						} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
 							p.sendMessage("§aUse of command: /spect <player>");
 						}
-				} else if (args[0].equalsIgnoreCase("leave")){
+				} else if (args[0].equalsIgnoreCase("leave")) {
 					for (Game g : GameManager.getManager().getArenasList()) {
 						try {
 							g.getSpectators().remove(p);
@@ -54,8 +55,9 @@ public class SpectCommand implements CommandExecutor {
 					p.setGameMode(GameMode.ADVENTURE);
 					p.teleport(Main.getLoc(Main.arena.get("lobby"), true));
 				} else {
-			
+					GameManager.getManager().leaveQueue(p, false, true);
 					Player pa = Bukkit.getServer().getPlayer(args[0]);
+					
 					if (Bukkit.getOnlinePlayers().contains(pa)) {
 						for (Game g : GameManager.getManager().getArenasList()) {
 						if (g.getPlayer1().contains(pa) || g.getPlayer2().contains(pa)) {
@@ -67,6 +69,14 @@ public class SpectCommand implements CommandExecutor {
 							p.setGameMode(GameMode.SPECTATOR);
 							p.teleport(pa);
 							g.getSpectators().add(p);
+							  
+						     new BukkitRunnable() {
+									@Override
+									public void run() {
+										p.getInventory().clear();
+								      
+									}
+								}.runTaskLater(Main.get(), 3L);	
 							if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
 								p.sendMessage("§aAhora te encuentras espectando a §b" + pa.getName());
 							} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {

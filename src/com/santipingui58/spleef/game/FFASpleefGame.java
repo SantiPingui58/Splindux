@@ -85,7 +85,7 @@ public static void startCountdown(String id) {
      
      g.getQueue().clear();
      
-    GameManager.getManager().addInGameArena(g);
+    GameManager.getManager().getInGameArenas().add(g);
     GameManager.getManager().Countdown(g);
   
   }

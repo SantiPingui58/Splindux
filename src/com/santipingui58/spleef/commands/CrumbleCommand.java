@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
 
@@ -22,7 +23,9 @@ public class CrumbleCommand implements CommandExecutor {
 			
 			if (GameManager.getManager().isInGame(p)) {
 				if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef") ||
-						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef2v2")) {
+						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("spleef2v2") ||
+						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("bowspleef") ||
+						GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("BuildSpleefPvP")) {
 					if (!GameManager.getManager().isRanked(GameManager.getManager().getArenabyPlayer(p))) {
 			if (args.length == 0 || args.length >= 2) {
 				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {

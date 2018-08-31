@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +29,6 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -49,15 +47,13 @@ import com.santipingui58.spleef.managers.GameManager;
 import com.santipingui58.spleef.managers.PartyManager;
 import com.santipingui58.spleef.menu.esp.OptionsMenu;
 import com.santipingui58.spleef.menu.esp.RankedMenu;
-import com.santipingui58.spleef.menu.esp.TournamentsMenu;
 import com.santipingui58.spleef.menu.esp.UnrankedMenu;
 
 import net.apcat.simplesit.SimpleSitPlayer;
 import net.apcat.simplesit.events.PlayerSitEvent;
 import net.apcat.simplesit.events.PlayerStopSittingEvent;
-import net.minecraft.server.v1_11_R1.PacketPlayOutMount;
-
 import net.md_5.bungee.api.ChatColor;
+import net.minecraft.server.v1_11_R1.PacketPlayOutMount;
 
 
 
@@ -79,7 +75,13 @@ public class PlayerListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public static void onInteract(final PlayerInteractEvent e) {
 		
-		if (e.getPlayer().getGameMode()==GameMode.SPECTATOR) e.setCancelled(true);
+		if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
+			e.setCancelled(true);
+		}
+		
+		if (GameManager.getManager().isSpectating(e.getPlayer())) {
+			e.setCancelled(true);
+		}
 		
 		   if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		    {
@@ -397,28 +399,12 @@ public class PlayerListener implements Listener {
 				new com.santipingui58.spleef.menu.eng.UnrankedMenu(e.getPlayer()).o(e.getPlayer());
 			} 
 			
-			if(e.getPlayer().getItemInHand().equals(Game.torneosesp)) {
-				for (Entity en : e.getPlayer().getPassengers()) {
-					if (en instanceof Player) {
-						e.getPlayer().eject();
-						en.eject();
-		 			PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)e.getPlayer()).getHandle());
-		            ((CraftPlayer)e.getPlayer()).getHandle().playerConnection.sendPacket(packet);
-				}
-				}
-				new TournamentsMenu(e.getPlayer()).o(e.getPlayer());
+			if(e.getPlayer().getItemInHand().equals(Game.giftsesp)) {
+				e.getPlayer().sendMessage("§cProximamente...");
 			} 
 			
-			if(e.getPlayer().getItemInHand().equals(Game.torneoseng)) {
-				for (Entity en : e.getPlayer().getPassengers()) {
-					if (en instanceof Player) {
-						e.getPlayer().eject();
-						en.eject();
-		 			PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)e.getPlayer()).getHandle());
-		            ((CraftPlayer)e.getPlayer()).getHandle().playerConnection.sendPacket(packet);
-				}
-				}
-				new com.santipingui58.spleef.menu.eng.TournamentsMenu(e.getPlayer()).o(e.getPlayer());
+			if(e.getPlayer().getItemInHand().equals(Game.giftseng)) {
+				e.getPlayer().sendMessage("§cComing soon...");
 			} 
 		
 			if(e.getPlayer().getItemInHand().equals(Game.opcionesesp)) {
@@ -792,11 +778,13 @@ public class PlayerListener implements Listener {
 				}
 			}
 			} else if (g.getType().equalsIgnoreCase("bowspleef")) {
-				if (!e.getBlock().getType().equals(Material.TNT)) {
 					if (!p.hasPermission("splindux.admin")) {
 						e.setCancelled(true);
+					} else {
+						if (e.getBlock().getType().equals(Material.TNT)) {
+							e.setCancelled(true);
+						}
 					}
-				}
 			}
 		} else {
 			if (p.hasPermission("splindux.admin")) {
@@ -848,8 +836,8 @@ public class PlayerListener implements Listener {
 		if (GameManager.getManager().isInGame(p)) {
 			if (GameManager.getManager().getArenabyPlayer(p).getType().equalsIgnoreCase("BuildSpleefPvP")) {
 				if (e.getDamager() instanceof Snowball) {
-					Bukkit.getPlayer("SantiPingui58").sendMessage(""+e.getCause().name());
 					e.setDamage(2.0);
+					p.setHealth(20);
 				}
 				if (e.getCause().equals(DamageCause.CONTACT) || e.getCause().equals(DamageCause.ENTITY_ATTACK)
 						|| e.getCause().equals(DamageCause.PROJECTILE)) {
@@ -1104,12 +1092,7 @@ public class PlayerListener implements Listener {
 	
 	}
 
-	
 
-	@EventHandler
-	public void onAchi(PlayerAchievementAwardedEvent e) {
-		e.setCancelled(true);
-	}
 
 	
 }

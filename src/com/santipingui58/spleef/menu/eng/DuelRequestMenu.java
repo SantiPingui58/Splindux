@@ -31,17 +31,17 @@ public class DuelRequestMenu extends MenuBuilder {
 		
 		if (page.get(p) == 1) {
 
-		s(0, new ItemBuilder(Material.SNOW_BLOCK).setTitle("§aSnow Spleef - Mapa al azar").
+		s(0, new ItemBuilder(Material.DIAMOND_SPADE).setTitle("§aSnow Spleef - Mapa al azar").
 				build());
 		s(1, new ItemBuilder(Material.DIAMOND_SWORD).setTitle("§aBuild Spleef PvP - Mapa al azar").
 				build());
-		s(9, new ItemBuilder(Material.SNOW_BLOCK).setTitle("§aSnow Spleef - Selecciona un mapa").
+		s(9, new ItemBuilder(Material.DIAMOND_SPADE).setTitle("§aSnow Spleef - Selecciona un mapa").
 				build());
 		s(10, new ItemBuilder(Material.DIAMOND_SWORD).setTitle("§aBuild Spleef PvP - Selecciona un mapa").
 				build());
-		s(10, new ItemBuilder(Material.BOW).setTitle("§aBow Spleef - Selecciona un mapa").
+		s(11, new ItemBuilder(Material.BOW).setTitle("§aBow Spleef - Selecciona un mapa").
 				build());
-		s(2, new ItemBuilder(Material.BOW).setTitle("§cBow Spleef - Mapa al zar").build());
+		s(2, new ItemBuilder(Material.BOW).setTitle("§aBow Spleef - Mapa al zar").build());
 		
 		} else if (page.get(p)==2) {
 			if (DuelCommand.game.get(p).equalsIgnoreCase("spleef")) {
@@ -63,10 +63,10 @@ public class DuelRequestMenu extends MenuBuilder {
 						build());
 				
 			} else if (DuelCommand.game.get(p).equalsIgnoreCase("BuildSpleefPvP")) {
-				s(0, new ItemBuilder(Material.MAP).setTitle("§a§lTest").
+				s(0, new ItemBuilder(Material.MAP).setTitle("§a§lVoid").
 						build());
 			}  else if (DuelCommand.game.get(p).equalsIgnoreCase("bowspleef")) {
-				s(0, new ItemBuilder(Material.MAP).setTitle("§a§lTest").
+				s(0, new ItemBuilder(Material.MAP).setTitle("§a§lAtomic").
 						build());
 			} 
 			
@@ -89,9 +89,9 @@ public class DuelRequestMenu extends MenuBuilder {
 				if (DuelCommand.game.get(p).equalsIgnoreCase("spleef")) {
 					DuelCommand.map.put(p, "SCT");
 				} else if (DuelCommand.game.get(p).equalsIgnoreCase("BuildSpleefPvP")) {
-					DuelCommand.map.put(p, "Test");
+					DuelCommand.map.put(p, "Void");
 				}  else if (DuelCommand.game.get(p).equalsIgnoreCase("bowspleef")) {
-					DuelCommand.map.put(p, "Test");
+					DuelCommand.map.put(p, "Atomic");
 				}
 				DuelCommand.duelrequest.put(p, DuelCommand.temprequest.get(p));
 				msg(p);

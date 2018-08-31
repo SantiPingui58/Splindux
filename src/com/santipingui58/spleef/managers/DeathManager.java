@@ -585,9 +585,20 @@ public class DeathManager {
 	 
 	 
 	 public static boolean getDeath(Location l, Game g) {
-		  	if (l.getY() >= g.getArena1().getBlockY()-1) {
+		 
+		 Location a;
+		 if (g.getType().equalsIgnoreCase("BuildSpleefPvP")) {
+			 a = g.getDeath1();		 
+		 } else {
+			 a = g.getArena1();
+		 }
+		 
+		 if (l.getY() >= a.getBlockY()-1) {
 		  		return false;
 		  	} 
+		  	
+		  	
+		  	
 		  	return true;
 		  }
 	 

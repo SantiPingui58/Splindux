@@ -1,6 +1,7 @@
 package com.santipingui58.spleef.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -47,17 +48,16 @@ public class RankCommand implements CommandExecutor {
 			
 			
 			} else if (args[0].equalsIgnoreCase("remove")) {
+				OfflinePlayer p = Bukkit.getServer().getPlayer(args[1]);
+				String uuid = p.getUniqueId().toString();
 				if (args[2].equalsIgnoreCase("vip")) {
-					Player p = Bukkit.getServer().getPlayer(args[1]);
-					PermissionsEx.getUser(p).removeGroup("vip");
+					PermissionsEx.getUser(uuid).removeGroup("vip");
 					DataManager.deleteNick(p);
 				} else if (args[2].equalsIgnoreCase("epic")) {
-					Player p = Bukkit.getServer().getPlayer(args[1]);
-					PermissionsEx.getUser(p).removeGroup("epic");
+					PermissionsEx.getUser(uuid).removeGroup("epic");
 					DataManager.deleteNick(p);
 				} else if (args[2].equalsIgnoreCase("extreme")) {
-					Player p = Bukkit.getServer().getPlayer(args[1]);
-					PermissionsEx.getUser(p).removeGroup("extreme");
+					PermissionsEx.getUser(uuid).removeGroup("extreme");
 					DataManager.deleteNick(p);
 				}
 				

@@ -47,6 +47,7 @@ import com.santipingui58.spleef.commands.RankCommand;
 import com.santipingui58.spleef.commands.RankingCommand;
 import com.santipingui58.spleef.commands.ResetCommand;
 import com.santipingui58.spleef.commands.RideCommand;
+import com.santipingui58.spleef.commands.SCCommand;
 import com.santipingui58.spleef.commands.SpectCommand;
 import com.santipingui58.spleef.commands.SpleefCommand;
 import com.santipingui58.spleef.commands.StaffCommand;
@@ -161,6 +162,7 @@ public class Main extends JavaPlugin {
 		    getCommand("matches").setExecutor(new MatchesCommand());
 		    getCommand("votenamemc").setExecutor(new VoteNameMCCommand());
 		    getCommand("ranking").setExecutor(new RankingCommand());
+		    getCommand("sc").setExecutor(new SCCommand());
 		    
 		    getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		    getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
@@ -173,9 +175,7 @@ public class Main extends JavaPlugin {
 		    getServer().getPluginManager().registerEvents(new BuildSpleefPvPGame(), this);
 		    
 		    GEconomyProvider.setMysteryDustStorage(new EconomyManager(this, "Splindux"));
-		   // for (Player p : Bukkit.getOnlinePlayers()) {
-		    	//p.performCommand("leave");
-		   // }
+		   
 		    
 		    new BukkitRunnable() {
 				@Override
@@ -184,15 +184,22 @@ public class Main extends JavaPlugin {
 		    getServer().createWorld(new WorldCreator("splindux").environment(Environment.NORMAL));
 		    getServer().createWorld(new WorldCreator("construccion").environment(Environment.NORMAL));
 		    getServer().createWorld(new WorldCreator("arenas").environment(Environment.NORMAL));
-		    getServer().getLogger().info("Mapas cargados");
+		   
+		    getServer().getLogger().info("mundos y arenas cargadas");
 					} catch (Exception e) {
-						  getServer().getLogger().info("Error al intentar cargar los mapas!");
+						  getServer().getLogger().info("Error al intentar cargar las arenas");
 					}
 				}
 			}.runTaskLater(Main.get(), 5L);	
-		    
-		    
-		    
+			 new BukkitRunnable() {
+					@Override
+					public void run() {
+			 if (arena.getConfig().contains("arenas")) {
+		    		GameManager.getManager().loadArenas();
+		    }
+					}
+				}.runTaskLater(Main.get(), 6L);	
+				
 		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
 		    {
 		        public void run()
@@ -341,7 +348,8 @@ public class Main extends JavaPlugin {
 		        		
 		        		        if (g.getCanPlay() == false) {
 		        		        	if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("spleef2v2")
-		        		        			|| g.getType().equalsIgnoreCase("BuildSpleefPvP") || g.getType().equalsIgnoreCase("bowspleef")) {
+		        		        			|| g.getType().equalsIgnoreCase("BuildSpleefPvP") || 
+		        		        			g.getType().equalsIgnoreCase("bowspleef")) {
 		        		        	if (g.getArenaStarting() > 1) {
 		        		        	g.ArenaStarting();
 		        		        
@@ -372,6 +380,14 @@ public class Main extends JavaPlugin {
 		        		        		g.resetArenaStarting();
 		        		        		if (g.getType().equalsIgnoreCase("spleef") || g.getType().equalsIgnoreCase("BuildSpleefPvP")
 		        		        				|| g.getType().equalsIgnoreCase("bowspleef")) {
+		        		        			if (g.getType().equalsIgnoreCase("bowspleef")) {
+		        		        				for (Player p1 : g.getPlayer1()) {
+		        		        					p1.getInventory().addItem(new ItemStack(Material.ARROW));
+		        		        				}
+		        		        				for (Player p2 : g.getPlayer2()) {
+		        		        					p2.getInventory().addItem(new ItemStack(Material.ARROW));
+		        		        				}
+		        		        			}
 		        		        		CapsuleManager.removeCapsula(g.getSpawn1());
 		        		        		CapsuleManager.removeCapsula(g.getSpawn2());
 		        		        		
@@ -433,12 +449,7 @@ public class Main extends JavaPlugin {
 	  }
 	      , 0L, 20L);
 		
-		    if (arena.getConfig().contains("arenas")) {
-		    	this.getLogger().info("Buscando arenas...");
-		    	try {
-		    		GameManager.getManager().loadArenas();
-		    	} catch(Exception e) {}
-		    }
+		    
 		      
 		    Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Main.get(), new Runnable()
 		    {
@@ -455,7 +466,17 @@ public class Main extends JavaPlugin {
 		    	
 	  @Override
 	 public void onDisable() {
-		  
+		  for (Game g : GameManager.getManager().getArenasList()) {
+			  for (Player p : g.getPlayer1()) {
+				  p.performCommand("/lobby");
+			  }
+			  for (Player p : g.getPlayer2()) {
+				  p.performCommand("/lobby");
+			  }
+			  for (Player p : g.getSpectators()) {
+				  p.performCommand("/lobby");
+			  }
+		  }
 		  try {
 		 for (Game g : GameManager.getManager().getArenasList()) {
 			 g.getQueue().clear();
@@ -573,7 +594,7 @@ public class Main extends JavaPlugin {
 			p.getInventory().setItem(1, Game.unrankeditemesp);
 			p.getInventory().setItem(4, Game.gadgetsesp);
 			p.getInventory().setItem(6, Game.partiesesp);
-			p.getInventory().setItem(7, Game.torneosesp);
+			p.getInventory().setItem(7, Game.giftsesp);
 			p.getInventory().setItem(8, Game.opcionesesp);
 			
 		} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")){
@@ -581,7 +602,7 @@ public class Main extends JavaPlugin {
 			p.getInventory().setItem(1, Game.unrankeditemeng);
 			p.getInventory().setItem(4, Game.gadgetseng);
 			p.getInventory().setItem(6, Game.partieseng);
-			p.getInventory().setItem(7, Game.torneoseng);
+			p.getInventory().setItem(7, Game.giftseng);
 			p.getInventory().setItem(8, Game.opcioneseng);
 		} else {
 			p.sendMessage("§cAn error has ocurred while joining the Server. Please leave and join again, if the problem persists, contact a Staff of the Server.");

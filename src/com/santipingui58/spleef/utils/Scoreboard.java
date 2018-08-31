@@ -31,11 +31,25 @@ public class Scoreboard {
 			setTag(p);
 	}
 		public static void setTag(Player p) {
-		String prefix = ChatColor.translateAlternateColorCodes('&', PermissionsEx.getUser(p).getPrefix());
 		if (AfkCommand.isAfk(p)) {
 			NametagEdit.getApi().setPrefix(p, "§7§oAFK ");
 		} else if (p.hasPermission("splindux.staff") || p.hasPermission("splindux.donator")) {
-			NametagEdit.getApi().setPrefix(p, prefix+ " ");
+			List<String> groups = PermissionsEx.getUser(p).getParentIdentifiers();
+			if (groups.contains("owner")) {
+				NametagEdit.getApi().setPrefix(p, "§4§l");
+			} else if (groups.contains("admin")) {
+				NametagEdit.getApi().setPrefix(p, "§c§l");
+			} else if (groups.contains("moderator")) {
+				NametagEdit.getApi().setPrefix(p, "§2§l");
+			} else if (groups.contains("helper")) {
+				NametagEdit.getApi().setPrefix(p, "§9");
+			} else if (groups.contains("extreme")) {
+				NametagEdit.getApi().setPrefix(p, "§5");
+			} else if (groups.contains("epic")) {
+				NametagEdit.getApi().setPrefix(p, "§1");
+			} else if (groups.contains("vip")) {
+				NametagEdit.getApi().setPrefix(p, "§a");
+			}
 		} else {
 			NametagEdit.getApi().setPrefix(p.getName(), "§7");
 		}
@@ -196,7 +210,7 @@ public class Scoreboard {
 									cache.add("§a"+ g.getPlayer2().get(0).getName()+ "§7:§b " + g.getPoints2());	
 									cache.add("§a"+ g.getPlayer1().get(0).getName() + "§7:§b " + g.getPoints1());
 								}
-								
+								if (!GameManager.getManager().isSpectating(p)) {
 								cache.add("§f§f§f");
 								cache.add("§f§f§f§f");
 								int nieve = BuildSpleefPvPGame.nieve.get(p);
@@ -217,7 +231,7 @@ public class Scoreboard {
 										cache.add("§7Snow: §c" + nieve);
 									}
 								}
-								
+								}
 								for(int i = 0; i < cache.size(); i++){
 									data = cache.toArray(new String[i]);
 								}

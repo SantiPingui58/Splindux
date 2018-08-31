@@ -1,5 +1,7 @@
 package com.santipingui58.spleef.commands;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -7,11 +9,8 @@ import org.bukkit.entity.Player;
 
 import com.santipingui58.spleef.Main;
 import com.santipingui58.spleef.game.Game;
+import com.santipingui58.spleef.managers.DataManager;
 import com.santipingui58.spleef.managers.GameManager;
-
-
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 
 public class SpleefCommand implements CommandExecutor{
 
@@ -31,7 +30,13 @@ public class SpleefCommand implements CommandExecutor{
 			Player p = (Player) sender;
 			
 			if(args.length == 0) {
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aPoner ayuda"));
+				if (DataManager.getLang(p).equalsIgnoreCase("ESP")) {
+				p.sendMessage("§aPara retar a otros jugadores coloca con: §b/duel <jugador>");
+				p.sendMessage("§aO también puedes entrar a las colas de las distintas modalidades con los Items de tu inventario, o los NPCs del Lobby!");
+				} else if (DataManager.getLang(p).equalsIgnoreCase("ENG")) {
+					p.sendMessage("§aTo duel players use: §b/duel <player>");
+					p.sendMessage("§aOr you can join the queues of the games with the Items of your inventory, or clicking the NPCs at the Lobby!");
+				}
 				return true;
 			} else if(p.hasPermission("spleefcore.admin")) {
 					if(args[0].equalsIgnoreCase("setup")) {
@@ -87,12 +92,45 @@ public class SpleefCommand implements CommandExecutor{
 							}
 						}
 						
+					 else if (args[1].equalsIgnoreCase("setdeath1")) {
+							if (args.length == 3) {
+							Main.arena.getConfig().set("arenas."+ args[2]+ ".death1", Main.setLoc(p.getLocation(), true));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del punto de muerte #1 de la arena: &b" + args[2]));
+							Main.arena.save();
+							return true; 
+							}
+						}
+					 else if (args[1].equalsIgnoreCase("setdeath2")) {
+							if (args.length == 3) {
+							Main.arena.getConfig().set("arenas."+ args[2]+ ".death2", Main.setLoc(p.getLocation(), true));
+							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del punto de muerte #2 de la arena: &b" + args[2]));
+							Main.arena.save();
+							return true; 
+							}
+						}
+						
 					 else if (args[1].equalsIgnoreCase("setspect")) {
 							if (args.length == 3) {
 							Main.arena.getConfig().set("arenas."+ args[2]+ ".spect", Main.setLoc(p.getLocation(), true));
 							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aDefiniste la localizacion del espectador de la arena: &b" + args[2]));
 							Main.arena.save();
 							return true; 
+							}
+						} else if (args[1].equalsIgnoreCase("savearenablocks")) {
+							if (args.length == 3) {
+								if ((Main.arena.getConfig().contains("arenas." + args[2] + ".arena1")) &&
+										(Main.arena.getConfig().contains("arenas." + args[2] + ".arena2")) &&
+										(Main.arena.getConfig().contains("arenas." + args[2] + ".type"))) {
+									String type = Main.arena.getConfig().getString("arenas." + args[2] + ".type");
+									Location arena1 = Main.getLoc(Main.arena.getConfig().getString("arenas." + args[2] + ".arena1"), true);
+									Location arena2 = Main.getLoc(Main.arena.getConfig().getString("arenas." + args[2] + ".arena2"), true);
+									if (type.equalsIgnoreCase("BuildSpleefPvP")) {
+									Main.arena.getConfig().set("arenas."+args[2] +".arenablocks", GameManager.getManager().saveArenaBlocks(arena1,arena2));
+									Main.arena.save();
+									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aHas guardado la arena de: &b" + args[2]));
+									}
+								
+								}
 							}
 						}
 						
@@ -120,9 +158,21 @@ public class SpleefCommand implements CommandExecutor{
 							Location spect = Main.getLoc(Main.arena.getConfig().getString("arenas." + args[1] + ".spect"), true);
 							String id = args[1];
 							String type = Main.arena.getConfig().getString("arenas." + args[1] + ".type");
+							if (type.equalsIgnoreCase("BuildSpleefPvP")) {
+								if (Main.arena.getConfig().contains("arenas."+args[1]+".death1") &&
+										Main.arena.getConfig().contains("arenas."+args[1]+".death2")) {
+									p.sendMessage("§aArena creada!");
+									Main.arena.save();
+									Location death1 = Main.getLoc(Main.arena.getConfig().getString("arenas." + args[1] + ".death1"), true);
+									Location death2 = Main.getLoc(Main.arena.getConfig().getString("arenas." + args[1] + ".death2"), true);
+									GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2,death1,death2, spect, id, type);
+								} else {
+									p.sendMessage("§cNo se pudo crear esta arena, faltan localizaciones por definir. ");
+								}
+							}
 							p.sendMessage("§aArena creada!");
 							Main.arena.save();
-							GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2, spect, id, type);
+							GameManager.getManager().loadArena(spawn1, spawn2, arena1, arena2,null,null, spect, id, type);
 								} else {
 									p.sendMessage("§cNo se pudo crear esta arena, faltan localizaciones por definir. ");
 								}
@@ -135,9 +185,25 @@ public class SpleefCommand implements CommandExecutor{
 						p.sendMessage("§7Arenas cargadas: §b" + GameManager.getManager().getArenasList().size() );
 						p.sendMessage("§5Arenas:");
 						for (Game g : GameManager.getManager().getArenasList()) {
-							p.sendMessage("§a" + g.getId());
+							if (GameManager.getManager().isStarted(g)) {
+							p.sendMessage("§c" + g.getId());
+							p.sendMessage("P1: " + g.getPlayer1().toString());
+							p.sendMessage("P2: " + g.getPlayer2().toString());
+							p.sendMessage("CanPlay: " + g.getCanPlay());
+							p.sendMessage("Cuenta: " + g.getArenaStarting());
+							
+							} else if (g.getCanPlay()) {
+								p.sendMessage("§6" + g.getId());
+								p.sendMessage("CanPlay: " + g.getCanPlay());
+								p.sendMessage("Cuenta: " + g.getArenaStarting());
+							}else {
+								p.sendMessage("§a" + g.getId());
+								p.sendMessage("CanPlay: " + g.getCanPlay());
+								p.sendMessage("Cuenta: " + g.getArenaStarting());
+							}
 
 						}
+					
 					} 
 					
 				}		
